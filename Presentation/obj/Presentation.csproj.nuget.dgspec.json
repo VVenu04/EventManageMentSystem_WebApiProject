@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Dell\\Desktop\\sample\\New_Project\\Presentation\\Presentation.csproj": {}
+    "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Presentation\\Presentation.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Dell\\Desktop\\sample\\New_Project\\Application\\Application.csproj": {
+    "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Application\\Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Dell\\Desktop\\sample\\New_Project\\Application\\Application.csproj",
+        "projectUniqueName": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Application\\Application.csproj",
         "projectName": "Application",
-        "projectPath": "C:\\Users\\Dell\\Desktop\\sample\\New_Project\\Application\\Application.csproj",
+        "projectPath": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Application\\Application.csproj",
         "packagesPath": "C:\\Users\\Dell\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Dell\\Desktop\\sample\\New_Project\\Application\\obj\\",
+        "outputPath": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Application\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -32,8 +32,8 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "C:\\Users\\Dell\\Desktop\\sample\\New_Project\\Domain\\Domain.csproj": {
-                "projectPath": "C:\\Users\\Dell\\Desktop\\sample\\New_Project\\Domain\\Domain.csproj"
+              "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Domain.csproj": {
+                "projectPath": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Domain.csproj"
               }
             }
           }
@@ -79,14 +79,14 @@
         }
       }
     },
-    "C:\\Users\\Dell\\Desktop\\sample\\New_Project\\Domain\\Domain.csproj": {
+    "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Dell\\Desktop\\sample\\New_Project\\Domain\\Domain.csproj",
+        "projectUniqueName": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Domain.csproj",
         "projectName": "Domain",
-        "projectPath": "C:\\Users\\Dell\\Desktop\\sample\\New_Project\\Domain\\Domain.csproj",
+        "projectPath": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Domain.csproj",
         "packagesPath": "C:\\Users\\Dell\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Dell\\Desktop\\sample\\New_Project\\Domain\\obj\\",
+        "outputPath": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -144,14 +144,14 @@
         }
       }
     },
-    "C:\\Users\\Dell\\Desktop\\sample\\New_Project\\infrastucure\\infrastucure.csproj": {
+    "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\infrastucure\\infrastucure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Dell\\Desktop\\sample\\New_Project\\infrastucure\\infrastucure.csproj",
+        "projectUniqueName": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\infrastucure\\infrastucure.csproj",
         "projectName": "infrastucure",
-        "projectPath": "C:\\Users\\Dell\\Desktop\\sample\\New_Project\\infrastucure\\infrastucure.csproj",
+        "projectPath": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\infrastucure\\infrastucure.csproj",
         "packagesPath": "C:\\Users\\Dell\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Dell\\Desktop\\sample\\New_Project\\infrastucure\\obj\\",
+        "outputPath": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\infrastucure\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -172,11 +172,11 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "C:\\Users\\Dell\\Desktop\\sample\\New_Project\\Application\\Application.csproj": {
-                "projectPath": "C:\\Users\\Dell\\Desktop\\sample\\New_Project\\Application\\Application.csproj"
+              "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Application\\Application.csproj": {
+                "projectPath": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Application\\Application.csproj"
               },
-              "C:\\Users\\Dell\\Desktop\\sample\\New_Project\\Domain\\Domain.csproj": {
-                "projectPath": "C:\\Users\\Dell\\Desktop\\sample\\New_Project\\Domain\\Domain.csproj"
+              "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Domain.csproj": {
+                "projectPath": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Domain.csproj"
               }
             }
           }
@@ -242,14 +242,14 @@
         }
       }
     },
-    "C:\\Users\\Dell\\Desktop\\sample\\New_Project\\Presentation\\Presentation.csproj": {
+    "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Presentation\\Presentation.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Dell\\Desktop\\sample\\New_Project\\Presentation\\Presentation.csproj",
+        "projectUniqueName": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Presentation\\Presentation.csproj",
         "projectName": "Presentation",
-        "projectPath": "C:\\Users\\Dell\\Desktop\\sample\\New_Project\\Presentation\\Presentation.csproj",
+        "projectPath": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Presentation\\Presentation.csproj",
         "packagesPath": "C:\\Users\\Dell\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Dell\\Desktop\\sample\\New_Project\\Presentation\\obj\\",
+        "outputPath": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Presentation\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -270,11 +270,11 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "C:\\Users\\Dell\\Desktop\\sample\\New_Project\\Application\\Application.csproj": {
-                "projectPath": "C:\\Users\\Dell\\Desktop\\sample\\New_Project\\Application\\Application.csproj"
+              "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Application\\Application.csproj": {
+                "projectPath": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Application\\Application.csproj"
               },
-              "C:\\Users\\Dell\\Desktop\\sample\\New_Project\\infrastucure\\infrastucure.csproj": {
-                "projectPath": "C:\\Users\\Dell\\Desktop\\sample\\New_Project\\infrastucure\\infrastucure.csproj"
+              "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\infrastucure\\infrastucure.csproj": {
+                "projectPath": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\infrastucure\\infrastucure.csproj"
               }
             }
           }
