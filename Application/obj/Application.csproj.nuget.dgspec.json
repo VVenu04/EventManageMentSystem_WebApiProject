@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Application\\Application.csproj": {}
+    "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Application\\Application.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Application\\Application.csproj": {
+    "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Application\\Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Application\\Application.csproj",
+        "projectUniqueName": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Application\\Application.csproj",
         "projectName": "Application",
-        "projectPath": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Application\\Application.csproj",
-        "packagesPath": "C:\\Users\\ASUS\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Application\\obj\\",
+        "projectPath": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Application\\Application.csproj",
+        "packagesPath": "C:\\Users\\Dell\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Application\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\ASUS\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Dell\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -32,8 +32,8 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Domain\\Domain.csproj": {
-                "projectPath": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Domain\\Domain.csproj"
+              "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Domain.csproj": {
+                "projectPath": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Domain.csproj"
               }
             }
           }
@@ -75,24 +75,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Domain\\Domain.csproj": {
+    "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Domain\\Domain.csproj",
+        "projectUniqueName": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Domain.csproj",
         "projectName": "Domain",
-        "projectPath": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Domain\\Domain.csproj",
-        "packagesPath": "C:\\Users\\ASUS\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Domain\\obj\\",
+        "projectPath": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Domain.csproj",
+        "packagesPath": "C:\\Users\\Dell\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\ASUS\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Dell\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -140,7 +140,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

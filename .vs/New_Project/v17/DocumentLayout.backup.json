@@ -1,130 +1,130 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\",
+  "WorkspaceRootPath": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|c:\\users\\asus\\desktop\\push\\eventmanagementsystem_webapiproject\\domain\\entities\\admin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\admin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|c:\\users\\asus\\desktop\\push\\eventmanagementsystem_webapiproject\\domain\\entities\\booking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|c:\\users\\dell\\desktop\\event\\eventmanagementsystem_webapiproject\\domain\\entities\\booking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\booking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|c:\\users\\asus\\desktop\\push\\eventmanagementsystem_webapiproject\\domain\\entities\\adminreport.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\adminreport.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BFC87AB2-5520-4DE3-9F6D-F11231417E10}|infrastucure\\infrastucure.csproj|c:\\users\\asus\\desktop\\push\\eventmanagementsystem_webapiproject\\infrastucure\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BFC87AB2-5520-4DE3-9F6D-F11231417E10}|infrastucure\\infrastucure.csproj|solutionrelative:infrastucure\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|c:\\users\\asus\\desktop\\push\\eventmanagementsystem_webapiproject\\domain\\entities\\payment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|c:\\users\\dell\\desktop\\event\\eventmanagementsystem_webapiproject\\domain\\entities\\payment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\payment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|c:\\users\\asus\\desktop\\push\\eventmanagementsystem_webapiproject\\domain\\entities\\category.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\category.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|c:\\users\\asus\\desktop\\push\\eventmanagementsystem_webapiproject\\domain\\domain.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|solutionrelative:domain\\domain.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|c:\\users\\asus\\desktop\\push\\eventmanagementsystem_webapiproject\\domain\\entities\\vendor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\vendor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|c:\\users\\asus\\desktop\\push\\eventmanagementsystem_webapiproject\\domain\\entities\\vendorreport.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\vendorreport.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|c:\\users\\asus\\desktop\\push\\eventmanagementsystem_webapiproject\\domain\\entities\\tracking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\tracking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|c:\\users\\asus\\desktop\\push\\eventmanagementsystem_webapiproject\\domain\\entities\\service.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\service.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|c:\\users\\asus\\desktop\\push\\eventmanagementsystem_webapiproject\\domain\\entities\\package.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\package.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|c:\\users\\asus\\desktop\\push\\eventmanagementsystem_webapiproject\\domain\\entities\\notification.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\notification.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|c:\\users\\asus\\desktop\\push\\eventmanagementsystem_webapiproject\\domain\\entities\\message.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\message.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|c:\\users\\asus\\desktop\\push\\eventmanagementsystem_webapiproject\\domain\\entities\\customer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\customer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|c:\\users\\asus\\desktop\\push\\eventmanagementsystem_webapiproject\\domain\\entities\\event.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\event.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BFC87AB2-5520-4DE3-9F6D-F11231417E10}|infrastucure\\infrastucure.csproj|c:\\users\\asus\\desktop\\push\\eventmanagementsystem_webapiproject\\infrastucure\\dependencyinjection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{BFC87AB2-5520-4DE3-9F6D-F11231417E10}|infrastucure\\infrastucure.csproj|c:\\users\\dell\\desktop\\event\\eventmanagementsystem_webapiproject\\infrastucure\\dependencyinjection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BFC87AB2-5520-4DE3-9F6D-F11231417E10}|infrastucure\\infrastucure.csproj|solutionrelative:infrastucure\\dependencyinjection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BFC87AB2-5520-4DE3-9F6D-F11231417E10}|infrastucure\\infrastucure.csproj|c:\\users\\asus\\desktop\\push\\eventmanagementsystem_webapiproject\\infrastucure\\repositary\\adminrepositary.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BFC87AB2-5520-4DE3-9F6D-F11231417E10}|infrastucure\\infrastucure.csproj|solutionrelative:infrastucure\\repositary\\adminrepositary.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{F9A3F8E1-C5C4-43B7-B30B-704104DD2917}|Presentation\\Presentation.csproj|c:\\users\\dell\\desktop\\event\\eventmanagementsystem_webapiproject\\presentation\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{F9A3F8E1-C5C4-43B7-B30B-704104DD2917}|Presentation\\Presentation.csproj|solutionrelative:presentation\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|c:\\users\\asus\\desktop\\push\\eventmanagementsystem_webapiproject\\domain\\baseentities\\baseentity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|c:\\users\\dell\\desktop\\event\\eventmanagementsystem_webapiproject\\domain\\domain.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|solutionrelative:domain\\domain.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BFC87AB2-5520-4DE3-9F6D-F11231417E10}|infrastucure\\infrastucure.csproj|c:\\users\\dell\\desktop\\event\\eventmanagementsystem_webapiproject\\infrastucure\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BFC87AB2-5520-4DE3-9F6D-F11231417E10}|infrastucure\\infrastucure.csproj|solutionrelative:infrastucure\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|c:\\users\\dell\\desktop\\event\\eventmanagementsystem_webapiproject\\domain\\baseentities\\baseentity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|solutionrelative:domain\\baseentities\\baseentity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{37046828-28F6-4851-B5D4-4D2F3231F48E}|Application\\Application.csproj|c:\\users\\asus\\desktop\\push\\eventmanagementsystem_webapiproject\\application\\mapper\\adminmapper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{BFC87AB2-5520-4DE3-9F6D-F11231417E10}|infrastucure\\infrastucure.csproj|c:\\users\\dell\\desktop\\event\\eventmanagementsystem_webapiproject\\infrastucure\\repositary\\adminrepositary.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BFC87AB2-5520-4DE3-9F6D-F11231417E10}|infrastucure\\infrastucure.csproj|solutionrelative:infrastucure\\repositary\\adminrepositary.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|c:\\users\\dell\\desktop\\event\\eventmanagementsystem_webapiproject\\domain\\entities\\vendorreport.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\vendorreport.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|c:\\users\\dell\\desktop\\event\\eventmanagementsystem_webapiproject\\domain\\entities\\vendor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\vendor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|c:\\users\\dell\\desktop\\event\\eventmanagementsystem_webapiproject\\domain\\entities\\tracking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\tracking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|c:\\users\\dell\\desktop\\event\\eventmanagementsystem_webapiproject\\domain\\entities\\package.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\package.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|c:\\users\\dell\\desktop\\event\\eventmanagementsystem_webapiproject\\domain\\entities\\event.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\event.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|c:\\users\\dell\\desktop\\event\\eventmanagementsystem_webapiproject\\domain\\entities\\adminreport.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\adminreport.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|c:\\users\\dell\\desktop\\event\\eventmanagementsystem_webapiproject\\domain\\entities\\admin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\admin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|c:\\users\\dell\\desktop\\event\\eventmanagementsystem_webapiproject\\domain\\entities\\category.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\category.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|c:\\users\\dell\\desktop\\event\\eventmanagementsystem_webapiproject\\domain\\entities\\service.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\service.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|c:\\users\\dell\\desktop\\event\\eventmanagementsystem_webapiproject\\domain\\entities\\notification.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\notification.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|c:\\users\\dell\\desktop\\event\\eventmanagementsystem_webapiproject\\domain\\entities\\message.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\message.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|c:\\users\\dell\\desktop\\event\\eventmanagementsystem_webapiproject\\domain\\entities\\customer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\customer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{37046828-28F6-4851-B5D4-4D2F3231F48E}|Application\\Application.csproj|c:\\users\\dell\\desktop\\event\\eventmanagementsystem_webapiproject\\application\\mapper\\adminmapper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{37046828-28F6-4851-B5D4-4D2F3231F48E}|Application\\Application.csproj|solutionrelative:application\\mapper\\adminmapper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{37046828-28F6-4851-B5D4-4D2F3231F48E}|Application\\Application.csproj|c:\\users\\asus\\desktop\\push\\eventmanagementsystem_webapiproject\\application\\attribute\\customemailattribute.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{37046828-28F6-4851-B5D4-4D2F3231F48E}|Application\\Application.csproj|c:\\users\\dell\\desktop\\event\\eventmanagementsystem_webapiproject\\application\\attribute\\customemailattribute.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{37046828-28F6-4851-B5D4-4D2F3231F48E}|Application\\Application.csproj|solutionrelative:application\\attribute\\customemailattribute.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{37046828-28F6-4851-B5D4-4D2F3231F48E}|Application\\Application.csproj|c:\\users\\asus\\desktop\\push\\eventmanagementsystem_webapiproject\\application\\dtos\\admindto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{37046828-28F6-4851-B5D4-4D2F3231F48E}|Application\\Application.csproj|c:\\users\\dell\\desktop\\event\\eventmanagementsystem_webapiproject\\application\\dtos\\admindto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{37046828-28F6-4851-B5D4-4D2F3231F48E}|Application\\Application.csproj|solutionrelative:application\\dtos\\admindto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{37046828-28F6-4851-B5D4-4D2F3231F48E}|Application\\Application.csproj|c:\\users\\asus\\desktop\\push\\eventmanagementsystem_webapiproject\\application\\interface\\iservice\\iadminservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{37046828-28F6-4851-B5D4-4D2F3231F48E}|Application\\Application.csproj|c:\\users\\dell\\desktop\\event\\eventmanagementsystem_webapiproject\\application\\interface\\iservice\\iadminservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{37046828-28F6-4851-B5D4-4D2F3231F48E}|Application\\Application.csproj|solutionrelative:application\\interface\\iservice\\iadminservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{37046828-28F6-4851-B5D4-4D2F3231F48E}|Application\\Application.csproj|c:\\users\\asus\\desktop\\push\\eventmanagementsystem_webapiproject\\application\\interface\\irepo\\iadminrepo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{37046828-28F6-4851-B5D4-4D2F3231F48E}|Application\\Application.csproj|c:\\users\\dell\\desktop\\event\\eventmanagementsystem_webapiproject\\application\\interface\\irepo\\iadminrepo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{37046828-28F6-4851-B5D4-4D2F3231F48E}|Application\\Application.csproj|solutionrelative:application\\interface\\irepo\\iadminrepo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{37046828-28F6-4851-B5D4-4D2F3231F48E}|Application\\Application.csproj|c:\\users\\asus\\desktop\\push\\eventmanagementsystem_webapiproject\\application\\interface\\igenericrepo\\igenericrepo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{37046828-28F6-4851-B5D4-4D2F3231F48E}|Application\\Application.csproj|c:\\users\\dell\\desktop\\event\\eventmanagementsystem_webapiproject\\application\\interface\\igenericrepo\\igenericrepo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{37046828-28F6-4851-B5D4-4D2F3231F48E}|Application\\Application.csproj|solutionrelative:application\\interface\\igenericrepo\\igenericrepo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{37046828-28F6-4851-B5D4-4D2F3231F48E}|Application\\Application.csproj|c:\\users\\asus\\desktop\\push\\eventmanagementsystem_webapiproject\\application\\service\\adminservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{37046828-28F6-4851-B5D4-4D2F3231F48E}|Application\\Application.csproj|c:\\users\\dell\\desktop\\event\\eventmanagementsystem_webapiproject\\application\\service\\adminservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{37046828-28F6-4851-B5D4-4D2F3231F48E}|Application\\Application.csproj|solutionrelative:application\\service\\adminservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{37046828-28F6-4851-B5D4-4D2F3231F48E}|Application\\Application.csproj|c:\\users\\asus\\desktop\\push\\eventmanagementsystem_webapiproject\\application\\denpendencyinjenction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{37046828-28F6-4851-B5D4-4D2F3231F48E}|Application\\Application.csproj|c:\\users\\dell\\desktop\\event\\eventmanagementsystem_webapiproject\\application\\denpendencyinjenction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{37046828-28F6-4851-B5D4-4D2F3231F48E}|Application\\Application.csproj|solutionrelative:application\\denpendencyinjenction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F9A3F8E1-C5C4-43B7-B30B-704104DD2917}|Presentation\\Presentation.csproj|c:\\users\\asus\\desktop\\push\\eventmanagementsystem_webapiproject\\presentation\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{F9A3F8E1-C5C4-43B7-B30B-704104DD2917}|Presentation\\Presentation.csproj|c:\\users\\dell\\desktop\\event\\eventmanagementsystem_webapiproject\\presentation\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F9A3F8E1-C5C4-43B7-B30B-704104DD2917}|Presentation\\Presentation.csproj|solutionrelative:presentation\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F9A3F8E1-C5C4-43B7-B30B-704104DD2917}|Presentation\\Presentation.csproj|c:\\users\\asus\\desktop\\push\\eventmanagementsystem_webapiproject\\presentation\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{F9A3F8E1-C5C4-43B7-B30B-704104DD2917}|Presentation\\Presentation.csproj|c:\\users\\dell\\desktop\\event\\eventmanagementsystem_webapiproject\\presentation\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F9A3F8E1-C5C4-43B7-B30B-704104DD2917}|Presentation\\Presentation.csproj|solutionrelative:presentation\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BFC87AB2-5520-4DE3-9F6D-F11231417E10}|infrastucure\\infrastucure.csproj|c:\\users\\asus\\desktop\\push\\eventmanagementsystem_webapiproject\\infrastucure\\genericrepositary\\genericrepo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{BFC87AB2-5520-4DE3-9F6D-F11231417E10}|infrastucure\\infrastucure.csproj|c:\\users\\dell\\desktop\\event\\eventmanagementsystem_webapiproject\\infrastucure\\genericrepositary\\genericrepo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BFC87AB2-5520-4DE3-9F6D-F11231417E10}|infrastucure\\infrastucure.csproj|solutionrelative:infrastucure\\genericrepositary\\genericrepo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F9A3F8E1-C5C4-43B7-B30B-704104DD2917}|Presentation\\Presentation.csproj|c:\\users\\asus\\desktop\\push\\eventmanagementsystem_webapiproject\\presentation\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{F9A3F8E1-C5C4-43B7-B30B-704104DD2917}|Presentation\\Presentation.csproj|solutionrelative:presentation\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     }
   ],
   "DocumentGroupContainers": [
@@ -134,7 +134,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 8,
           "Children": [
             {
               "$type": "Bookmark",
@@ -142,120 +142,114 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "AdminReport.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\AdminReport.cs",
-              "RelativeDocumentMoniker": "Domain\\Entities\\AdminReport.cs",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\AdminReport.cs",
-              "RelativeToolTip": "Domain\\Entities\\AdminReport.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAuAAAAAAAAAA==",
+              "DocumentIndex": 5,
+              "Title": "ApplicationDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\infrastucure\\Data\\ApplicationDbContext.cs",
+              "RelativeDocumentMoniker": "infrastucure\\Data\\ApplicationDbContext.cs",
+              "ToolTip": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\infrastucure\\Data\\ApplicationDbContext.cs",
+              "RelativeToolTip": "infrastucure\\Data\\ApplicationDbContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-28T18:27:15.976Z"
+              "WhenOpened": "2025-10-25T07:18:49.347Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Admin.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Admin.cs",
-              "RelativeDocumentMoniker": "Domain\\Entities\\Admin.cs",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Admin.cs",
-              "RelativeToolTip": "Domain\\Entities\\Admin.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAXAAAAAAAAAA==",
+              "DocumentIndex": 7,
+              "Title": "AdminRepositary.cs",
+              "DocumentMoniker": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\infrastucure\\Repositary\\AdminRepositary.cs",
+              "RelativeDocumentMoniker": "infrastucure\\Repositary\\AdminRepositary.cs",
+              "ToolTip": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\infrastucure\\Repositary\\AdminRepositary.cs",
+              "RelativeToolTip": "infrastucure\\Repositary\\AdminRepositary.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAA0AAAA9AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-24T16:31:30.275Z",
+              "WhenOpened": "2025-10-25T06:42:22.995Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "DependencyInjection.cs",
+              "DocumentMoniker": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\infrastucure\\DependencyInjection.cs",
+              "RelativeDocumentMoniker": "infrastucure\\DependencyInjection.cs",
+              "ToolTip": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\infrastucure\\DependencyInjection.cs",
+              "RelativeToolTip": "infrastucure\\DependencyInjection.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAAB8AAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-25T07:46:42.706Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "ApplicationDbContext.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\infrastucure\\Data\\ApplicationDbContext.cs",
-              "RelativeDocumentMoniker": "infrastucure\\Data\\ApplicationDbContext.cs",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\infrastucure\\Data\\ApplicationDbContext.cs",
-              "RelativeToolTip": "infrastucure\\Data\\ApplicationDbContext.cs",
-              "ViewState": "AgIAAA8AAAAAAAAAAAAAABwAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-25T07:18:49.347Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "Category.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Category.cs",
-              "RelativeDocumentMoniker": "Domain\\Entities\\Category.cs",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Category.cs",
-              "RelativeToolTip": "Domain\\Entities\\Category.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-28T18:27:56.241Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "Domain.csproj",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Domain\\Domain.csproj",
-              "RelativeDocumentMoniker": "Domain\\Domain.csproj",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Domain\\Domain.csproj",
-              "RelativeToolTip": "Domain\\Domain.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAARAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2025-10-28T18:43:11.623Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "Vendor.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Vendor.cs",
-              "RelativeDocumentMoniker": "Domain\\Entities\\Vendor.cs",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Vendor.cs",
-              "RelativeToolTip": "Domain\\Entities\\Vendor.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-28T18:30:17.605Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "VendorReport.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\VendorReport.cs",
-              "RelativeDocumentMoniker": "Domain\\Entities\\VendorReport.cs",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\VendorReport.cs",
-              "RelativeToolTip": "Domain\\Entities\\VendorReport.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAApAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-28T18:30:32.122Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Payment.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Payment.cs",
-              "RelativeDocumentMoniker": "Domain\\Entities\\Payment.cs",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Payment.cs",
-              "RelativeToolTip": "Domain\\Entities\\Payment.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-28T18:29:37.821Z"
+              "Title": "appsettings.Development.json",
+              "DocumentMoniker": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Presentation\\appsettings.Development.json",
+              "RelativeDocumentMoniker": "Presentation\\appsettings.Development.json",
+              "ToolTip": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Presentation\\appsettings.Development.json",
+              "RelativeToolTip": "Presentation\\appsettings.Development.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-10-25T07:35:55.783Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "Booking.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Booking.cs",
-              "RelativeDocumentMoniker": "Domain\\Entities\\Booking.cs",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Booking.cs",
-              "RelativeToolTip": "Domain\\Entities\\Booking.cs",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAxwBEAAAAAAAAAAAAAAA==",
+              "Title": "Payment.cs",
+              "DocumentMoniker": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Payment.cs",
+              "RelativeDocumentMoniker": "Domain\\Entities\\Payment.cs",
+              "ToolTip": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Payment.cs",
+              "RelativeToolTip": "Domain\\Entities\\Payment.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-28T18:27:30.355Z"
+              "WhenOpened": "2025-10-28T18:29:37.821Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 6,
+              "Title": "BaseEntity.cs",
+              "DocumentMoniker": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\BaseEntities\\BaseEntity.cs",
+              "RelativeDocumentMoniker": "Domain\\BaseEntities\\BaseEntity.cs",
+              "ToolTip": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\BaseEntities\\BaseEntity.cs",
+              "RelativeToolTip": "Domain\\BaseEntities\\BaseEntity.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-28T18:25:34.372Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Domain.csproj",
+              "DocumentMoniker": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Domain.csproj",
+              "RelativeDocumentMoniker": "Domain\\Domain.csproj",
+              "ToolTip": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Domain.csproj",
+              "RelativeToolTip": "Domain\\Domain.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-10-28T18:43:11.623Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Booking.cs",
+              "DocumentMoniker": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Booking.cs",
+              "RelativeDocumentMoniker": "Domain\\Entities\\Booking.cs",
+              "ToolTip": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Booking.cs*",
+              "RelativeToolTip": "Domain\\Entities\\Booking.cs*",
+              "ViewState": "AgIAABMAAAAAAAAAAAAiwBUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-28T18:27:30.355Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
               "Title": "Tracking.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Tracking.cs",
+              "DocumentMoniker": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Tracking.cs",
               "RelativeDocumentMoniker": "Domain\\Entities\\Tracking.cs",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Tracking.cs",
+              "ToolTip": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Tracking.cs",
               "RelativeToolTip": "Domain\\Entities\\Tracking.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -263,23 +257,35 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "Service.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Service.cs",
-              "RelativeDocumentMoniker": "Domain\\Entities\\Service.cs",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Service.cs",
-              "RelativeToolTip": "Domain\\Entities\\Service.cs",
+              "DocumentIndex": 8,
+              "Title": "VendorReport.cs",
+              "DocumentMoniker": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\VendorReport.cs",
+              "RelativeDocumentMoniker": "Domain\\Entities\\VendorReport.cs",
+              "ToolTip": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\VendorReport.cs",
+              "RelativeToolTip": "Domain\\Entities\\VendorReport.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-28T18:30:32.122Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Vendor.cs",
+              "DocumentMoniker": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Vendor.cs",
+              "RelativeDocumentMoniker": "Domain\\Entities\\Vendor.cs",
+              "ToolTip": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Vendor.cs",
+              "RelativeToolTip": "Domain\\Entities\\Vendor.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-28T18:29:53.996Z"
+              "WhenOpened": "2025-10-28T18:30:17.605Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 11,
               "Title": "Package.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Package.cs",
+              "DocumentMoniker": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Package.cs",
               "RelativeDocumentMoniker": "Domain\\Entities\\Package.cs",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Package.cs",
+              "ToolTip": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Package.cs",
               "RelativeToolTip": "Domain\\Entities\\Package.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -288,46 +294,10 @@
             {
               "$type": "Document",
               "DocumentIndex": 12,
-              "Title": "Notification.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Notification.cs",
-              "RelativeDocumentMoniker": "Domain\\Entities\\Notification.cs",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Notification.cs",
-              "RelativeToolTip": "Domain\\Entities\\Notification.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-28T18:29:01.873Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "Message.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Message.cs",
-              "RelativeDocumentMoniker": "Domain\\Entities\\Message.cs",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Message.cs",
-              "RelativeToolTip": "Domain\\Entities\\Message.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-28T18:28:41.656Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "Customer.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Customer.cs",
-              "RelativeDocumentMoniker": "Domain\\Entities\\Customer.cs",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Customer.cs",
-              "RelativeToolTip": "Domain\\Entities\\Customer.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-28T18:28:10.834Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 15,
               "Title": "Event.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Event.cs",
+              "DocumentMoniker": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Event.cs",
               "RelativeDocumentMoniker": "Domain\\Entities\\Event.cs",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Event.cs",
+              "ToolTip": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Event.cs",
               "RelativeToolTip": "Domain\\Entities\\Event.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -335,47 +305,95 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
-              "Title": "AdminRepositary.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\infrastucure\\Repositary\\AdminRepositary.cs",
-              "RelativeDocumentMoniker": "infrastucure\\Repositary\\AdminRepositary.cs",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\infrastucure\\Repositary\\AdminRepositary.cs",
-              "RelativeToolTip": "infrastucure\\Repositary\\AdminRepositary.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAAA0AAAA9AAAAAAAAAA==",
+              "DocumentIndex": 13,
+              "Title": "AdminReport.cs",
+              "DocumentMoniker": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\AdminReport.cs",
+              "RelativeDocumentMoniker": "Domain\\Entities\\AdminReport.cs",
+              "ToolTip": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\AdminReport.cs",
+              "RelativeToolTip": "Domain\\Entities\\AdminReport.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAuAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-25T06:42:22.995Z"
+              "WhenOpened": "2025-10-28T18:27:15.976Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "Admin.cs",
+              "DocumentMoniker": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Admin.cs",
+              "RelativeDocumentMoniker": "Domain\\Entities\\Admin.cs",
+              "ToolTip": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Admin.cs",
+              "RelativeToolTip": "Domain\\Entities\\Admin.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-24T16:31:30.275Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "Category.cs",
+              "DocumentMoniker": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Category.cs",
+              "RelativeDocumentMoniker": "Domain\\Entities\\Category.cs",
+              "ToolTip": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Category.cs",
+              "RelativeToolTip": "Domain\\Entities\\Category.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-28T18:27:56.241Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 16,
-              "Title": "DependencyInjection.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\infrastucure\\DependencyInjection.cs",
-              "RelativeDocumentMoniker": "infrastucure\\DependencyInjection.cs",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\infrastucure\\DependencyInjection.cs",
-              "RelativeToolTip": "infrastucure\\DependencyInjection.cs",
-              "ViewState": "AgIAAAwAAAAAAAAAAAAAABQAAAAwAAAAAAAAAA==",
+              "Title": "Service.cs",
+              "DocumentMoniker": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Service.cs",
+              "RelativeDocumentMoniker": "Domain\\Entities\\Service.cs",
+              "ToolTip": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Service.cs",
+              "RelativeToolTip": "Domain\\Entities\\Service.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-25T07:46:42.706Z"
+              "WhenOpened": "2025-10-28T18:29:53.996Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "Notification.cs",
+              "DocumentMoniker": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Notification.cs",
+              "RelativeDocumentMoniker": "Domain\\Entities\\Notification.cs",
+              "ToolTip": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Notification.cs",
+              "RelativeToolTip": "Domain\\Entities\\Notification.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-28T18:29:01.873Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 18,
-              "Title": "BaseEntity.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Domain\\BaseEntities\\BaseEntity.cs",
-              "RelativeDocumentMoniker": "Domain\\BaseEntities\\BaseEntity.cs",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Domain\\BaseEntities\\BaseEntity.cs",
-              "RelativeToolTip": "Domain\\BaseEntities\\BaseEntity.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Title": "Message.cs",
+              "DocumentMoniker": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Message.cs",
+              "RelativeDocumentMoniker": "Domain\\Entities\\Message.cs",
+              "ToolTip": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Message.cs",
+              "RelativeToolTip": "Domain\\Entities\\Message.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-28T18:25:34.372Z"
+              "WhenOpened": "2025-10-28T18:28:41.656Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 23,
+              "DocumentIndex": 19,
+              "Title": "Customer.cs",
+              "DocumentMoniker": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Customer.cs",
+              "RelativeDocumentMoniker": "Domain\\Entities\\Customer.cs",
+              "ToolTip": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Customer.cs",
+              "RelativeToolTip": "Domain\\Entities\\Customer.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-28T18:28:10.834Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
               "Title": "IAdminRepo.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Application\\Interface\\IRepo\\IAdminRepo.cs",
+              "DocumentMoniker": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Application\\Interface\\IRepo\\IAdminRepo.cs",
               "RelativeDocumentMoniker": "Application\\Interface\\IRepo\\IAdminRepo.cs",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Application\\Interface\\IRepo\\IAdminRepo.cs",
+              "ToolTip": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Application\\Interface\\IRepo\\IAdminRepo.cs",
               "RelativeToolTip": "Application\\Interface\\IRepo\\IAdminRepo.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -383,11 +401,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 24,
+              "DocumentIndex": 25,
               "Title": "IGenericRepo.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Application\\Interface\\IGenericRepo\\IGenericRepo.cs",
+              "DocumentMoniker": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Application\\Interface\\IGenericRepo\\IGenericRepo.cs",
               "RelativeDocumentMoniker": "Application\\Interface\\IGenericRepo\\IGenericRepo.cs",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Application\\Interface\\IGenericRepo\\IGenericRepo.cs",
+              "ToolTip": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Application\\Interface\\IGenericRepo\\IGenericRepo.cs",
               "RelativeToolTip": "Application\\Interface\\IGenericRepo\\IGenericRepo.cs",
               "ViewState": "AgIAAAMAAAAAAAAAAAAAAAgAAAAjAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -395,11 +413,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 20,
               "Title": "AdminMapper.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Application\\Mapper\\AdminMapper.cs",
+              "DocumentMoniker": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Application\\Mapper\\AdminMapper.cs",
               "RelativeDocumentMoniker": "Application\\Mapper\\AdminMapper.cs",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Application\\Mapper\\AdminMapper.cs",
+              "ToolTip": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Application\\Mapper\\AdminMapper.cs",
               "RelativeToolTip": "Application\\Mapper\\AdminMapper.cs",
               "ViewState": "AgIAAAcAAAAAAAAAAAAvwBUAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -407,11 +425,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 23,
               "Title": "IAdminService.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Application\\Interface\\IService\\IAdminService.cs",
+              "DocumentMoniker": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Application\\Interface\\IService\\IAdminService.cs",
               "RelativeDocumentMoniker": "Application\\Interface\\IService\\IAdminService.cs",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Application\\Interface\\IService\\IAdminService.cs",
+              "ToolTip": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Application\\Interface\\IService\\IAdminService.cs",
               "RelativeToolTip": "Application\\Interface\\IService\\IAdminService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -419,11 +437,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 22,
               "Title": "AdminDto.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Application\\DTOs\\AdminDto.cs",
+              "DocumentMoniker": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Application\\DTOs\\AdminDto.cs",
               "RelativeDocumentMoniker": "Application\\DTOs\\AdminDto.cs",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Application\\DTOs\\AdminDto.cs",
+              "ToolTip": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Application\\DTOs\\AdminDto.cs",
               "RelativeToolTip": "Application\\DTOs\\AdminDto.cs",
               "ViewState": "AgIAAAsAAAAAAAAAAAAuwBAAAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -431,11 +449,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 21,
               "Title": "CustomEmailAttribute.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Application\\Attribute\\CustomEmailAttribute.cs",
+              "DocumentMoniker": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Application\\Attribute\\CustomEmailAttribute.cs",
               "RelativeDocumentMoniker": "Application\\Attribute\\CustomEmailAttribute.cs",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Application\\Attribute\\CustomEmailAttribute.cs",
+              "ToolTip": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Application\\Attribute\\CustomEmailAttribute.cs",
               "RelativeToolTip": "Application\\Attribute\\CustomEmailAttribute.cs",
               "ViewState": "AgIAAAsAAAAAAAAAAAAAwCkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -443,11 +461,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 25,
+              "DocumentIndex": 26,
               "Title": "AdminService.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Application\\Service\\AdminService.cs",
+              "DocumentMoniker": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Application\\Service\\AdminService.cs",
               "RelativeDocumentMoniker": "Application\\Service\\AdminService.cs",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Application\\Service\\AdminService.cs",
+              "ToolTip": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Application\\Service\\AdminService.cs",
               "RelativeToolTip": "Application\\Service\\AdminService.cs",
               "ViewState": "AgIAAAgAAAAAAAAAAAAswBEAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -455,11 +473,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 26,
+              "DocumentIndex": 27,
               "Title": "DenpendencyInjenction.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Application\\DenpendencyInjenction.cs",
+              "DocumentMoniker": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Application\\DenpendencyInjenction.cs",
               "RelativeDocumentMoniker": "Application\\DenpendencyInjenction.cs",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Application\\DenpendencyInjenction.cs",
+              "ToolTip": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Application\\DenpendencyInjenction.cs",
               "RelativeToolTip": "Application\\DenpendencyInjenction.cs",
               "ViewState": "AgIAAAYAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -467,11 +485,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 27,
+              "DocumentIndex": 28,
               "Title": "AdminController.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Presentation\\Controllers\\AdminController.cs",
+              "DocumentMoniker": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Presentation\\Controllers\\AdminController.cs",
               "RelativeDocumentMoniker": "Presentation\\Controllers\\AdminController.cs",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Presentation\\Controllers\\AdminController.cs",
+              "ToolTip": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Presentation\\Controllers\\AdminController.cs",
               "RelativeToolTip": "Presentation\\Controllers\\AdminController.cs",
               "ViewState": "AgIAAAsAAAAAAAAAAAAAwBMAAAAeAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -479,11 +497,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 29,
+              "DocumentIndex": 30,
               "Title": "GenericRepo.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\infrastucure\\GenericRepositary\\GenericRepo.cs",
+              "DocumentMoniker": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\infrastucure\\GenericRepositary\\GenericRepo.cs",
               "RelativeDocumentMoniker": "infrastucure\\GenericRepositary\\GenericRepo.cs",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\infrastucure\\GenericRepositary\\GenericRepo.cs",
+              "ToolTip": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\infrastucure\\GenericRepositary\\GenericRepo.cs",
               "RelativeToolTip": "infrastucure\\GenericRepositary\\GenericRepo.cs",
               "ViewState": "AgIAAAYAAAAAAAAAAAAAABIAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -491,27 +509,15 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 28,
+              "DocumentIndex": 29,
               "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Presentation\\Program.cs",
+              "DocumentMoniker": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Presentation\\Program.cs",
               "RelativeDocumentMoniker": "Presentation\\Program.cs",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Presentation\\Program.cs",
+              "ToolTip": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Presentation\\Program.cs",
               "RelativeToolTip": "Presentation\\Program.cs",
               "ViewState": "AgIAABYAAAAAAAAAAAAQwAEAAAASAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-10-25T07:47:48.272Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 30,
-              "Title": "appsettings.Development.json",
-              "DocumentMoniker": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Presentation\\appsettings.Development.json",
-              "RelativeDocumentMoniker": "Presentation\\appsettings.Development.json",
-              "ToolTip": "C:\\Users\\ASUS\\Desktop\\push\\EventManageMentSystem_WebApiProject\\Presentation\\appsettings.Development.json",
-              "RelativeToolTip": "Presentation\\appsettings.Development.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-10-25T07:35:55.783Z"
             }
           ]
         }

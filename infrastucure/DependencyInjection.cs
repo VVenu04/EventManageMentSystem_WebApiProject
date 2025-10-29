@@ -23,7 +23,7 @@ namespace infrastucure
             //services.AddScoped<IVendorRepository, VendorRepository>();
             //services.AddScoped<IUserRepository, UserRepository>();
 
-            var connectionString = configuration.GetConnectionString("New");
+            var connectionString = configuration.GetConnectionString("Smart");
 
             services.AddDbContext<ApplicationDbContext>(option => option.UseSqlServer(connectionString));
 

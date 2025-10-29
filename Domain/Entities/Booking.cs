@@ -19,7 +19,8 @@ namespace Domain.Entities
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public decimal Price { get; set; }
-        public Guid? PaymentID { get; set; }
+
+        //public Guid? PaymentID { get; set; }
 
         // Navigation
         public Service? Service { get; set; }
