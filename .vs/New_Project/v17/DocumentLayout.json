@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\infrastucure\\Migrations\\20251110141859_EntityUpdate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:infrastucure\\Migrations\\20251110141859_EntityUpdate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|c:\\users\\dell\\desktop\\event\\eventmanagementsystem_webapiproject\\domain\\entities\\vendorreport.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\vendorreport.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -13,10 +17,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|c:\\users\\dell\\desktop\\event\\eventmanagementsystem_webapiproject\\domain\\entities\\package.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\package.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\BookingItem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Domain\\Entities\\BookingItem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|c:\\users\\dell\\desktop\\event\\eventmanagementsystem_webapiproject\\domain\\entities\\booking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -141,6 +141,10 @@
     {
       "AbsoluteMoniker": "D:0:0:{BFC87AB2-5520-4DE3-9F6D-F11231417E10}|infrastucure\\infrastructure.csproj|c:\\users\\dell\\desktop\\event\\eventmanagementsystem_webapiproject\\infrastucure\\genericrepositary\\genericrepo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BFC87AB2-5520-4DE3-9F6D-F11231417E10}|infrastucure\\infrastructure.csproj|solutionrelative:infrastucure\\genericrepositary\\genericrepo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|c:\\users\\dell\\desktop\\event\\eventmanagementsystem_webapiproject\\domain\\entities\\bookingitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F98FE47C-D736-4168-A668-727E451E3E16}|Domain\\Domain.csproj|solutionrelative:domain\\entities\\bookingitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -150,7 +154,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -158,7 +162,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
+              "Title": "20251110141859_EntityUpdate.cs",
+              "DocumentMoniker": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\infrastucure\\Migrations\\20251110141859_EntityUpdate.cs",
+              "RelativeDocumentMoniker": "infrastucure\\Migrations\\20251110141859_EntityUpdate.cs",
+              "ToolTip": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\infrastucure\\Migrations\\20251110141859_EntityUpdate.cs",
+              "RelativeToolTip": "infrastucure\\Migrations\\20251110141859_EntityUpdate.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-10T14:18:59.789Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "Package.cs",
               "DocumentMoniker": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\Package.cs",
               "RelativeDocumentMoniker": "Domain\\Entities\\Package.cs",
@@ -166,12 +183,11 @@
               "RelativeToolTip": "Domain\\Entities\\Package.cs",
               "ViewState": "AgIAAAYAAAAAAAAAAAAAABIAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-28T18:29:20.514Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-28T18:29:20.514Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "PackageItem.cs",
               "DocumentMoniker": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\PackageItem.cs",
               "RelativeDocumentMoniker": "Domain\\Entities\\PackageItem.cs",
@@ -179,12 +195,11 @@
               "RelativeToolTip": "Domain\\Entities\\PackageItem.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-10T14:05:27.842Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-10T14:05:27.842Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "VendorReport.cs",
               "DocumentMoniker": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\VendorReport.cs",
               "RelativeDocumentMoniker": "Domain\\Entities\\VendorReport.cs",
@@ -205,8 +220,7 @@
               "RelativeToolTip": "Domain\\Entities\\Vendor.cs",
               "ViewState": "AgIAAAoAAAAAAAAAAAAAABwAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-28T18:30:17.605Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-28T18:30:17.605Z"
             },
             {
               "$type": "Document",
@@ -234,7 +248,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 35,
               "Title": "BookingItem.cs",
               "DocumentMoniker": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Entities\\BookingItem.cs",
               "RelativeDocumentMoniker": "Domain\\Entities\\BookingItem.cs",
@@ -242,8 +256,7 @@
               "RelativeToolTip": "Domain\\Entities\\BookingItem.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-10T14:05:25.838Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-10T14:05:25.838Z"
             },
             {
               "$type": "Document",
@@ -303,8 +316,7 @@
               "RelativeToolTip": "Domain\\Entities\\Service.cs",
               "ViewState": "AgIAAA8AAAAAAAAAAAA1wBUAAAAoAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-28T18:29:53.996Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-28T18:29:53.996Z"
             },
             {
               "$type": "Document",
@@ -388,8 +400,7 @@
               "RelativeToolTip": "Domain\\Entities\\Booking.cs",
               "ViewState": "AgIAABsAAAAAAAAAAEBUwCEAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-28T18:27:30.355Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-28T18:27:30.355Z"
             },
             {
               "$type": "Document",
