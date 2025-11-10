@@ -15,7 +15,7 @@ namespace Application.Mapper
             if (dto == null)
                 return null;
             Admin admin = new Admin();
-            admin.AdminPassword = dto.AdminPassword;
+            admin.PasswordHash = dto.AdminPassword;
             admin.AdminEmail = dto.AdminEmail;
             admin.AdminName = dto.AdminName;
             return admin;
@@ -24,7 +24,7 @@ namespace Application.Mapper
         {
             if (admin == null) return null;
             AdminDto adminDTO = new AdminDto();
-            adminDTO.AdminPassword = admin.AdminPassword;
+            adminDTO.AdminPassword = admin.PasswordHash;
             adminDTO.AdminEmail = admin.AdminEmail;
             adminDTO.AdminName = admin.AdminName;
             return adminDTO;

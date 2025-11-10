@@ -33,3 +33,15 @@ C:\Users\Dell\Desktop\Event\EventManageMentSystem_WebApiProject\Domain\obj\Debug
 C:\Users\Dell\Desktop\Event\EventManageMentSystem_WebApiProject\Domain\obj\Debug\net9.0\refint\Domain.dll
 C:\Users\Dell\Desktop\Event\EventManageMentSystem_WebApiProject\Domain\obj\Debug\net9.0\Domain.pdb
 C:\Users\Dell\Desktop\Event\EventManageMentSystem_WebApiProject\Domain\obj\Debug\net9.0\ref\Domain.dll
+C:\UnicomTic\final\backendd2\EventManageMentSystem_WebApiProject\Domain\bin\Debug\net9.0\Domain.deps.json
+C:\UnicomTic\final\backendd2\EventManageMentSystem_WebApiProject\Domain\bin\Debug\net9.0\Domain.dll
+C:\UnicomTic\final\backendd2\EventManageMentSystem_WebApiProject\Domain\bin\Debug\net9.0\Domain.pdb
+C:\UnicomTic\final\backendd2\EventManageMentSystem_WebApiProject\Domain\obj\Debug\net9.0\Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\UnicomTic\final\backendd2\EventManageMentSystem_WebApiProject\Domain\obj\Debug\net9.0\Domain.AssemblyInfoInputs.cache
+C:\UnicomTic\final\backendd2\EventManageMentSystem_WebApiProject\Domain\obj\Debug\net9.0\Domain.AssemblyInfo.cs
+C:\UnicomTic\final\backendd2\EventManageMentSystem_WebApiProject\Domain\obj\Debug\net9.0\Domain.csproj.CoreCompileInputs.cache
+C:\UnicomTic\final\backendd2\EventManageMentSystem_WebApiProject\Domain\obj\Debug\net9.0\Domain.sourcelink.json
+C:\UnicomTic\final\backendd2\EventManageMentSystem_WebApiProject\Domain\obj\Debug\net9.0\Domain.dll
+C:\UnicomTic\final\backendd2\EventManageMentSystem_WebApiProject\Domain\obj\Debug\net9.0\refint\Domain.dll
+C:\UnicomTic\final\backendd2\EventManageMentSystem_WebApiProject\Domain\obj\Debug\net9.0\Domain.pdb
+C:\UnicomTic\final\backendd2\EventManageMentSystem_WebApiProject\Domain\obj\Debug\net9.0\ref\Domain.dll
