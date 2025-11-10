@@ -15,7 +15,7 @@
           "Swashbuckle.AspNetCore.Swagger": "9.0.6",
           "Swashbuckle.AspNetCore.SwaggerGen": "9.0.6",
           "Swashbuckle.AspNetCore.SwaggerUI": "9.0.6",
-          "infrastucure": "1.0.0"
+          "infrastructure": "1.0.0"
         },
         "runtime": {
           "Presentation.dll": {}
@@ -1063,7 +1063,7 @@
           }
         }
       },
-      "infrastucure/1.0.0": {
+      "infrastructure/1.0.0": {
         "dependencies": {
           "Application": "1.0.0",
           "Domain": "1.0.0",
@@ -1072,7 +1072,7 @@
           "Microsoft.Extensions.DependencyInjection": "9.0.10"
         },
         "runtime": {
-          "infrastucure.dll": {
+          "infrastructure.dll": {
             "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
           }
@@ -1677,7 +1677,7 @@
       "serviceable": false,
       "sha512": ""
     },
-    "infrastucure/1.0.0": {
+    "infrastructure/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

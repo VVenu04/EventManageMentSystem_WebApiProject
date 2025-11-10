@@ -1700,7 +1700,7 @@
           "bin/placeholder/Domain.dll": {}
         }
       },
-      "infrastucure/1.0.0": {
+      "infrastructure/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
@@ -1711,10 +1711,10 @@
           "Microsoft.Extensions.DependencyInjection": "9.0.10"
         },
         "compile": {
-          "bin/placeholder/infrastucure.dll": {}
+          "bin/placeholder/infrastructure.dll": {}
         },
         "runtime": {
-          "bin/placeholder/infrastucure.dll": {}
+          "bin/placeholder/infrastructure.dll": {}
         }
       }
     }
@@ -4890,10 +4890,10 @@
       "path": "../Domain/Domain.csproj",
       "msbuildProject": "../Domain/Domain.csproj"
     },
-    "infrastucure/1.0.0": {
+    "infrastructure/1.0.0": {
       "type": "project",
-      "path": "../infrastucure/infrastucure.csproj",
-      "msbuildProject": "../infrastucure/infrastucure.csproj"
+      "path": "../infrastucure/infrastructure.csproj",
+      "msbuildProject": "../infrastucure/infrastructure.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -4905,7 +4905,7 @@
       "Swashbuckle.AspNetCore.Swagger >= 9.0.6",
       "Swashbuckle.AspNetCore.SwaggerGen >= 9.0.6",
       "Swashbuckle.AspNetCore.SwaggerUI >= 9.0.6",
-      "infrastucure >= 1.0.0"
+      "infrastructure >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -4943,8 +4943,8 @@
             "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Application\\Application.csproj": {
               "projectPath": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Application\\Application.csproj"
             },
-            "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\infrastucure\\infrastucure.csproj": {
-              "projectPath": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\infrastucure\\infrastucure.csproj"
+            "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\infrastucure\\infrastructure.csproj": {
+              "projectPath": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\infrastucure\\infrastructure.csproj"
             }
           }
         }

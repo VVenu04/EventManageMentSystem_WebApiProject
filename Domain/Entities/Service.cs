@@ -13,19 +13,20 @@ namespace Domain.Entities
         public Guid ServiceID { get; set; }
 
         public Guid VendorID { get; set; }
-        public Guid EventID { get; set; }
         public Guid CategoryID { get; set; }
+        public Guid? EventID { get; set; }
 
         public string Photo { get; set; }
         public string Description { get; set; }
+        public decimal Price { get; set; }
+
         public string Location { get; set; }
         public bool Active { get; set; }
 
-
-        public Vendor Vendor { get; set; }
-        public Event Event { get; set; }
-        public Category Category { get; set; }
-        public ICollection<Booking> Bookings { get; set; }
+        public Vendor? Vendor { get; set; }
+        public Event? Event { get; set; }
+        public Category? Category { get; set; }
+        //public ICollection<Booking> Bookings { get; set; }
 
     }
 }
