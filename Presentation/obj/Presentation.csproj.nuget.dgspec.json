@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Presentation\\Presentation.csproj": {}
+    "C:\\UnicomTic\\final\\backendd2\\EventManageMentSystem_WebApiProject\\Presentation\\Presentation.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Application\\Application.csproj": {
+    "C:\\UnicomTic\\final\\backendd2\\EventManageMentSystem_WebApiProject\\Application\\Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Application\\Application.csproj",
+        "projectUniqueName": "C:\\UnicomTic\\final\\backendd2\\EventManageMentSystem_WebApiProject\\Application\\Application.csproj",
         "projectName": "Application",
-        "projectPath": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Application\\Application.csproj",
-        "packagesPath": "C:\\Users\\Dell\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Application\\obj\\",
+        "projectPath": "C:\\UnicomTic\\final\\backendd2\\EventManageMentSystem_WebApiProject\\Application\\Application.csproj",
+        "packagesPath": "C:\\Users\\Venujan\\.nuget\\packages\\",
+        "outputPath": "C:\\UnicomTic\\final\\backendd2\\EventManageMentSystem_WebApiProject\\Application\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Dell\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Venujan\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -32,8 +32,8 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Domain.csproj": {
-                "projectPath": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Domain.csproj"
+              "C:\\UnicomTic\\final\\backendd2\\EventManageMentSystem_WebApiProject\\Domain\\Domain.csproj": {
+                "projectPath": "C:\\UnicomTic\\final\\backendd2\\EventManageMentSystem_WebApiProject\\Domain\\Domain.csproj"
               }
             }
           }
@@ -54,9 +54,21 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "dependencies": {
+            "BCrypt.Net-Next": {
+              "target": "Package",
+              "version": "[4.0.3, )"
+            },
+            "Microsoft.Extensions.Configuration.Binder": {
+              "target": "Package",
+              "version": "[9.0.10, )"
+            },
             "Microsoft.Extensions.DependencyInjection": {
               "target": "Package",
               "version": "[9.0.10, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[8.14.0, )"
             }
           },
           "imports": [
@@ -75,24 +87,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Domain.csproj": {
+    "C:\\UnicomTic\\final\\backendd2\\EventManageMentSystem_WebApiProject\\Domain\\Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Domain.csproj",
+        "projectUniqueName": "C:\\UnicomTic\\final\\backendd2\\EventManageMentSystem_WebApiProject\\Domain\\Domain.csproj",
         "projectName": "Domain",
-        "projectPath": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Domain.csproj",
-        "packagesPath": "C:\\Users\\Dell\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\obj\\",
+        "projectPath": "C:\\UnicomTic\\final\\backendd2\\EventManageMentSystem_WebApiProject\\Domain\\Domain.csproj",
+        "packagesPath": "C:\\Users\\Venujan\\.nuget\\packages\\",
+        "outputPath": "C:\\UnicomTic\\final\\backendd2\\EventManageMentSystem_WebApiProject\\Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Dell\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Venujan\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -140,24 +152,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\infrastucure\\infrastructure.csproj": {
+    "C:\\UnicomTic\\final\\backendd2\\EventManageMentSystem_WebApiProject\\infrastucure\\infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\infrastucure\\infrastructure.csproj",
+        "projectUniqueName": "C:\\UnicomTic\\final\\backendd2\\EventManageMentSystem_WebApiProject\\infrastucure\\infrastructure.csproj",
         "projectName": "infrastructure",
-        "projectPath": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\infrastucure\\infrastructure.csproj",
-        "packagesPath": "C:\\Users\\Dell\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\infrastucure\\obj\\",
+        "projectPath": "C:\\UnicomTic\\final\\backendd2\\EventManageMentSystem_WebApiProject\\infrastucure\\infrastructure.csproj",
+        "packagesPath": "C:\\Users\\Venujan\\.nuget\\packages\\",
+        "outputPath": "C:\\UnicomTic\\final\\backendd2\\EventManageMentSystem_WebApiProject\\infrastucure\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Dell\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Venujan\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -172,11 +184,11 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Application\\Application.csproj": {
-                "projectPath": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Application\\Application.csproj"
+              "C:\\UnicomTic\\final\\backendd2\\EventManageMentSystem_WebApiProject\\Application\\Application.csproj": {
+                "projectPath": "C:\\UnicomTic\\final\\backendd2\\EventManageMentSystem_WebApiProject\\Application\\Application.csproj"
               },
-              "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Domain.csproj": {
-                "projectPath": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Domain\\Domain.csproj"
+              "C:\\UnicomTic\\final\\backendd2\\EventManageMentSystem_WebApiProject\\Domain\\Domain.csproj": {
+                "projectPath": "C:\\UnicomTic\\final\\backendd2\\EventManageMentSystem_WebApiProject\\Domain\\Domain.csproj"
               }
             }
           }
@@ -238,24 +250,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Presentation\\Presentation.csproj": {
+    "C:\\UnicomTic\\final\\backendd2\\EventManageMentSystem_WebApiProject\\Presentation\\Presentation.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Presentation\\Presentation.csproj",
+        "projectUniqueName": "C:\\UnicomTic\\final\\backendd2\\EventManageMentSystem_WebApiProject\\Presentation\\Presentation.csproj",
         "projectName": "Presentation",
-        "projectPath": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Presentation\\Presentation.csproj",
-        "packagesPath": "C:\\Users\\Dell\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Presentation\\obj\\",
+        "projectPath": "C:\\UnicomTic\\final\\backendd2\\EventManageMentSystem_WebApiProject\\Presentation\\Presentation.csproj",
+        "packagesPath": "C:\\Users\\Venujan\\.nuget\\packages\\",
+        "outputPath": "C:\\UnicomTic\\final\\backendd2\\EventManageMentSystem_WebApiProject\\Presentation\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Dell\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Venujan\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -270,11 +282,11 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Application\\Application.csproj": {
-                "projectPath": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\Application\\Application.csproj"
+              "C:\\UnicomTic\\final\\backendd2\\EventManageMentSystem_WebApiProject\\Application\\Application.csproj": {
+                "projectPath": "C:\\UnicomTic\\final\\backendd2\\EventManageMentSystem_WebApiProject\\Application\\Application.csproj"
               },
-              "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\infrastucure\\infrastructure.csproj": {
-                "projectPath": "C:\\Users\\Dell\\Desktop\\Event\\EventManageMentSystem_WebApiProject\\infrastucure\\infrastructure.csproj"
+              "C:\\UnicomTic\\final\\backendd2\\EventManageMentSystem_WebApiProject\\infrastucure\\infrastructure.csproj": {
+                "projectPath": "C:\\UnicomTic\\final\\backendd2\\EventManageMentSystem_WebApiProject\\infrastucure\\infrastructure.csproj"
               }
             }
           }
@@ -295,6 +307,10 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "dependencies": {
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[9.0.10, )"
+            },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[9.0.10, )"
@@ -341,7 +357,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

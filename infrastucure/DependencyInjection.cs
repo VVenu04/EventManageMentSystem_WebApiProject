@@ -1,5 +1,7 @@
 ﻿using Application.Interface.IGenericRepo;
 using Application.Interface.IRepo;
+using Domain.Entities;
+using infrastructure.Repositary;
 using infrastucure.Data;
 using infrastucure.GenericRepositary;
 using infrastucure.Repositary;
@@ -20,6 +22,8 @@ namespace infrastucure
         {
            services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepo<>));
            services.AddScoped<IAdminRepo, AdminRepositary>();
+            services.AddScoped<IAuthRepository, AuthRepository>();
+
             //services.AddScoped<IVendorRepository, VendorRepository>();
             //services.AddScoped<IUserRepository, UserRepository>();
 

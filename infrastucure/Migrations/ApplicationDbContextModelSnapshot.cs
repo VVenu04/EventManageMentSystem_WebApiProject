@@ -49,7 +49,7 @@ namespace infrastucure.Migrations
                     b.Property<string>("AdminName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("AdminPassword")
+                    b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("AdminID");
@@ -151,7 +151,7 @@ namespace infrastucure.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Password")
+                    b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
@@ -354,7 +354,7 @@ namespace infrastucure.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Password")
+                    b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
