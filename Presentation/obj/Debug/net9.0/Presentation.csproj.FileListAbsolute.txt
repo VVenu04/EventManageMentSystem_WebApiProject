@@ -490,9 +490,7 @@ C:\Users\Dell\Desktop\Event\EventManageMentSystem_WebApiProject\Presentation\bin
 C:\Users\Dell\Desktop\Event\EventManageMentSystem_WebApiProject\Presentation\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
 C:\Users\Dell\Desktop\Event\EventManageMentSystem_WebApiProject\Presentation\bin\Debug\net9.0\Application.dll
 C:\Users\Dell\Desktop\Event\EventManageMentSystem_WebApiProject\Presentation\bin\Debug\net9.0\Domain.dll
-C:\Users\Dell\Desktop\Event\EventManageMentSystem_WebApiProject\Presentation\bin\Debug\net9.0\infrastucure.dll
 C:\Users\Dell\Desktop\Event\EventManageMentSystem_WebApiProject\Presentation\bin\Debug\net9.0\Application.pdb
-C:\Users\Dell\Desktop\Event\EventManageMentSystem_WebApiProject\Presentation\bin\Debug\net9.0\infrastucure.pdb
 C:\Users\Dell\Desktop\Event\EventManageMentSystem_WebApiProject\Presentation\bin\Debug\net9.0\Domain.pdb
 C:\Users\Dell\Desktop\Event\EventManageMentSystem_WebApiProject\Presentation\obj\Debug\net9.0\Presentation.csproj.AssemblyReference.cache
 C:\Users\Dell\Desktop\Event\EventManageMentSystem_WebApiProject\Presentation\obj\Debug\net9.0\rpswa.dswa.cache.json
@@ -518,3 +516,5 @@ C:\Users\Dell\Desktop\Event\EventManageMentSystem_WebApiProject\Presentation\obj
 C:\Users\Dell\Desktop\Event\EventManageMentSystem_WebApiProject\Presentation\obj\Debug\net9.0\Presentation.pdb
 C:\Users\Dell\Desktop\Event\EventManageMentSystem_WebApiProject\Presentation\obj\Debug\net9.0\Presentation.genruntimeconfig.cache
 C:\Users\Dell\Desktop\Event\EventManageMentSystem_WebApiProject\Presentation\obj\Debug\net9.0\ref\Presentation.dll
+C:\Users\Dell\Desktop\Event\EventManageMentSystem_WebApiProject\Presentation\bin\Debug\net9.0\infrastructure.dll
+C:\Users\Dell\Desktop\Event\EventManageMentSystem_WebApiProject\Presentation\bin\Debug\net9.0\infrastructure.pdb
