@@ -12,7 +12,6 @@ namespace Application.Service
 {
     public class AuthService: IAuthService
     {
-        // DbContext-க்கு பதிலாக Repository-ஐ Inject செய்யவும்
         private readonly IAuthRepository _authRepo;
         private readonly ITokenService _tokenService;
 
@@ -25,7 +24,7 @@ namespace Application.Service
         // --- CUSTOMER ---
         public async Task<AuthResponseDto> RegisterCustomerAsync(RegisterCustomerDto dto)
         {
-            // _context-க்கு பதிலாக _authRepo-ஐப் பயன்படுத்தவும்
+
             if (await _authRepo.CustomerEmailExistsAsync(dto.Email))
             {
                 return new AuthResponseDto { IsSuccess = false, Message = "Email already exists" };
@@ -40,9 +39,9 @@ namespace Application.Service
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password)
             };
 
-            await _authRepo.AddCustomerAsync(customer); // Repository-ல் சேமிக்கவும்
+            await _authRepo.AddCustomerAsync(customer);
 
-            return CreateAuthResponse(customer.CustomerID, customer.Name, customer.Email, "Customer");
+            return CreateAuthResponse(customer.CustomerID, customer.Name, customer.Email, "Customer", "Registration Successful");
         }
 
         public async Task<AuthResponseDto> LoginCustomerAsync(LoginDto dto)
@@ -59,7 +58,7 @@ namespace Application.Service
                 return new AuthResponseDto { IsSuccess = false, Message = "Invalid Password" };
             }
 
-            return CreateAuthResponse(customer.CustomerID, customer.Name, customer.Email, "Customer");
+            return CreateAuthResponse(customer.CustomerID, customer.Name, customer.Email, "Customer", "Login Successful");
         }
 
         // --- VENDOR ---
@@ -80,9 +79,9 @@ namespace Application.Service
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password)
             };
 
-            await _authRepo.AddVendorAsync(vendor); // Repository-ல் சேமிக்கவும்
+            await _authRepo.AddVendorAsync(vendor);
 
-            return CreateAuthResponse(vendor.VendorID, vendor.Name, vendor.Email, "Vendor");
+            return CreateAuthResponse(vendor.VendorID, vendor.Name, vendor.Email, "Vendor", "Registration Successful");
         }
 
         public async Task<AuthResponseDto> LoginVendorAsync(LoginDto dto)
@@ -99,7 +98,7 @@ namespace Application.Service
                 return new AuthResponseDto { IsSuccess = false, Message = "Invalid Password" };
             }
 
-            return CreateAuthResponse(vendor.VendorID, vendor.Name, vendor.Email, "Vendor");
+            return CreateAuthResponse(vendor.VendorID, vendor.Name, vendor.Email, "Vendor", "Login Successful");
         }
 
         // --- ADMIN ---
@@ -117,18 +116,18 @@ namespace Application.Service
                 return new AuthResponseDto { IsSuccess = false, Message = "Invalid Password" };
             }
 
-            return CreateAuthResponse(admin.AdminID, admin.AdminName, admin.AdminEmail, "Admin");
+            return CreateAuthResponse(admin.AdminID, admin.AdminName, admin.AdminEmail, "Admin", "Login Successful");
         }
 
 
-        // --- Helper Method (இதில் எந்த மாற்றமும் இல்லை) ---
-        private AuthResponseDto CreateAuthResponse(Guid userId, string name, string email, string role)
+
+        private AuthResponseDto CreateAuthResponse(Guid userId, string name, string email, string role, string message)
         {
             var token = _tokenService.CreateToken(userId, email, role);
             return new AuthResponseDto
             {
                 IsSuccess = true,
-                Message = "Login Successful",
+                Message = message,
                 Token = token,
                 UserId = userId,
                 Name = name,

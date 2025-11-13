@@ -52,6 +52,8 @@ namespace Presentation
                     };
                 });
 
+            builder.Services.AddCors();
+
             var app = builder.Build();
 
 
@@ -73,6 +75,13 @@ namespace Presentation
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
+            app.UseAuthentication();
+
+
+            app.UseCors(x =>
+            x.AllowAnyHeader()
+            .AllowAnyMethod()
+            .WithOrigins("http://localhost:4200", "http://localhost:5278"));
 
 
             app.MapControllers();
