@@ -18,5 +18,7 @@ namespace Application.Interface.IRepo
         Task<Vendor> AddVendorAsync(Vendor vendor);
 
         Task<Admin> GetAdminByEmailAsync(string email);
+
+        Task<Customer> GetCustomerByIdAsync(Guid customerId);
     }
 }

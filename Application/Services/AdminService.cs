@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Service
+namespace Application.Services
 {
     public class AdminService : IAdminService
     {

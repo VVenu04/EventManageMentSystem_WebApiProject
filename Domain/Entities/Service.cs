@@ -11,7 +11,7 @@ namespace Domain.Entities
     {
         [Key]
         public Guid ServiceID { get; set; }
-
+        public string Name { get; set; } 
         public Guid VendorID { get; set; }
         public Guid CategoryID { get; set; }
         public Guid? EventID { get; set; }
@@ -27,6 +27,7 @@ namespace Domain.Entities
         public Event? Event { get; set; }
         public Category? Category { get; set; }
         //public ICollection<Booking> Bookings { get; set; }
+        public ICollection<BookingItem>? BookingItems { get; set; }
 
     }
 }
