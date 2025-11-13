@@ -19,7 +19,8 @@ namespace Domain.Entities
         public string Photo { get; set; }
         public string Description { get; set; }
         public decimal Price { get; set; }
-
+        public decimal EventPerDayLimit { get; set; }
+        public double TimeLimit { get; set; }
         public string Location { get; set; }
         public bool Active { get; set; }
 

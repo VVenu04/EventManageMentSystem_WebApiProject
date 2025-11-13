@@ -18,6 +18,7 @@ namespace infrastucure.Data
         public DbSet<Admin> Admins { get; set; }
         public DbSet<Package> Packages { get; set; }
         public DbSet<Booking> Bookings { get; set; }
+        public DbSet<BookingItem> BookingItems { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Event> Events { get; set; }

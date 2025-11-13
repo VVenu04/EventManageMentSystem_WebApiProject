@@ -9,8 +9,10 @@ namespace Application.Interface.IRepo
 {
     public interface IBookingRepository
     {
+        Task<bool> IsServiceBookedOnDateAsync(Guid serviceId, DateTime eventDate);
         Task<Booking> AddAsync(Booking booking);
 
         Task<Booking> GetByIdAsync(Guid bookingId);
+        Task<int> GetBookingCountForVendorOnDateAsync(Guid vendorId, DateTime eventDate);
     }
 }

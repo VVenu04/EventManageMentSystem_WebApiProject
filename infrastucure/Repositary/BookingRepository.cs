@@ -36,6 +36,30 @@ namespace infrastructure.Repositary
                         .ThenInclude(service => service.Vendor) 
                 .FirstOrDefaultAsync(b => b.BookingID == bookingId);
         }
+        public async Task<bool> IsServiceBookedOnDateAsync(Guid serviceId, DateTime eventDate)
+        {
+            return await _context.BookingItems
+
+                .Where(item => item.ServiceID == serviceId)
+
+                .AnyAsync(item => item.Booking.EventDate.Date == eventDate.Date);
+        }
+        public async Task<int> GetBookingCountForVendorOnDateAsync(Guid vendorId, DateTime eventDate)
+        {
+            // BookingItems table-find
+            var bookingIds = await _context.BookingItems
+
+                .Where(item => item.VendorID == vendorId)
+
+                .Where(item => item.Booking.EventDate.Date == eventDate.Date)
+
+                .Select(item => item.BookingID)
+
+                .Distinct()
+                .ToListAsync();
+
+            return bookingIds.Count;
+        }
     }
 }
 
