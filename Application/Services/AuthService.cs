@@ -12,7 +12,6 @@ namespace Application.Services
 {
     public class AuthService: IAuthService
     {
-        // DbContext-க்கு பதிலாக Repository-ஐ Inject செய்யவும்
         private readonly IAuthRepository _authRepo;
         private readonly ITokenService _tokenService;
 
@@ -25,7 +24,6 @@ namespace Application.Services
         // --- CUSTOMER ---
         public async Task<AuthResponseDto> RegisterCustomerAsync(RegisterCustomerDto dto)
         {
-            // _context-க்கு பதிலாக _authRepo-ஐப் பயன்படுத்தவும்
             if (await _authRepo.CustomerEmailExistsAsync(dto.Email))
             {
                 return new AuthResponseDto { IsSuccess = false, Message = "Email already exists" };
@@ -40,7 +38,7 @@ namespace Application.Services
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password)
             };
 
-            await _authRepo.AddCustomerAsync(customer); // Repository-ல் சேமிக்கவும்
+            await _authRepo.AddCustomerAsync(customer); 
 
             return CreateAuthResponse(customer.CustomerID, customer.Name, customer.Email, "Customer");
         }
@@ -121,7 +119,6 @@ namespace Application.Services
         }
 
 
-        // --- Helper Method (இதில் எந்த மாற்றமும் இல்லை) ---
         private AuthResponseDto CreateAuthResponse(Guid userId, string name, string email, string role)
         {
             var token = _tokenService.CreateToken(userId, email, role);
