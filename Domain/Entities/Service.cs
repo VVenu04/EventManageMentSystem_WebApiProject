@@ -12,6 +12,9 @@ namespace Domain.Entities
         [Key]
         public Guid ServiceID { get; set; }
 
+
+        public string Name { get; set; } 
+
         public Guid VendorID { get; set; }
         public Guid CategoryID { get; set; }
         public Guid? EventID { get; set; }
@@ -19,7 +22,8 @@ namespace Domain.Entities
         public string Photo { get; set; }
         public string Description { get; set; }
         public decimal Price { get; set; }
-
+        public decimal EventPerDayLimit { get; set; }
+        public double TimeLimit { get; set; }
         public string Location { get; set; }
         public bool Active { get; set; }
 
@@ -27,6 +31,9 @@ namespace Domain.Entities
         public Event? Event { get; set; }
         public Category? Category { get; set; }
         //public ICollection<Booking> Bookings { get; set; }
+        public ICollection<BookingItem>? BookingItems { get; set; }
+        public ICollection<PackageItem>? PackageItems { get; set; }
+
 
     }
 }

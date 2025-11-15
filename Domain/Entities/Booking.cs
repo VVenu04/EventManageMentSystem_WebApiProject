@@ -13,12 +13,13 @@ namespace Domain.Entities
         public Guid BookingID { get; set; }
         public Guid CustomerID { get; set; }
         public string BookingStatus { get; set; }
-
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
         public decimal TotalPrice { get; set; }
+        public string Location { get; set; }
 
-        // Navigation
+
+
+        public DateTime EventDate { get; set; } 
+
         public Customer? Customer { get; set; }
         public Payment? Payment { get; set; }
         public ICollection<BookingItem> BookingItems { get; set; }

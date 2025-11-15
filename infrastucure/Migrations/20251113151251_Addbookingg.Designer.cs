@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using infrastucure.Data;
 
@@ -11,9 +12,11 @@ using infrastucure.Data;
 namespace infrastucure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251113151251_Addbookingg")]
+    partial class Addbookingg
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -72,9 +75,6 @@ namespace infrastucure.Migrations
                     b.Property<DateTime>("EventDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Location")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(18,2)");
 
@@ -119,7 +119,7 @@ namespace infrastucure.Migrations
 
                     b.HasIndex("VendorID");
 
-                    b.ToTable("BookingItems");
+                    b.ToTable("BookingItem");
                 });
 
             modelBuilder.Entity("Domain.Entities.Category", b =>
@@ -247,27 +247,6 @@ namespace infrastucure.Migrations
                     b.ToTable("Packages");
                 });
 
-            modelBuilder.Entity("Domain.Entities.PackageItem", b =>
-                {
-                    b.Property<Guid>("PackageItemID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("PackageID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ServiceID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("PackageItemID");
-
-                    b.HasIndex("PackageID");
-
-                    b.HasIndex("ServiceID");
-
-                    b.ToTable("PackageItems");
-                });
-
             modelBuilder.Entity("Domain.Entities.Payment", b =>
                 {
                     b.Property<Guid>("PaymentID")
@@ -306,9 +285,6 @@ namespace infrastucure.Migrations
                     b.Property<Guid?>("EventID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<decimal>("EventPerDayLimit")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<string>("Location")
                         .HasColumnType("nvarchar(max)");
 
@@ -320,9 +296,6 @@ namespace infrastucure.Migrations
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<double>("TimeLimit")
-                        .HasColumnType("float");
 
                     b.Property<Guid>("VendorID")
                         .HasColumnType("uniqueidentifier");
@@ -497,25 +470,6 @@ namespace infrastucure.Migrations
                     b.Navigation("Vendor");
                 });
 
-            modelBuilder.Entity("Domain.Entities.PackageItem", b =>
-                {
-                    b.HasOne("Domain.Entities.Package", "Package")
-                        .WithMany("PackageItems")
-                        .HasForeignKey("PackageID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.Service", "Service")
-                        .WithMany("PackageItems")
-                        .HasForeignKey("ServiceID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Package");
-
-                    b.Navigation("Service");
-                });
-
             modelBuilder.Entity("Domain.Entities.Payment", b =>
                 {
                     b.HasOne("Domain.Entities.Booking", "Booking")
@@ -598,16 +552,9 @@ namespace infrastucure.Migrations
                     b.Navigation("Vendors");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Package", b =>
-                {
-                    b.Navigation("PackageItems");
-                });
-
             modelBuilder.Entity("Domain.Entities.Service", b =>
                 {
                     b.Navigation("BookingItems");
-
-                    b.Navigation("PackageItems");
                 });
 
             modelBuilder.Entity("Domain.Entities.Vendor", b =>

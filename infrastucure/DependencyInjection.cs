@@ -1,5 +1,7 @@
 ﻿using Application.Interface.IGenericRepo;
 using Application.Interface.IRepo;
+using Application.Interface.IService;
+using Application.Services;
 using Domain.Entities;
 using infrastructure.Repositary;
 using infrastucure.Data;
@@ -29,6 +31,12 @@ namespace infrastucure
            services.AddScoped<IFunctionRepo, FunctionRepository>();
 
 
+            services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddScoped<IBookingRepository, BookingRepository>();
+            services.AddScoped<IServiceRepository, ServiceRepository>();
+            services.AddScoped<IPackageRepository, PackageRepository>();
+            //services.AddScoped<IVendorRepository, VendorRepository>();
+            //services.AddScoped<IUserRepository, UserRepository>();
 
             var connectionString = configuration.GetConnectionString("Smart");
 
