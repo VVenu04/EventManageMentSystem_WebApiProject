@@ -20,7 +20,6 @@ namespace Domain.Entities
 
         public DateTime EventDate { get; set; } 
 
-        // Navigation
         public Customer? Customer { get; set; }
         public Payment? Payment { get; set; }
         public ICollection<BookingItem> BookingItems { get; set; }
