@@ -19,7 +19,7 @@ namespace infrastructure.Repositary
             _context = context;
         }
 
-        public async Task<Package> GetPackageWithServicesAsync(Guid packageId)
+        public async Task<Package?> GetPackageWithServicesAsync(Guid packageId)
         {
             return await _context.Packages
                 // Package-இல் உள்ள Items-ஐ Include செய்
@@ -27,7 +27,7 @@ namespace infrastructure.Repositary
                 // அந்த Item-உடைய Service-ஐ Include செய்
                 .ThenInclude(pi => pi.Service)
                 // அந்த Service-உடைய Vendor-ஐ Include செய் (Limit check-க்குத் தேவை)
-                .ThenInclude(s => s.Vendor)
+                .ThenInclude(s => s!.Vendor)
                 .FirstOrDefaultAsync(p => p.PackageID == packageId);
         }
     }
