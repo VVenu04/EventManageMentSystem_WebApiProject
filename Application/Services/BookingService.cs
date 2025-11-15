@@ -31,6 +31,12 @@ namespace Application.Services
 
         public async Task<BookingConfirmationDto> CreateBookingAsync(CreateBookingDto createBookingDto, Guid customerId)
         {
+            var customer = await _authRepo.GetCustomerByIdAsync(customerId);
+            if (customer == null)
+            {
+                // Token-ல் இருந்து வரும் ID தவறாக இருந்தால், அது ஒரு தீவிர பிழை.
+                throw new Exception($"Invalid customer ID: {customerId}. User not found.");
+            }
             if (createBookingDto.EventDate.Date < DateTime.UtcNow.Date)
             {
                 throw new Exception("Data was expired. Cannot book on a past date.");
@@ -63,9 +69,9 @@ namespace Application.Services
 
             // 5. Save to Database
             await _bookingRepo.AddAsync(booking);
-
-            // 6. Get Customer (Mapper-க்குத் தேவை)
-            var customer = await _authRepo.GetCustomerByIdAsync(customerId);
+            
+           
+           
 
             // 7. Return Confirmation DTO (Mapper-ஐப் பயன்படுத்தி)
             return BookingMapper.MapToConfirmationDto(booking, customer, servicesToBook);
@@ -74,7 +80,11 @@ namespace Application.Services
         public async Task<BookingConfirmationDto> GetBookingByIdAsync(Guid bookingId)
         {
             var booking = await _bookingRepo.GetByIdAsync(bookingId);
+            if (booking == null) {
+                throw new Exception($"Booking with ID {bookingId} not found.");
 
+
+            }
             // Mapper-ஐப் பயன்படுத்தி DTO-ஆக மாற்று
             return BookingMapper.MapToConfirmationDto(booking);
         }

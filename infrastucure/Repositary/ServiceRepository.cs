@@ -26,7 +26,7 @@ namespace infrastructure.Repositary
             return service;
         }
 
-        public async Task<Service> GetByIdAsync(Guid serviceId)
+        public async Task<Service?> GetByIdAsync(Guid serviceId)
         {
             // Service-ஐ எடுக்கும்போது, related data-வையும் (Vendor, Category) எடு
             return await _context.Services

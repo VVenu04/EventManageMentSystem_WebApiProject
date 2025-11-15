@@ -14,7 +14,7 @@ namespace Application.Interface.IRepo
         Task UpdateAsync(Service service);
         Task DeleteAsync(Service service);
 
-        Task<Service> GetByIdAsync(Guid serviceId);
+        Task<Service?> GetByIdAsync(Guid serviceId);
         Task<IEnumerable<Service>> GetAllAsync();
 
         Task<IEnumerable<Service>> GetByVendorIdAsync(Guid vendorId);
