@@ -44,21 +44,19 @@ namespace infrastructure.Repositary
 
                 .AnyAsync(item => item.Booking.EventDate.Date == eventDate.Date);
         }
-        public async Task<int> GetBookingCountForVendorOnDateAsync(Guid vendorId, DateTime eventDate)
+        public async Task<int> GetBookingCountForServiceOnDateAsync(Guid serviceId, DateTime eventDate)
         {
-            // BookingItems table-find
-            var bookingIds = await _context.BookingItems
+            // BookingItems table-ஐத் தேடு
+            return await _context.BookingItems
 
-                .Where(item => item.VendorID == vendorId)
+                // 1. அந்த ServiceID-ஐக் கொண்ட Item-ஆ?
+                .Where(item => item.ServiceID == serviceId)
 
+                // 2. அந்த Item-உடைய Parent Booking அதே தேதியிலா உள்ளது?
                 .Where(item => item.Booking.EventDate.Date == eventDate.Date)
 
-                .Select(item => item.BookingID)
-
-                .Distinct()
-                .ToListAsync();
-
-            return bookingIds.Count;
+                // 3. அவற்றின் எண்ணிக்கையைக் கொடு
+                .CountAsync();
         }
     }
 }

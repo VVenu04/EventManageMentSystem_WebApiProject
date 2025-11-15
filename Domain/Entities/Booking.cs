@@ -14,6 +14,7 @@ namespace Domain.Entities
         public Guid CustomerID { get; set; }
         public string BookingStatus { get; set; }
         public decimal TotalPrice { get; set; }
+        public string Location { get; set; }
 
         public DateTime EventDate { get; set; } 
         // Navigation

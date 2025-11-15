@@ -13,6 +13,6 @@ namespace Application.Interface.IRepo
         Task<Booking> AddAsync(Booking booking);
 
         Task<Booking> GetByIdAsync(Guid bookingId);
-        Task<int> GetBookingCountForVendorOnDateAsync(Guid vendorId, DateTime eventDate);
+        Task<int> GetBookingCountForServiceOnDateAsync(Guid serviceId, DateTime eventDate);
     }
 }

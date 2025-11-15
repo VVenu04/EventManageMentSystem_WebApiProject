@@ -27,7 +27,7 @@ namespace infrastucure
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IBookingRepository, BookingRepository>();
             services.AddScoped<IServiceRepository, ServiceRepository>();
-
+            services.AddScoped<IPackageRepository, PackageRepository>();
             //services.AddScoped<IVendorRepository, VendorRepository>();
             //services.AddScoped<IUserRepository, UserRepository>();
 

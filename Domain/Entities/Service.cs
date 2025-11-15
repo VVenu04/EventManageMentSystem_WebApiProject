@@ -29,6 +29,8 @@ namespace Domain.Entities
         public Category? Category { get; set; }
         //public ICollection<Booking> Bookings { get; set; }
         public ICollection<BookingItem>? BookingItems { get; set; }
+        public ICollection<PackageItem>? PackageItems { get; set; }
+
 
     }
 }

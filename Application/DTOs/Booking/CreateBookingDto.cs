@@ -9,6 +9,8 @@ namespace Application.DTOs.Booking
     public class CreateBookingDto
     {
         public DateTime EventDate { get; set; }
+        public string Location { get; set; }
         public List<Guid> ServiceIDs { get; set; }
+        public Guid? PackageID { get; set; }
     }
 }
