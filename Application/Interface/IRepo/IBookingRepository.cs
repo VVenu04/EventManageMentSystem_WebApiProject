@@ -12,7 +12,7 @@ namespace Application.Interface.IRepo
         Task<bool> IsServiceBookedOnDateAsync(Guid serviceId, DateTime eventDate);
         Task<Booking> AddAsync(Booking booking);
 
-        Task<Booking> GetByIdAsync(Guid bookingId);
+        Task<Booking?> GetByIdAsync(Guid bookingId);
         Task<int> GetBookingCountForServiceOnDateAsync(Guid serviceId, DateTime eventDate);
     }
 }

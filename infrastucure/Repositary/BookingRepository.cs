@@ -27,13 +27,13 @@ namespace infrastructure.Repositary
             return booking;
         }
 
-        public async Task<Booking> GetByIdAsync(Guid bookingId)
+        public async Task<Booking?> GetByIdAsync(Guid bookingId)
         {
             return await _context.Bookings
                 .Include(b => b.Customer) 
                 .Include(b => b.BookingItems) 
                     .ThenInclude(item => item.Service) 
-                        .ThenInclude(service => service.Vendor) 
+                        .ThenInclude(service => service!.Vendor) 
                 .FirstOrDefaultAsync(b => b.BookingID == bookingId);
         }
         public async Task<bool> IsServiceBookedOnDateAsync(Guid serviceId, DateTime eventDate)
@@ -42,7 +42,7 @@ namespace infrastructure.Repositary
 
                 .Where(item => item.ServiceID == serviceId)
 
-                .AnyAsync(item => item.Booking.EventDate.Date == eventDate.Date);
+                .AnyAsync(item => item.Booking!.EventDate.Date == eventDate.Date);
         }
         public async Task<int> GetBookingCountForServiceOnDateAsync(Guid serviceId, DateTime eventDate)
         {
@@ -53,7 +53,7 @@ namespace infrastructure.Repositary
                 .Where(item => item.ServiceID == serviceId)
 
                 // 2. அந்த Item-உடைய Parent Booking அதே தேதியிலா உள்ளது?
-                .Where(item => item.Booking.EventDate.Date == eventDate.Date)
+                .Where(item => item.Booking!.EventDate.Date == eventDate.Date)
 
                 // 3. அவற்றின் எண்ணிக்கையைக் கொடு
                 .CountAsync();

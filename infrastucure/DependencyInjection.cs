@@ -24,6 +24,13 @@ namespace infrastucure
         {
            services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepo<>));
            services.AddScoped<IAdminRepo, AdminRepositary>();
+           services.AddScoped<IAuthRepository, AuthRepository>();
+           services.AddScoped<ICustomerRepo, CustomerRepository>();
+           services.AddScoped<IVendorRepo, VendorRepository>();
+           services.AddScoped<IEventRepo, EventRepository>();
+           services.AddScoped<IFunctionRepo, FunctionRepository>();
+
+
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IBookingRepository, BookingRepository>();
             services.AddScoped<IServiceRepository, ServiceRepository>();

@@ -19,19 +19,8 @@ namespace infrastructure.Repositary
             _context = context;
         }
 
-        public async Task<Package> AddAsync(Package package)
-        {
-            _context.Packages.Add(package);
-            await _context.SaveChangesAsync();
-            return package;
-        }
-
-        public async Task<Package> GetPackageWithServicesAsync(Guid packageId)
-        {
-            return await _context.Packages
-                .Include(p => p.Vendor)
-                .Include(p => p.PackageItems)
-                .ThenInclude(pi => pi.Service)
+                // அந்த Service-உடைய Vendor-ஐ Include செய் (Limit check-க்குத் தேவை)
+                .ThenInclude(s => s!.Vendor)
                 .FirstOrDefaultAsync(p => p.PackageID == packageId);
         }
 

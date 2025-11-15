@@ -12,8 +12,8 @@ namespace Domain.Entities
         [Key]
         public Guid BookingItemID { get; set; }
 
-        public Guid BookingID { get; set; } 
-        public Guid? ServiceID { get; set; } 
+        public Guid BookingID { get; set; }
+        public Guid? ServiceID { get; set; }
         public Guid? PackageID { get; set; }
         public Guid VendorID { get; set; }
         public decimal ItemPrice { get; set; }
