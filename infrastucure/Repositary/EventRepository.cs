@@ -1,0 +1,25 @@
+﻿using Application.Interface.IRepo;
+using Domain.Entities;
+using infrastucure.Data;
+using infrastucure.GenericRepositary;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace infrastructure.Repositary
+{
+    public class EventRepository : GenericRepo<Event>, IEventRepo
+    {
+        public EventRepository(ApplicationDbContext dbContext) : base(dbContext)
+        {
+        }
+
+        public async Task UpdateAsync(Event @event)
+        {
+            _dbContext.Events.Update(@event);
+            await _dbContext.SaveChangesAsync();
+        }
+    }
+}

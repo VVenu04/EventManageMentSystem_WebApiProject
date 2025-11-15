@@ -27,8 +27,6 @@ namespace Presentation
             builder.Services.AddService();
             #endregion
 
-
-
             #region Bridge between Infrastructure and Presentation
             builder.Services.AddInfrastructure(builder.Configuration);
             #endregion

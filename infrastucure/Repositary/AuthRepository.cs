@@ -12,7 +12,7 @@ namespace infrastructure.Repositary
 {
     public class AuthRepository : IAuthRepository
     {
-        private readonly ApplicationDbContext _context; // உங்கள் DbContext-இன் பெயர்
+        private readonly ApplicationDbContext _context; 
 
         public AuthRepository(ApplicationDbContext context)
         {
