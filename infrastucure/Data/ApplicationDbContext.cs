@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace infrastucure.Data
 {
-    public class ApplicationDbContext:DbContext
+    public class ApplicationDbContext : DbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options): base(options) 
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
-            
+
         }
         public DbSet<Admin> Admins { get; set; }
         public DbSet<Package> Packages { get; set; }

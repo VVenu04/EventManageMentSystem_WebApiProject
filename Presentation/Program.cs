@@ -52,6 +52,8 @@ namespace Presentation
                     };
                 });
 
+            builder.Services.AddCors();
+
             var app = builder.Build();
 
 
