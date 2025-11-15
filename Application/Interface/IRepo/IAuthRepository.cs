@@ -12,11 +12,9 @@ namespace Application.Interface.IRepo
         Task<bool> CustomerEmailExistsAsync(string email);
         Task<Customer> GetCustomerByEmailAsync(string email);
         Task<Customer> AddCustomerAsync(Customer customer);
-
         Task<bool> VendorEmailExistsAsync(string email);
         Task<Vendor> GetVendorByEmailAsync(string email);
         Task<Vendor> AddVendorAsync(Vendor vendor);
-
         Task<Admin> GetAdminByEmailAsync(string email);
     }
 }

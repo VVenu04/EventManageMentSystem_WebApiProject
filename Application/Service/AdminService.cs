@@ -31,6 +31,33 @@ namespace Application.Service
 
         }
 
+        public async Task DeleteAdminAsync(Guid Id)
+        {
+            if (Id == null)
+            {
+                throw new ArgumentNullException(nameof(Id));
+            }
+            var admin = await _adminRepository.GetByIdAsync(x => x.AdminID == Id);
+            await _adminRepository.DeleteAsync(admin);
+
+        }
+
+        public async Task<AdminDto> GetAdminAsync(Guid adminId)
+        {
+            if (adminId == Guid.Empty)
+            {
+                throw new ArgumentNullException(nameof(adminId));
+            }
+
+            var admin = await _adminRepository.GetByIdAsync(x => x.AdminID == adminId);
+            return AdminMapper.MapToAdminDTO(admin);
+        }
+
+        public async Task<IEnumerable<AdminDto>> GetAllAsync()
+        {
+            var Admins = await _adminRepository.GetAllAsync();
+            return AdminMapper.MapToAdminDTOList(Admins);
+        }
     }
     
 }
