@@ -18,6 +18,7 @@ namespace Application
             services.AddScoped<IAdminService, AdminService>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IBookingService, BookingService>();
             //services.AddScoped<IVendorService, VendorService>();
             //services.AddScoped<IUserService, UserService>();
             return services;

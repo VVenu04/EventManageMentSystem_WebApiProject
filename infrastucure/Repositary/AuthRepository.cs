@@ -60,5 +60,9 @@ namespace infrastructure.Repositary
         {
             return await _context.Admins.FirstOrDefaultAsync(x => x.AdminEmail == email);
         }
+        public async Task<Customer> GetCustomerByIdAsync(Guid customerId)
+        {
+            return await _context.Customers.FindAsync(customerId);
+        }
     }
 }

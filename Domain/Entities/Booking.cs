@@ -16,7 +16,10 @@ namespace Domain.Entities
         public decimal TotalPrice { get; set; }
         public string Location { get; set; }
 
-        public DateTime EventDate { get; set; }
+
+
+        public DateTime EventDate { get; set; } 
+
         // Navigation
         public Customer? Customer { get; set; }
         public Payment? Payment { get; set; }
