@@ -1,7 +1,7 @@
 using Application;
 using Application.Interface.IAuth;
 using Application.Interface.IRepo;
-using Application.Service;
+using Application.Services;
 using infrastructure.Repositary;
 using infrastucure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

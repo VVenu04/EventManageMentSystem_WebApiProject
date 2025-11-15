@@ -1,7 +1,7 @@
 ﻿using Application.Interface.IAuth;
 using Application.Interface.IRepo;
 using Application.Interface.IService;
-using Application.Service;
+using Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
