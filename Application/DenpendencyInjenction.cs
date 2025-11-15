@@ -23,6 +23,8 @@ namespace Application
             services.AddScoped<IEventService, EventService>();
             services.AddScoped<IFunctionService, FunctionService>();
             services.AddScoped<IBookingService, BookingService>();
+            services.AddScoped<IPackageService, PackageService>();
+            services.AddScoped<IServiceService, ServiceService>();
             //services.AddScoped<IVendorService, VendorService>();
             //services.AddScoped<IUserService, UserService>();
             return services;

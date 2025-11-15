@@ -19,16 +19,20 @@ namespace infrastructure.Repositary
             _context = context;
         }
 
-        public async Task<Package?> GetPackageWithServicesAsync(Guid packageId)
-        {
-            return await _context.Packages
-                // Package-இல் உள்ள Items-ஐ Include செய்
-                .Include(p => p.PackageItems)
-                // அந்த Item-உடைய Service-ஐ Include செய்
-                .ThenInclude(pi => pi.Service)
                 // அந்த Service-உடைய Vendor-ஐ Include செய் (Limit check-க்குத் தேவை)
                 .ThenInclude(s => s!.Vendor)
                 .FirstOrDefaultAsync(p => p.PackageID == packageId);
+        }
+
+        public async Task<IEnumerable<Package>> GetPackagesByVendorAsync(Guid vendorId)
+        {
+            return await _context.Packages
+                .Where(p => p.VendorID == vendorId)
+                .Include(p => p.Vendor)
+                .Include(p => p.PackageItems)
+                .ThenInclude(pi => pi.Service)
+                .Where(p => p.Active == true) // Active
+                .ToListAsync();
         }
     }
 }

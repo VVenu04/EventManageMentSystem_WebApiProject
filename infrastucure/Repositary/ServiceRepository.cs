@@ -33,6 +33,7 @@ namespace infrastructure.Repositary
                 .Include(s => s.Vendor)
                 .Include(s => s.Category)
                 .Include(s => s.Event)
+                .Include(s => s.ServiceImages)
                 .FirstOrDefaultAsync(s => s.ServiceID == serviceId);
         }
 
@@ -42,6 +43,7 @@ namespace infrastructure.Repositary
                 .Include(s => s.Vendor)
                 .Include(s => s.Category)
                 .Include(s => s.Event)
+                .Include(s => s.ServiceImages)
                 .ToListAsync();
         }
 
@@ -51,6 +53,7 @@ namespace infrastructure.Repositary
                 .Include(s => s.Category)
                 .Include(s => s.Event)
                 .Where(s => s.VendorID == vendorId)
+                .Include(s => s.ServiceImages)
                 .ToListAsync();
         }
 
