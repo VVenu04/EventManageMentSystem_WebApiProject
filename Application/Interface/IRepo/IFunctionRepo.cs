@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace Application.Interface.IRepo
 {
-    public interface IFunctionRepo : IGenericRepo<Domain.Entities.Service>
+    public interface IFunctionRepo : IGenericRepo<Domain.Entities.ServiceItem>
     {
-        Task UpdateAsync(Domain.Entities.Service service);
+        Task UpdateAsync(Domain.Entities.ServiceItem service);
     }
 }

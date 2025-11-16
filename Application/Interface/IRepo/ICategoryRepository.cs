@@ -9,7 +9,7 @@ namespace Application.Interface.IRepo
 {
     public interface ICategoryRepository
     {
-        Task<Service> GetByIdAsync(Guid categoryId);
+        Task<ServiceItem> GetByIdAsync(Guid categoryId);
 
     }
 }

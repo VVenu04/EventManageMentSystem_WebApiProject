@@ -19,9 +19,9 @@ namespace infrastructure.Repositary
             _context = context;
         }
 
-                // அந்த Service-உடைய Vendor-ஐ Include செய் (Limit check-க்குத் தேவை)
-                .ThenInclude(s => s!.Vendor)
-                .FirstOrDefaultAsync(p => p.PackageID == packageId);
+        public Task<Package> AddAsync(Package package)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<IEnumerable<Package>> GetPackagesByVendorAsync(Guid vendorId)
@@ -33,6 +33,11 @@ namespace infrastructure.Repositary
                 .ThenInclude(pi => pi.Service)
                 .Where(p => p.Active == true) // Active
                 .ToListAsync();
+        }
+
+        public Task<Package?> GetPackageWithServicesAsync(Guid packageId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

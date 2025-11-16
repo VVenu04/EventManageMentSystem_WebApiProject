@@ -33,12 +33,11 @@ namespace infrastucure
 
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IBookingRepository, BookingRepository>();
-            services.AddScoped<IServiceRepository, ServiceRepository>();
+            services.AddScoped<IServiceItemRepository, ServiceItemRepository>();
             services.AddScoped<IPackageRepository, PackageRepository>();
-            services.AddScoped<IServiceRepository, ServiceRepository > ();
-            //services.AddScoped<IVendorRepository, VendorRepository>();
-            //services.AddScoped<IUserRepository, UserRepository>();
-
+            services.AddScoped<IServiceItemRepository, ServiceItemRepository > ();
+            
+            //Services.AddScoped<ICategoryRepository, CategoryRepository>();
             var connectionString = configuration.GetConnectionString("Smart");
 
             services.AddDbContext<ApplicationDbContext>(option => option.UseSqlServer(connectionString));

@@ -1,6 +1,7 @@
 ﻿using Application.Interface.IAuth;
 using Application.Interface.IRepo;
 using Application.Interface.IService;
+using Application.Service;
 using Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -24,7 +25,7 @@ namespace Application
             services.AddScoped<IFunctionService, FunctionService>();
             services.AddScoped<IBookingService, BookingService>();
             services.AddScoped<IPackageService, PackageService>();
-            services.AddScoped<IServiceService, ServiceService>();
+            services.AddScoped<IServiceItemService, ServiceItemService>();
             //services.AddScoped<IVendorService, VendorService>();
             //services.AddScoped<IUserService, UserService>();
             return services;

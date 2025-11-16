@@ -10,15 +10,15 @@ using System.Threading.Tasks;
 
 namespace infrastructure.Repositary
 {
-    public class FunctionRepository : GenericRepo<Domain.Entities.Service>, IFunctionRepo
+    public class FunctionRepository : GenericRepo<Domain.Entities.ServiceItem>, IFunctionRepo
     {
         public FunctionRepository(ApplicationDbContext dbContext) : base(dbContext)
         {
         }
 
-        public async Task UpdateAsync(Service service)
+        public async Task UpdateAsync(ServiceItem service)
         {
-            _dbContext.Services.Update(service);
+            _dbContext.ServiceItems.Update(service);
             await _dbContext.SaveChangesAsync();
         }
     }

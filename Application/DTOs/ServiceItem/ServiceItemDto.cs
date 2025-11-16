@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Application.DTOs.Service
 {
-    public class ServiceDto
+    public class ServiceItemDto
     {
         public Guid ServiceID { get; set; }
         public string Name { get; set; }

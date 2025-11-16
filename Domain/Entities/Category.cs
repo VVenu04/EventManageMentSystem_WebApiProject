@@ -14,7 +14,7 @@ namespace Domain.Entities
         public string CategoryName { get; set; }
 
         // Navigation
-        public ICollection<Service>? Services { get; set; }
+        public ICollection<ServiceItem>? Services { get; set; }
         public ICollection<Event>? Events { get; set; }
     }
 }

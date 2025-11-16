@@ -14,9 +14,9 @@ namespace Application.Services
     public class PackageService:IPackageService
     {
         private readonly IPackageRepository _packageRepo;
-        private readonly IServiceRepository _serviceRepo;
+        private readonly IServiceItemRepository _serviceRepo;
 
-        public PackageService(IPackageRepository packageRepo, IServiceRepository serviceRepo)
+        public PackageService(IPackageRepository packageRepo, IServiceItemRepository serviceRepo)
         {
             _packageRepo = packageRepo;
             _serviceRepo = serviceRepo;
@@ -51,7 +51,7 @@ namespace Application.Services
                 packageItems.Add(new PackageItem
                 {
                     PackageItemID = Guid.NewGuid(),
-                    ServiceID = serviceId
+                    ServiceItemID = serviceId
                 });
 
                 originalServicesPrice += service.Price;
@@ -112,7 +112,7 @@ namespace Application.Services
                 VendorName = package.Vendor?.Name, // Vendor-ஐ Include செய்ததால் இது வேலை செய்யும்
                 ServicesInPackage = package.PackageItems.Select(item => new SimpleServiceDto
                 {
-                    ServiceID = item.ServiceID,
+                    ServiceID = item.ServiceItemID,
                     Name = item.Service?.Name, // Service-ஐ Include செய்ததால் இது வேலை செய்யும்
                     OriginalPrice = item.Service?.Price ?? 0
                 }).ToList()

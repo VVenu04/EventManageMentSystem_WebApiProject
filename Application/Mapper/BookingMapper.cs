@@ -34,7 +34,7 @@ namespace Application.Mapper // (உங்கள் folder பெயர் 'Mapp
         }
 
         // CreateBookingAsync-ஆல் call செய்யப்படும்
-        public static BookingConfirmationDto MapToConfirmationDto(Booking booking, Customer customer, List<Service> servicesInCart)
+        public static BookingConfirmationDto MapToConfirmationDto(Booking booking, Customer customer, List<ServiceItem> servicesInCart)
         {
             return new BookingConfirmationDto
             {
@@ -46,7 +46,7 @@ namespace Application.Mapper // (உங்கள் folder பெயர் 'Mapp
                 BookingStatus = booking.BookingStatus,
                 BookedItems = booking.BookingItems.Select(item =>
                 {
-                    var serviceInCart = servicesInCart.First(s => s.ServiceID == item.ServiceID);
+                    var serviceInCart = servicesInCart.First(s => s.ServiceItemID == item.ServiceItemID);
                     return new BookingItemDto
                     {
                         BookingItemID = item.BookingItemID,

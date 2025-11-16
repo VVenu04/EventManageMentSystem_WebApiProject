@@ -14,12 +14,12 @@ namespace Application.Services
     public class BookingService : IBookingService
     {
         private readonly IBookingRepository _bookingRepo;
-        private readonly IServiceRepository _serviceRepo;
+        private readonly IServiceItemRepository _serviceRepo;
         private readonly IAuthRepository _authRepo;
         private readonly IPackageRepository _packageRepo; 
 
         public BookingService(IBookingRepository bookingRepo,
-                              IServiceRepository serviceRepo,
+                              IServiceItemRepository serviceRepo,
                               IAuthRepository authRepo,
                               IPackageRepository packageRepo) 
         {
@@ -50,7 +50,7 @@ namespace Application.Services
             var bookingItemsList = servicesToBook.Select(service => new BookingItem
             {
                 BookingItemID = Guid.NewGuid(),
-                ServiceID = service.ServiceID,
+                ServiceItemID = service.ServiceItemID,
                 VendorID = service.VendorID,
                 ItemPrice = service.Price, 
                 TrackingStatus = "Confirmed"
@@ -90,9 +90,9 @@ namespace Application.Services
         }
 
         // --- Helper Method 1: DTO-வில் இருந்து Services-ஐப் பெறுதல் ---
-        private async Task<(List<Service> services, Dictionary<Guid, Vendor> vendors, decimal total)> GetServicesFromDtoAsync(CreateBookingDto dto)
+        private async Task<(List<ServiceItem> services, Dictionary<Guid, Vendor> vendors, decimal total)> GetServicesFromDtoAsync(CreateBookingDto dto)
         {
-            var servicesInCart = new List<Service>();
+            var servicesInCart = new List<ServiceItem>();
             var vendorsInCart = new Dictionary<Guid, Vendor>();
             decimal totalPrice = 0;
 
@@ -134,7 +134,7 @@ namespace Application.Services
                     if (!vendorsInCart.ContainsKey(service.VendorID))
                     {
                         if (service.Vendor == null)
-                            throw new Exception($"Service '{service.Name}' (ID: {service.ServiceID}) has no associated vendor.");
+                            throw new Exception($"Service '{service.Name}' (ID: {service.ServiceItemID}) has no associated vendor.");
 
                         vendorsInCart.Add(service.VendorID, service.Vendor);
                     }
@@ -149,7 +149,7 @@ namespace Application.Services
         }
 
         // --- Helper Method 2: Business Logic-ஐச் சோதித்தல் ---
-        private async Task ValidateBookingLogicAsync(List<Service> services, Dictionary<Guid, Vendor> vendors, DateTime eventDate)
+        private async Task ValidateBookingLogicAsync(List<ServiceItem> services, Dictionary<Guid, Vendor> vendors, DateTime eventDate)
         {
             // Loop 1: Services-ஐ Validate செய்
             foreach (var service in services)
@@ -157,7 +157,7 @@ namespace Application.Services
                 if (!service.Active)
                     throw new Exception($"Sorry, the service '{service.Name}' is currently unavailable.");
 
-                bool isAlreadyBooked = await _bookingRepo.IsServiceBookedOnDateAsync(service.ServiceID, eventDate);
+                bool isAlreadyBooked = await _bookingRepo.IsServiceBookedOnDateAsync(service.ServiceItemID, eventDate);
                 if (isAlreadyBooked)
                     throw new Exception($"Sorry, '{service.Name}' this service {eventDate.ToShortDateString()} booked on this date.");
 
@@ -169,7 +169,7 @@ namespace Application.Services
                 }
                 if (service.EventPerDayLimit > 0)
                 {
-                    int existingBookings = await _bookingRepo.GetBookingCountForServiceOnDateAsync(service.ServiceID, eventDate);
+                    int existingBookings = await _bookingRepo.GetBookingCountForServiceOnDateAsync(service.ServiceItemID, eventDate);
 
                     if (existingBookings >= (int)service.EventPerDayLimit)
                     {

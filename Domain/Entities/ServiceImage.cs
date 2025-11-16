@@ -16,7 +16,7 @@ namespace Domain.Entities
         public bool IsCover { get; set; } = false; // இது main photo-வா?
 
         // Foreign Key
-        public Guid ServiceID { get; set; }
-        public Service Service { get; set; }
+        public Guid ServiceItemID { get; set; }
+        public ServiceItem Service { get; set; }
     }
 }

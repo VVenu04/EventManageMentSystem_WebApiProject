@@ -24,7 +24,7 @@ namespace infrastucure.Data
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Event> Events { get; set; }
         public DbSet<Message> Messages { get; set; }
-        public DbSet<Service> Services { get; set; }
+        public DbSet<ServiceItem> ServiceItems { get; set; }
         public DbSet<Vendor> Vendors { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Payment> Payment { get; set; }

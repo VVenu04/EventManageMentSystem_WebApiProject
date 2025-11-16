@@ -2,6 +2,7 @@
 using Domain.Entities;
 using infrastucure.Data;
 using infrastucure.GenericRepositary;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,10 @@ namespace infrastructure.Repositary
         {
             _dbContext.Events.Update(@event);
             await _dbContext.SaveChangesAsync();
+        }
+        public async Task<Event> GetByIdAsync(Guid id)
+        {
+            return await _dbContext.Events.FindAsync(id);
         }
     }
 }

@@ -2,29 +2,26 @@
 using Application.Interface.IRepo;
 using Application.Interface.IService;
 using Application.Mapper;
-using Domain.Entities;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+using Domain.Entities;
 
 namespace Application.Services
 {
-    public class ServiceService : IServiceService
+    public class ServiceItemService : IServiceItemService
     {
-        private readonly IServiceRepository _serviceRepo;
+        private readonly IServiceItemRepository _serviceRepo;
         private readonly ICategoryRepository _categoryRepo;
-        private readonly IEventRepository _eventRepo;
+        private readonly IEventRepo _eventRepo;
 
-        public ServiceService(IServiceRepository serviceRepo, ICategoryRepository categoryRepo, IEventRepository eventRepo)
+        public ServiceItemService(IServiceItemRepository serviceRepo, ICategoryRepository categoryRepo, IEventRepo eventRepo)
         {
             _serviceRepo = serviceRepo;
             _categoryRepo = categoryRepo;
             _eventRepo = eventRepo;
         }
 
-        public async Task<ServiceDto> CreateServiceAsync(CreateServiceDto dto, Guid vendorId)
+        public async Task<ServiceItemDto> CreateServiceAsync(CreateServiceDto dto, Guid vendorId)
         {
             if (dto.ImageUrls == null || !dto.ImageUrls.Any())
                 throw new Exception("You must upload at least one photo for the service.");
@@ -45,9 +42,9 @@ namespace Application.Services
                 IsCover = (index == 0) 
             }).ToList();
 
-            var service = new Service
+            var service = new ServiceItem
             {
-                ServiceID = Guid.NewGuid(),
+                ServiceItemID = Guid.NewGuid(),
                 Name = dto.Name,
                 Description = dto.Description,
                 Price = dto.Price,
@@ -63,7 +60,7 @@ namespace Application.Services
 
             await _serviceRepo.AddAsync(service);
 
-            var newServiceData = await _serviceRepo.GetByIdAsync(service.ServiceID);
+            var newServiceData = await _serviceRepo.GetByIdAsync(service.ServiceItemID);
             return ServiceMapper.MapToServiceDto(newServiceData);
         }
 
@@ -120,19 +117,18 @@ namespace Application.Services
             await _serviceRepo.DeleteAsync(service);
         }
 
-        public async Task<ServiceDto> GetServiceByIdAsync(Guid serviceId)
+        public async Task<ServiceItemDto> GetServiceByIdAsync(Guid serviceId)
         {
             var service = await _serviceRepo.GetByIdAsync(serviceId);
             return ServiceMapper.MapToServiceDto(service);
         }
 
-        public async Task<IEnumerable<ServiceDto>> GetAllServicesAsync()
+        public async Task<IEnumerable<ServiceItemDto>> GetAllServicesAsync()
         {
             var services = await _serviceRepo.GetAllAsync();
             return services.Select(ServiceMapper.MapToServiceDto);
         }
-
-        public async Task<IEnumerable<ServiceDto>> GetServicesByVendorAsync(Guid vendorId)
+        public async Task<IEnumerable<ServiceItemDto>> GetServicesByVendorAsync(Guid vendorId)
         {
             var services = await _serviceRepo.GetByVendorIdAsync(vendorId);
             return services.Select(ServiceMapper.MapToServiceDto);
