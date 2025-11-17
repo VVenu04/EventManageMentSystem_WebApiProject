@@ -8,7 +8,7 @@ using System.Security.Claims;
 
 namespace Presentation.Controllers
 {
-    [Route("api/[services]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class ServiceItemController : ControllerBase
     {

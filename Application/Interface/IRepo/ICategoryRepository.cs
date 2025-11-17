@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Application.Interface.IGenericRepo;
+using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +8,11 @@ using System.Threading.Tasks;
 
 namespace Application.Interface.IRepo
 {
-    public interface ICategoryRepository
+    public interface ICategoryRepository : IGenericRepo<Category>
     {
-        Task<ServiceItem> GetByIdAsync(Guid categoryId);
+
+        Task UpdateAsync(Category category);
+        Task<Category> GetByIdAsync(Guid id);  // This match the GetByIdAsync(Guid id) method in our IEventRepo
 
     }
 }
