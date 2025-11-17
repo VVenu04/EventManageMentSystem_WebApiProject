@@ -7,7 +7,7 @@ using System.Security.Claims;
 
 namespace Presentation.Controllers
 {
-    [Route("api/[Booking]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class BookingController : ControllerBase
     {

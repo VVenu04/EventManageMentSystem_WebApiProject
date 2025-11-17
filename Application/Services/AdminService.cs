@@ -25,26 +25,26 @@ namespace Application.Services
                 throw new ArgumentNullException(nameof(adminDTO));
             }
             var admin = AdminMapper.MapToAdmin(adminDTO);
+            admin.PasswordHash = BCrypt.Net.BCrypt.HashPassword(adminDTO.AdminPassword);
             var addedAdmin = await _adminRepository.AddAsync(admin);
-            return adminDTO;
+            return AdminMapper.MapToAdminDTO(addedAdmin);
 
 
         }
 
-        public async Task DeleteAdminAsync(Guid Id)
+        public async Task DeleteAdminAsync(Guid? id)
         {
-            if (Id == null)
+            if (id == null || id.Value == Guid.Empty)
             {
-                throw new ArgumentNullException(nameof(Id));
+                throw new ArgumentNullException(nameof(id));
             }
-            var admin = await _adminRepository.GetByIdAsync(x => x.AdminID == Id);
-            await _adminRepository.DeleteAsync(admin);
 
-        }
+            var admin = await _adminRepository.GetByIdAsync(x => x.AdminID == id.Value);
 
-        public Task DeleteAdminAsync(Guid? id)
-        {
-            throw new NotImplementedException();
+            if (admin != null)
+            {
+                await _adminRepository.DeleteAsync(admin);
+            }
         }
 
         public async Task<AdminDto> GetAdminAsync(Guid adminId)

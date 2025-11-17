@@ -7,7 +7,7 @@ using System.Security.Claims;
 
 namespace Presentation.Controllers
 {
-    [Route("api/[packages]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class PackagesController : ControllerBase
     {
