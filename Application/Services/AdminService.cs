@@ -42,6 +42,11 @@ namespace Application.Services
 
         }
 
+        public Task DeleteAdminAsync(Guid? id)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<AdminDto> GetAdminAsync(Guid adminId)
         {
             if (adminId == Guid.Empty)

@@ -40,7 +40,7 @@ namespace infrastructure.Repositary
         {
             return await _context.BookingItems
 
-                .Where(item => item.ServiceID == serviceId)
+                .Where(item => item.ServiceItemID == serviceId)
 
                 .AnyAsync(item => item.Booking!.EventDate.Date == eventDate.Date);
         }
@@ -50,7 +50,7 @@ namespace infrastructure.Repositary
             return await _context.BookingItems
 
                 // 1. அந்த ServiceID-ஐக் கொண்ட Item-ஆ?
-                .Where(item => item.ServiceID == serviceId)
+                .Where(item => item.ServiceItemID == serviceId)
 
                 // 2. அந்த Item-உடைய Parent Booking அதே தேதியிலா உள்ளது?
                 .Where(item => item.Booking!.EventDate.Date == eventDate.Date)

@@ -9,9 +9,9 @@ namespace Application.Mapper
 {
     public class FunctionMapper
     {
-        public static Domain.Entities.Service MapToService(FunctionDto dto)
+        public static Domain.Entities.ServiceItem MapToService(FunctionDto dto)
         {
-            Domain.Entities.Service service = new Domain.Entities.Service();
+            Domain.Entities.ServiceItem service = new Domain.Entities.ServiceItem();
             service.Price = dto.Price;
             service.Description = dto.Description;
             return service;

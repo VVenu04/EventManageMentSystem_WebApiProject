@@ -34,7 +34,7 @@ namespace Presentation.Controllers
         [ProducesErrorResponseType(typeof(BadRequestResult))]
         [ProducesResponseType(typeof(AdminDto), StatusCodes.Status200OK)]
         [HttpDelete("DeleteAdmin")]
-        public async Task<IActionResult> DeleteAdmin(Guid Id)
+        public async Task<IActionResult> DeleteAdmin(Guid? Id)
         {
             if (Id == null) { return BadRequest("id ela"); }
             await _adminService.DeleteAdminAsync(Id);

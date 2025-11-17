@@ -10,13 +10,13 @@ namespace Application.Mapper
 {
     public class ServiceMapper
     {
-        public static ServiceDto MapToServiceDto(Service service)
+        public static ServiceItemDto MapToServiceDto(ServiceItem service)
         {
             if (service == null) return null;
 
-            return new ServiceDto
+            return new ServiceItemDto
             {
-                ServiceID = service.ServiceID,
+                ServiceID = service.ServiceItemID,
                 Name = service.Name,
                 Description = service.Description,
                 Price = service.Price,

@@ -11,5 +11,6 @@ namespace Application.Interface.IRepo
     public interface IEventRepo : IGenericRepo<Event>
     {
         Task UpdateAsync(Event @event);
+        Task<Event> GetByIdAsync(Guid id);
     }
 }

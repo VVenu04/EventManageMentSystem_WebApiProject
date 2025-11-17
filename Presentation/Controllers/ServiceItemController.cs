@@ -10,11 +10,11 @@ namespace Presentation.Controllers
 {
     [Route("api/[services]")]
     [ApiController]
-    public class ServicesController : ControllerBase
+    public class ServiceItemController : ControllerBase
     {
-        private readonly IServiceService _serviceService;
+        private readonly IServiceItemService _serviceService;
 
-        public ServicesController(IServiceService serviceService)
+        public ServiceItemController(IServiceItemService serviceService)
         {
             _serviceService = serviceService;
         }
@@ -22,7 +22,7 @@ namespace Presentation.Controllers
         // --- Vendor Protected Endpoint ---
         [HttpPost]
         [Authorize(Roles = "Vendor")] // Vendor மட்டும் தான் உருவாக்க முடியும்
-        public async Task<ActionResult<ServiceDto>> CreateService(CreateServiceDto createServiceDto)
+        public async Task<ActionResult<ServiceItemDto>> CreateService(CreateServiceDto createServiceDto)
         {
             var vendorId = GetCurrentUserId();
             if (vendorId == Guid.Empty)
@@ -47,7 +47,7 @@ namespace Presentation.Controllers
         // GET: api/services/{id}
         [HttpGet("{id}")]
         [AllowAnonymous]
-        public async Task<ActionResult<ServiceDto>> GetService(Guid id)
+        public async Task<ActionResult<ServiceItemDto>> GetService(Guid id)
         {
             var service = await _serviceService.GetServiceByIdAsync(id);
             if (service == null) return NotFound();
@@ -57,7 +57,7 @@ namespace Presentation.Controllers
         // GET: api/services/vendor/{vendorId}
         [HttpGet("vendor/{vendorId}")]
         [AllowAnonymous] // ஒரு Vendor-இன் services-ஐப் பார்க்கலாம்
-        public async Task<ActionResult<ServiceDto>> GetServicesByVendor(Guid vendorId)
+        public async Task<ActionResult<ServiceItemDto>> GetServicesByVendor(Guid vendorId)
         {
             var services = await _serviceService.GetServicesByVendorAsync(vendorId);
             return Ok(services);

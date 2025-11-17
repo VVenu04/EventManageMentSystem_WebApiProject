@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class Service
+    public class ServiceItem
     {
         [Key]
-        public Guid ServiceID { get; set; }
+        public Guid ServiceItemID { get; set; }
 
-
+        [Required]
         public string Name { get; set; } 
 
         public Guid VendorID { get; set; }
