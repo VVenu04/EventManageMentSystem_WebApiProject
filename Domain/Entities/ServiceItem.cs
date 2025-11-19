@@ -13,17 +13,17 @@ namespace Domain.Entities
         public Guid ServiceItemID { get; set; }
 
         [Required]
-        public string Name { get; set; } 
+        public string? Name { get; set; } 
 
         public Guid VendorID { get; set; }
         public Guid CategoryID { get; set; }
         public Guid? EventID { get; set; }
 
-        public string Description { get; set; }
+        public string? Description { get; set; }
         public decimal Price { get; set; }
         public decimal EventPerDayLimit { get; set; }
         public double TimeLimit { get; set; }
-        public string Location { get; set; }
+        public string? Location { get; set; }
         public bool Active { get; set; }
 
         public Vendor? Vendor { get; set; }

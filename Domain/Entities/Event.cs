@@ -12,11 +12,11 @@ namespace Domain.Entities
         [Key]
         public Guid EventID { get; set; }
 
-        public string EventName { get; set; }
+        public string? EventName { get; set; }
 
-        public ICollection<ServiceItem> Services { get; set; }
-        public ICollection<Category> Categories { get; set; }
-        public ICollection<Package> Packages { get; set; }
-        public ICollection<Vendor> Vendors { get; set; }
+        public ICollection<ServiceItem>? Services { get; set; }
+        public ICollection<Category>? Categories { get; set; }
+        public  ICollection<Package>? Packages { get; set; }
+        public ICollection<Vendor>? Vendors { get; set; }
     }
 }

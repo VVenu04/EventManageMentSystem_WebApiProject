@@ -36,10 +36,10 @@ namespace Presentation.Controllers
         [ProducesErrorResponseType(typeof(BadRequestResult))]
         [ProducesResponseType(typeof(EventDto), StatusCodes.Status200OK)]
         [HttpDelete("DeleteEvent")]
-        public async Task<IActionResult> DeleteEvent(Guid Id)
+        public async Task<IActionResult> DeleteEvent(Guid? Id)
         {
             if (Id == null) { return BadRequest("id ela"); }
-            await _eventService.DeleteEventAsync(Id);
+            await _eventService.DeleteEventAsync(Id.Value);
             return Ok();
         }
 

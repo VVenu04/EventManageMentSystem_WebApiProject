@@ -9,6 +9,6 @@ namespace Domain.Entities
     public class AdminReport
     {
         public Guid ReportID { get; set; }
-        public string ReportName { get; set; }
+        public string? ReportName { get; set; }
     }
 }

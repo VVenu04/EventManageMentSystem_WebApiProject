@@ -12,9 +12,9 @@ namespace Domain.Entities
         [Key]
         public Guid BookingID { get; set; }
         public Guid CustomerID { get; set; }
-        public string BookingStatus { get; set; }
+        public string? BookingStatus { get; set; }
         public decimal TotalPrice { get; set; }
-        public string Location { get; set; }
+        public string? Location { get; set; }
 
 
 
@@ -22,7 +22,7 @@ namespace Domain.Entities
 
         public Customer? Customer { get; set; }
         public Payment? Payment { get; set; }
-        public ICollection<BookingItem> BookingItems { get; set; }
+        public ICollection<BookingItem>? BookingItems { get; set; }
 
 
 

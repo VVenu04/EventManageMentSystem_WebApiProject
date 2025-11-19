@@ -11,7 +11,7 @@ namespace Domain.Entities
     {
         [Key]
         public Guid CategoryID { get; set; }
-        public string CategoryName { get; set; }
+        public string? CategoryName { get; set; }
 
         // Navigation
         public ICollection<ServiceItem>? Services { get; set; }

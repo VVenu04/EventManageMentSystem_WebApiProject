@@ -75,7 +75,7 @@ namespace Presentation.Controllers
             {
                 await _adminService.DeleteAdminAsync(Id);
       
-                return Ok(ApiResponse<object>.Success(null, "Admin deleted successfully."));
+                return Ok(ApiResponse<object>.Success( "Admin deleted successfully."));
             }
             catch (Exception ex)
             {

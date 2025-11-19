@@ -15,7 +15,8 @@ namespace Application.Mapper
             Vendor vendor = new Vendor();
             vendor.Name = vendorDTO.Name;
             vendor.PhoneNumber = vendorDTO.PhoneNumber;
-             
+            vendor.PasswordHash = vendorDTO.PasswordHash;
+
             return vendor;
         }
 
@@ -24,10 +25,10 @@ namespace Application.Mapper
             VendorDto vendorDTO = new VendorDto();
             vendorDTO.Name = vendor.Name;
             vendorDTO.PhoneNumber = vendor.PhoneNumber;
-            
+          
             return vendorDTO;
         }
-        public static IEnumerable<VendorDto> MapToAdminDTOList(IEnumerable<Vendor> vendors)
+        public static IEnumerable<VendorDto> MapToVendorDTOList(IEnumerable<Vendor> vendors)
         {
             return vendors.Select(v => new VendorDto
             {
