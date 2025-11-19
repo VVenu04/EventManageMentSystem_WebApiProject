@@ -29,6 +29,7 @@ namespace Application.Services
             var addedAdmin = await _adminRepository.AddAsync(admin);
             return AdminMapper.MapToAdminDTO(addedAdmin);
 
+
         }
 
         public async Task DeleteAdminAsync(Guid? id)

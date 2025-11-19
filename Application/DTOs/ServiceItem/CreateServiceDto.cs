@@ -9,10 +9,10 @@ namespace Application.DTOs.Service
 {
     public class CreateServiceDto
     {
-        public string? Name { get; set; }
-        public string? Description { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
         public decimal Price { get; set; }
-        public string? Location { get; set; }
+        public string Location { get; set; }
 
         // Limits
         public decimal EventPerDayLimit { get; set; }
@@ -24,6 +24,6 @@ namespace Application.DTOs.Service
 
         // --- நீங்கள் கேட்ட 5 Photos ---
         // (Frontend 5 URL-களை List-ஆக அனுப்பும்)
-        public List<string>? ImageUrls { get; set; }
+        public List<string> ImageUrls { get; set; }
     }
 }

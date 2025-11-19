@@ -10,7 +10,7 @@ namespace Application.Mapper
 {
     public  class AdminMapper
     {
-        public static Admin? MapToAdmin(AdminDto dto)
+        public static Admin MapToAdmin(AdminDto dto)
         {
             if (dto == null)
                 return null;
@@ -20,7 +20,7 @@ namespace Application.Mapper
             admin.AdminName = dto.AdminName;
             return admin;
         }
-        public static AdminDto? MapToAdminDTO(Admin admin)
+        public static AdminDto MapToAdminDTO(Admin admin)
         {
             if (admin == null) return null;
             AdminDto adminDTO = new AdminDto();

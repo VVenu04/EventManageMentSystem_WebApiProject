@@ -9,10 +9,10 @@ namespace Application.DTOs.Service
     public class ServiceItemDto
     {
         public Guid ServiceID { get; set; }
-        public string? Name { get; set; }
-        public string? Description { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
         public decimal Price { get; set; }
-        public string? Location { get; set; }
+        public string Location { get; set; }
         public bool Active { get; set; }
 
         public decimal EventPerDayLimit { get; set; }
@@ -20,11 +20,11 @@ namespace Application.DTOs.Service
 
         // Relations
         public Guid VendorID { get; set; }
-        public string? VendorName { get; set; }
+        public string VendorName { get; set; }
         public Guid CategoryID { get; set; }
-        public string? CategoryName { get; set; } // (Mapper-இல் Include செய்ய வேண்டும்)
+        public string CategoryName { get; set; } // (Mapper-இல் Include செய்ய வேண்டும்)
 
         // --- Photos List ---
-        public List<string>? ImageUrls { get; set; }
+        public List<string> ImageUrls { get; set; }
     }
 }

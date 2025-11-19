@@ -9,29 +9,29 @@ using System.Threading.Tasks;
 
 namespace Application.Service
 {
-    public class VendorService : IVendorService
+    public class FunctionService : IFunctionService
     {
-        private readonly IVendorRepo _vendorRepo;
-        public VendorService(IVendorRepo vendorRepo)
+        private readonly IFunctionRepo _repo;
+        public FunctionService(IFunctionRepo functionRepo)
         {
-            _vendorRepo = vendorRepo;
+            _repo = functionRepo;
         }
-        public Task<VendorDto> AddVendorAsync(VendorDto vendorDTO)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task DeleteVendorAsync(Guid Id)
+        public Task<FunctionDto> AddFunctionAsync(FunctionDto functionDTO)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<VendorDto>> GetAllAsync()
+        public Task DeleteFunctionAsync(Guid Id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<VendorDto> GetVendorAsync(Guid vendorId)
+        public Task<IEnumerable<FunctionDto>> GetAllAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<FunctionDto> GetFunctionAsync(Guid FunctionId)
         {
             throw new NotImplementedException();
         }

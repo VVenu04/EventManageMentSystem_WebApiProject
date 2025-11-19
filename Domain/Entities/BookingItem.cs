@@ -17,7 +17,7 @@ namespace Domain.Entities
         public Guid? PackageID { get; set; }
         public Guid VendorID { get; set; }
         public decimal ItemPrice { get; set; }
-        public string? TrackingStatus { get; set; }
+        public string TrackingStatus { get; set; }
         // Navigation
         public Booking? Booking { get; set; }
         public ServiceItem? Service { get; set; }

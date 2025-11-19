@@ -35,11 +35,10 @@ namespace Presentation.Controllers
         [ProducesErrorResponseType(typeof(BadRequestResult))]
         [ProducesResponseType(typeof(CustomerDto), StatusCodes.Status200OK)]
         [HttpDelete("DeleteCustomer")]
-        public async Task<IActionResult> DeleteCustomer(Guid? Id)
+        public async Task<IActionResult> DeleteCustomer(Guid Id)
         {
-
-            if (Id == null)  return BadRequest("id ela"); 
-            await _customerService.DeleteCustomerAsync(Id.Value);
+            if (Id == null) { return BadRequest("id ela"); }
+            await _customerService.DeleteCustomerAsync(Id);
             return Ok();
         }
 

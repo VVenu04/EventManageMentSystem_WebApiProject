@@ -9,7 +9,7 @@ namespace Application.DTOs.Service
     public class SimpleServiceDto
     {
         public Guid ServiceID { get; set; }
-        public string? Name { get; set; }
+        public string Name { get; set; }
         public decimal OriginalPrice { get; set; } 
     }
 }

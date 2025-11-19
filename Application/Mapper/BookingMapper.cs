@@ -9,7 +9,7 @@ namespace Application.Mapper // (உங்கள் folder பெயர் 'Mapp
     public static class BookingMapper
     {
         // GetBookingByIdAsync-ஆல் call செய்யப்படும்
-        public static BookingConfirmationDto? MapToConfirmationDto(Booking booking)
+        public static BookingConfirmationDto MapToConfirmationDto(Booking booking)
         {
             if (booking == null) return null;
 
@@ -22,7 +22,7 @@ namespace Application.Mapper // (உங்கள் folder பெயர் 'Mapp
                 TotalPrice = booking.TotalPrice,
                 BookingStatus = booking.BookingStatus,
                 // 'using Domain.Entities;' இருப்பதால், 'item' இப்போது 'BookingItem' எனச் சரியாகப் புரியும்
-                BookedItems = booking.BookingItems?.Select(item => new BookingItemDto
+                BookedItems = booking.BookingItems.Select(item => new BookingItemDto
                 {
                     BookingItemID = item.BookingItemID,
                     ServiceName = item.Service?.Name, // <-- பிழை (Error) இருந்த இடம்
@@ -44,7 +44,7 @@ namespace Application.Mapper // (உங்கள் folder பெயர் 'Mapp
                 EventDate = booking.EventDate,
                 TotalPrice = booking.TotalPrice,
                 BookingStatus = booking.BookingStatus,
-                BookedItems = booking.BookingItems?.Select(item =>
+                BookedItems = booking.BookingItems.Select(item =>
                 {
                     var serviceInCart = servicesInCart.First(s => s.ServiceItemID == item.ServiceItemID);
                     return new BookingItemDto
@@ -52,7 +52,7 @@ namespace Application.Mapper // (உங்கள் folder பெயர் 'Mapp
                         BookingItemID = item.BookingItemID,
                         ServiceName = serviceInCart.Name,
                         ItemPrice = item.ItemPrice,
-                        VendorName = serviceInCart.Vendor?.Name,
+                        VendorName = serviceInCart.Vendor.Name,
                         TrackingStatus = item.TrackingStatus
                     };
                 }).ToList()

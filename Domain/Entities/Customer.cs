@@ -12,14 +12,14 @@ namespace Domain.Entities
         [Key]
         public Guid CustomerID { get; set; }
 
-        public string? Name { get; set; }
-        public string? Email { get; set; }
-        public string? PasswordHash { get; set; }
-        public string? PhoneNumber { get; set; }
-        public string? Location { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string PasswordHash { get; set; }
+        public string PhoneNumber { get; set; }
+        public string Location { get; set; }
         public string? ProfilePhoto { get; set; }
 
-        public ICollection<Booking>? Bookings { get; set; }
-        public ICollection<Message>? Messages { get; set; }
+        public ICollection<Booking> Bookings { get; set; }
+        public ICollection<Message> Messages { get; set; }
     }
 }

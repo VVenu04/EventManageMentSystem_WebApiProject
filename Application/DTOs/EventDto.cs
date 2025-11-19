@@ -8,6 +8,6 @@ namespace Application.DTOs
 {
     public class EventDto
     {
-        public string? EventName { get; set; }
+        public string EventName { get; set; }
     }
 }

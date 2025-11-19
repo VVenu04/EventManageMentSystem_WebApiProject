@@ -22,10 +22,12 @@ namespace Application
             services.AddScoped<IVendorService, VendorService>();
             services.AddScoped<ICustomerService, CustomerService>();
             services.AddScoped<IEventService, EventService>();
+            services.AddScoped<IFunctionService, FunctionService>();
             services.AddScoped<IBookingService, BookingService>();
             services.AddScoped<IPackageService, PackageService>();
             services.AddScoped<IServiceItemService, ServiceItemService>();
- 
+            //services.AddScoped<IVendorService, VendorService>();
+            //services.AddScoped<IUserService, UserService>();
             return services;
         }
     }

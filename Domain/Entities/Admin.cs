@@ -12,8 +12,8 @@ namespace Domain.Entities
     {
         [Key]
         public Guid AdminID { get; set; }
-        public string? AdminName { get; set; }
-        public string? AdminEmail { get; set; }
-        public string? PasswordHash { get; set; }
+        public string AdminName { get; set; }
+        public string AdminEmail { get; set; }
+        public string PasswordHash { get; set; }
     }
 }

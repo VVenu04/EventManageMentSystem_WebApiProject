@@ -22,17 +22,21 @@ namespace infrastucure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepo<>));
-            services.AddScoped<IAdminRepo, AdminRepositary>();
-            services.AddScoped<IAuthRepository, AuthRepository>();
-            services.AddScoped<ICustomerRepo, CustomerRepository>();
-            services.AddScoped<IVendorRepo, VendorRepository>();
-            services.AddScoped<IEventRepo, EventRepository>();
+           services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepo<>));
+           services.AddScoped<IAdminRepo, AdminRepositary>();
+           services.AddScoped<IAuthRepository, AuthRepository>();
+           services.AddScoped<ICustomerRepo, CustomerRepository>();
+           services.AddScoped<IVendorRepo, VendorRepository>();
+           services.AddScoped<IEventRepo, EventRepository>();
+           services.AddScoped<IFunctionRepo, FunctionRepository>();
+
+
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IBookingRepository, BookingRepository>();
             services.AddScoped<IServiceItemRepository, ServiceItemRepository>();
             services.AddScoped<IPackageRepository, PackageRepository>();
             services.AddScoped<IServiceItemRepository, ServiceItemRepository > ();
+            
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             var connectionString = configuration.GetConnectionString("Smart");
 

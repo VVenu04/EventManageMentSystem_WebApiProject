@@ -10,7 +10,7 @@ namespace Application.Attribute
 {
     public class CustomEmailAttribute : ValidationAttribute
     {
-        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             var email = value as string;
 

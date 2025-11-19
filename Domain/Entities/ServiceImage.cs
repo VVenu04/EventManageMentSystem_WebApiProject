@@ -12,11 +12,11 @@ namespace Domain.Entities
         [Key]
         public Guid ServiceImageID { get; set; }
 
-        public string? ImageUrl { get; set; } // Photo-இன் URL
+        public string ImageUrl { get; set; } // Photo-இன் URL
         public bool IsCover { get; set; } = false; // இது main photo-வா?
 
         // Foreign Key
         public Guid ServiceItemID { get; set; }
-        public ServiceItem? Service { get; set; }
+        public ServiceItem Service { get; set; }
     }
 }
