@@ -11,14 +11,16 @@ namespace Application.DTOs
     public class VendorDto
     {
         [Required]
-        public string Name { get; set; }
+        public string? Name { get; set; }
         [Required]
-        public string Category { get; set; }
+        public string? Category { get; set; }
 
         [CustomEmail]
         [Required]
-        public string ContactEmail { get; set; }
+        public string? ContactEmail { get; set; }
         [Required]
-        public string PhoneNumber { get; set; }
+        public string? PhoneNumber { get; set; }
+        [Required]
+        public string? PasswordHash { get; set; }
     }
 }

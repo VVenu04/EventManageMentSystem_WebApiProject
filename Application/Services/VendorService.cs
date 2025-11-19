@@ -1,6 +1,8 @@
 ﻿using Application.DTOs;
 using Application.Interface.IRepo;
 using Application.Interface.IService;
+using Application.Mapper;
+using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,24 +18,42 @@ namespace Application.Service
         {
             _vendorRepo = vendorRepo;
         }
-        public Task<VendorDto> AddVendorAsync(VendorDto vendorDTO)
+        public async Task<VendorDto> AddVendorAsync(VendorDto vendorDTO)
         {
-            throw new NotImplementedException();
+            var vendor = VendorMapper.MapToVendor(vendorDTO);
+            if (!string.IsNullOrEmpty(vendorDTO.PasswordHash))
+            {
+                vendor.PasswordHash = BCrypt.Net.BCrypt.HashPassword(vendorDTO.PasswordHash);
+            }
+
+            var addedVendor = await _vendorRepo.AddAsync(vendor);
+            return VendorMapper.MapToVendorDTO(addedVendor);
         }
 
-        public Task DeleteVendorAsync(Guid Id)
+        public async  Task DeleteVendorAsync(Guid Id)
         {
-            throw new NotImplementedException();
+            var vendor = await _vendorRepo.GetByIdAsync(c => c.VendorID == Id);
+            if (vendor != null)
+            {
+                await _vendorRepo.DeleteAsync(vendor);
+            }
+
         }
 
-        public Task<IEnumerable<VendorDto>> GetAllAsync()
+        public async Task<IEnumerable<VendorDto>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            var vendors = await _vendorRepo.GetAllAsync();
+            return VendorMapper.MapToVendorDTOList(vendors);
         }
 
-        public Task<VendorDto> GetVendorAsync(Guid vendorId)
+        public async Task<VendorDto> GetVendorAsync(Guid vendorId)
         {
-            throw new NotImplementedException();
+            if (vendorId == Guid.Empty)
+            {
+                throw new ArgumentException("Invalid vendor ID");
+            }
+            var vendor = await _vendorRepo.GetByIdAsync(c => c.VendorID == vendorId);
+            return VendorMapper.MapToVendorDTO(vendor);
         }
     }
 }

@@ -12,11 +12,11 @@ namespace Domain.Entities
         [Key]
         public Guid PackageID { get; set; }
         public Guid VendorID { get; set; }
-        public string Name { get; set; }
+        public string? Name { get; set; }
         public decimal TotalPrice { get; set; }
         public bool Active { get; set; }
         public Vendor? Vendor { get; set; }
 
-        public ICollection<PackageItem> PackageItems { get; set; }
+        public ICollection<PackageItem>? PackageItems { get; set; }
     }
 }

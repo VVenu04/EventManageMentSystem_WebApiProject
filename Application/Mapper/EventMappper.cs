@@ -10,7 +10,7 @@ namespace Application.Mapper
 {
     public class EventMappper
     {
-        public static Event MapToEvent(EventDto eventDto)
+        public static Event? MapToEvent(EventDto eventDto)
         {
             if (eventDto == null)
                 return null;
@@ -19,7 +19,7 @@ namespace Application.Mapper
             return @event;
         }
 
-        public static EventDto MapToEventDto(Event @event)
+        public static EventDto? MapToEventDto(Event @event)
         {
             if (@event == null) return null;
             EventDto @eventDto = new EventDto();

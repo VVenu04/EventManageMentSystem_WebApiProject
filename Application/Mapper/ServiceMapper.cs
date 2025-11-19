@@ -10,7 +10,7 @@ namespace Application.Mapper
 {
     public class ServiceMapper
     {
-        public static ServiceItemDto MapToServiceDto(ServiceItem service)
+        public static ServiceItemDto? MapToServiceDto(ServiceItem service)
         {
             if (service == null) return null;
 

@@ -13,7 +13,7 @@ namespace Domain.Entities
         public Guid MessageID { get; set; }
         public Guid CustomerID { get; set; }
         public Guid VendorID { get; set; }
-        public string Data { get; set; }
+        public string? Data { get; set; }
 
         // Navigation
         public Customer? Customer { get; set; }

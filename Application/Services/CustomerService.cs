@@ -51,12 +51,13 @@ namespace Application.Service
         }
 
         public async Task<CustomerDto> GetCustomerAsync(Guid customerId)
-        {
-            var customer = await _repo.GetByIdAsync(c => c.CustomerID == customerId);
-            if (customer == null)
+        { 
+            if (customerId == Guid.Empty)
             {
-                return null;
+                throw new ArgumentException("Invalid customer ID");
             }
+
+            var customer = await _repo.GetByIdAsync(c => c.CustomerID == customerId);
             return CustomerMapper.MapToCustomerDto(customer);
         }
     }

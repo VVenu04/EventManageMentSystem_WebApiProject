@@ -36,10 +36,10 @@ namespace Presentation.Controllers
         [ProducesErrorResponseType(typeof(BadRequestResult))]
         [ProducesResponseType(typeof(VendorDto), StatusCodes.Status200OK)]
         [HttpDelete("DeleteVendor")]
-        public async Task<IActionResult> DeleteVendor(Guid Id)
+        public async Task<IActionResult> DeleteVendor(Guid? Id)
         {
             if (Id == null) { return BadRequest("id ela"); }
-            await _vendorService.DeleteVendorAsync(Id);
+            await _vendorService.DeleteVendorAsync(Id.Value);
             return Ok();
         }
 

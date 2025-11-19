@@ -12,9 +12,9 @@ namespace Domain.Entities
         [Key]
         public Guid PaymentID { get; set; }
         public Guid BookingID { get; set; }
-        public string PaymentMethod { get; set; }
+        public string? PaymentMethod { get; set; }
 
         // Navigation
-        public Booking Booking { get; set; }
+        public Booking?   Booking { get; set; }
     }
 }

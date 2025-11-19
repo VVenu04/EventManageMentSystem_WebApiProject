@@ -11,6 +11,6 @@ namespace Domain.Entities
     {
         [Key]
         public Guid NotificationID { get; set; }
-        public string Message { get; set; }
+        public string? Message { get; set; }
     }
 }
