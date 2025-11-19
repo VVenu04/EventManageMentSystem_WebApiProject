@@ -100,7 +100,7 @@ namespace infrastucure.Migrations
                     b.Property<Guid?>("PackageID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ServiceID")
+                    b.Property<Guid?>("ServiceItemID")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("TrackingStatus")
@@ -115,7 +115,7 @@ namespace infrastucure.Migrations
 
                     b.HasIndex("PackageID");
 
-                    b.HasIndex("ServiceID");
+                    b.HasIndex("ServiceItemID");
 
                     b.HasIndex("VendorID");
 
@@ -256,14 +256,14 @@ namespace infrastucure.Migrations
                     b.Property<Guid>("PackageID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ServiceID")
+                    b.Property<Guid>("ServiceItemID")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("PackageItemID");
 
                     b.HasIndex("PackageID");
 
-                    b.HasIndex("ServiceID");
+                    b.HasIndex("ServiceItemID");
 
                     b.ToTable("PackageItems");
                 });
@@ -288,9 +288,31 @@ namespace infrastucure.Migrations
                     b.ToTable("Payment");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Service", b =>
+            modelBuilder.Entity("Domain.Entities.ServiceImage", b =>
                 {
-                    b.Property<Guid>("ServiceID")
+                    b.Property<Guid>("ServiceImageID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsCover")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("ServiceItemID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("ServiceImageID");
+
+                    b.HasIndex("ServiceItemID");
+
+                    b.ToTable("ServiceImage");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ServiceItem", b =>
+                {
+                    b.Property<Guid>("ServiceItemID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -313,6 +335,7 @@ namespace infrastucure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Price")
@@ -324,7 +347,7 @@ namespace infrastucure.Migrations
                     b.Property<Guid>("VendorID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("ServiceID");
+                    b.HasKey("ServiceItemID");
 
                     b.HasIndex("CategoryID");
 
@@ -332,29 +355,7 @@ namespace infrastucure.Migrations
 
                     b.HasIndex("VendorID");
 
-                    b.ToTable("Services");
-                });
-
-            modelBuilder.Entity("Domain.Entities.ServiceImage", b =>
-                {
-                    b.Property<Guid>("ServiceImageID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsCover")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("ServiceID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("ServiceImageID");
-
-                    b.HasIndex("ServiceID");
-
-                    b.ToTable("ServiceImage");
+                    b.ToTable("ServiceItems");
                 });
 
             modelBuilder.Entity("Domain.Entities.Tracking", b =>
@@ -412,9 +413,6 @@ namespace infrastucure.Migrations
                     b.Property<string>("RegisterNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Salt")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("TimeLimit")
                         .HasColumnType("int");
 
@@ -463,9 +461,9 @@ namespace infrastucure.Migrations
                         .WithMany()
                         .HasForeignKey("PackageID");
 
-                    b.HasOne("Domain.Entities.Service", "Service")
+                    b.HasOne("Domain.Entities.ServiceItem", "Service")
                         .WithMany("BookingItems")
-                        .HasForeignKey("ServiceID");
+                        .HasForeignKey("ServiceItemID");
 
                     b.HasOne("Domain.Entities.Vendor", "Vendor")
                         .WithMany()
@@ -524,9 +522,9 @@ namespace infrastucure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.Service", "Service")
+                    b.HasOne("Domain.Entities.ServiceItem", "Service")
                         .WithMany("PackageItems")
-                        .HasForeignKey("ServiceID")
+                        .HasForeignKey("ServiceItemID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -546,7 +544,18 @@ namespace infrastucure.Migrations
                     b.Navigation("Booking");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Service", b =>
+            modelBuilder.Entity("Domain.Entities.ServiceImage", b =>
+                {
+                    b.HasOne("Domain.Entities.ServiceItem", "Service")
+                        .WithMany("ServiceImages")
+                        .HasForeignKey("ServiceItemID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Service");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ServiceItem", b =>
                 {
                     b.HasOne("Domain.Entities.Category", "Category")
                         .WithMany("Services")
@@ -569,17 +578,6 @@ namespace infrastucure.Migrations
                     b.Navigation("Event");
 
                     b.Navigation("Vendor");
-                });
-
-            modelBuilder.Entity("Domain.Entities.ServiceImage", b =>
-                {
-                    b.HasOne("Domain.Entities.Service", "Service")
-                        .WithMany("ServiceImages")
-                        .HasForeignKey("ServiceID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Service");
                 });
 
             modelBuilder.Entity("Domain.Entities.Tracking", b =>
@@ -633,7 +631,7 @@ namespace infrastucure.Migrations
                     b.Navigation("PackageItems");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Service", b =>
+            modelBuilder.Entity("Domain.Entities.ServiceItem", b =>
                 {
                     b.Navigation("BookingItems");
 

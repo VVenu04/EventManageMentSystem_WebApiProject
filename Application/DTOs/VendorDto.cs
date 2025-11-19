@@ -10,6 +10,8 @@ namespace Application.DTOs
 {
     public class VendorDto
     {
+        public Guid VendorID { get; set; }
+
         [Required]
         public string Name { get; set; }
         [Required]
@@ -20,5 +22,7 @@ namespace Application.DTOs
         public string ContactEmail { get; set; }
         [Required]
         public string PhoneNumber { get; set; }
+
+        public string Password { get; set; }
     }
 }
