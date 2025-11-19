@@ -12,15 +12,15 @@ namespace Domain.Entities
         [Key]
         public Guid BookingItemID { get; set; }
 
-        public Guid BookingID { get; set; } 
-        public Guid? ServiceID { get; set; } 
+        public Guid BookingID { get; set; }
+        public Guid? ServiceItemID { get; set; }
         public Guid? PackageID { get; set; }
         public Guid VendorID { get; set; }
         public decimal ItemPrice { get; set; }
         public string TrackingStatus { get; set; }
         // Navigation
         public Booking? Booking { get; set; }
-        public Service? Service { get; set; }
+        public ServiceItem? Service { get; set; }
         public Package? Package { get; set; }
         public Vendor? Vendor { get; set; }
     }

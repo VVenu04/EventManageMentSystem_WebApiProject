@@ -69,11 +69,11 @@ namespace infrastucure.Migrations
                     b.Property<Guid>("CustomerID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("EndDate")
+                    b.Property<DateTime>("EventDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("Location")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(18,2)");
@@ -100,7 +100,7 @@ namespace infrastucure.Migrations
                     b.Property<Guid?>("PackageID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ServiceID")
+                    b.Property<Guid?>("ServiceItemID")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("TrackingStatus")
@@ -115,11 +115,11 @@ namespace infrastucure.Migrations
 
                     b.HasIndex("PackageID");
 
-                    b.HasIndex("ServiceID");
+                    b.HasIndex("ServiceItemID");
 
                     b.HasIndex("VendorID");
 
-                    b.ToTable("BookingItem");
+                    b.ToTable("BookingItems");
                 });
 
             modelBuilder.Entity("Domain.Entities.Category", b =>
@@ -247,6 +247,27 @@ namespace infrastucure.Migrations
                     b.ToTable("Packages");
                 });
 
+            modelBuilder.Entity("Domain.Entities.PackageItem", b =>
+                {
+                    b.Property<Guid>("PackageItemID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PackageID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ServiceItemID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("PackageItemID");
+
+                    b.HasIndex("PackageID");
+
+                    b.HasIndex("ServiceItemID");
+
+                    b.ToTable("PackageItems");
+                });
+
             modelBuilder.Entity("Domain.Entities.Payment", b =>
                 {
                     b.Property<Guid>("PaymentID")
@@ -267,9 +288,31 @@ namespace infrastucure.Migrations
                     b.ToTable("Payment");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Service", b =>
+            modelBuilder.Entity("Domain.Entities.ServiceImage", b =>
                 {
-                    b.Property<Guid>("ServiceID")
+                    b.Property<Guid>("ServiceImageID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsCover")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("ServiceItemID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("ServiceImageID");
+
+                    b.HasIndex("ServiceItemID");
+
+                    b.ToTable("ServiceImage");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ServiceItem", b =>
+                {
+                    b.Property<Guid>("ServiceItemID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -285,19 +328,26 @@ namespace infrastucure.Migrations
                     b.Property<Guid?>("EventID")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<decimal>("EventPerDayLimit")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("Location")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Photo")
+                    b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<double>("TimeLimit")
+                        .HasColumnType("float");
+
                     b.Property<Guid>("VendorID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("ServiceID");
+                    b.HasKey("ServiceItemID");
 
                     b.HasIndex("CategoryID");
 
@@ -305,7 +355,7 @@ namespace infrastucure.Migrations
 
                     b.HasIndex("VendorID");
 
-                    b.ToTable("Services");
+                    b.ToTable("ServiceItems");
                 });
 
             modelBuilder.Entity("Domain.Entities.Tracking", b =>
@@ -363,9 +413,6 @@ namespace infrastucure.Migrations
                     b.Property<string>("RegisterNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Salt")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("TimeLimit")
                         .HasColumnType("int");
 
@@ -414,9 +461,9 @@ namespace infrastucure.Migrations
                         .WithMany()
                         .HasForeignKey("PackageID");
 
-                    b.HasOne("Domain.Entities.Service", "Service")
-                        .WithMany()
-                        .HasForeignKey("ServiceID");
+                    b.HasOne("Domain.Entities.ServiceItem", "Service")
+                        .WithMany("BookingItems")
+                        .HasForeignKey("ServiceItemID");
 
                     b.HasOne("Domain.Entities.Vendor", "Vendor")
                         .WithMany()
@@ -467,6 +514,25 @@ namespace infrastucure.Migrations
                     b.Navigation("Vendor");
                 });
 
+            modelBuilder.Entity("Domain.Entities.PackageItem", b =>
+                {
+                    b.HasOne("Domain.Entities.Package", "Package")
+                        .WithMany("PackageItems")
+                        .HasForeignKey("PackageID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.ServiceItem", "Service")
+                        .WithMany("PackageItems")
+                        .HasForeignKey("ServiceItemID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Package");
+
+                    b.Navigation("Service");
+                });
+
             modelBuilder.Entity("Domain.Entities.Payment", b =>
                 {
                     b.HasOne("Domain.Entities.Booking", "Booking")
@@ -478,7 +544,18 @@ namespace infrastucure.Migrations
                     b.Navigation("Booking");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Service", b =>
+            modelBuilder.Entity("Domain.Entities.ServiceImage", b =>
+                {
+                    b.HasOne("Domain.Entities.ServiceItem", "Service")
+                        .WithMany("ServiceImages")
+                        .HasForeignKey("ServiceItemID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Service");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ServiceItem", b =>
                 {
                     b.HasOne("Domain.Entities.Category", "Category")
                         .WithMany("Services")
@@ -547,6 +624,20 @@ namespace infrastucure.Migrations
                     b.Navigation("Services");
 
                     b.Navigation("Vendors");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Package", b =>
+                {
+                    b.Navigation("PackageItems");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ServiceItem", b =>
+                {
+                    b.Navigation("BookingItems");
+
+                    b.Navigation("PackageItems");
+
+                    b.Navigation("ServiceImages");
                 });
 
             modelBuilder.Entity("Domain.Entities.Vendor", b =>

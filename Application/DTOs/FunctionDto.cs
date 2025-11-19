@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Entities
+namespace Application.DTOs
 {
-    public class Service
+    public class FunctionDto
     {
-        [Key]
-        public Guid ServiceID { get; set; }
-
         public Guid VendorID { get; set; }
         public Guid CategoryID { get; set; }
         public Guid? EventID { get; set; }
@@ -21,12 +17,5 @@ namespace Domain.Entities
         public decimal Price { get; set; }
 
         public string Location { get; set; }
-        public bool Active { get; set; }
-
-        public Vendor? Vendor { get; set; }
-        public Event? Event { get; set; }
-        public Category? Category { get; set; }
-        //public ICollection<Booking> Bookings { get; set; }
-
     }
 }

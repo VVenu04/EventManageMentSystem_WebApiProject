@@ -8,9 +8,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Service
+namespace Application.Services
 {
-    public class AuthService: IAuthService
+
+
+    public class AuthService : IAuthService
+
     {
         private readonly IAuthRepository _authRepo;
         private readonly ITokenService _tokenService;

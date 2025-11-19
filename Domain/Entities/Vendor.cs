@@ -15,12 +15,11 @@ namespace Domain.Entities
         public string Name { get; set; }
         public string Email { get; set; }
         public string PasswordHash { get; set; }
-        public string Salt { get; set; }
         public string CompanyName { get; set; }
         public string RegisterNumber { get; set; }
         public string PhoneNumber { get; set; }
         public string Location { get; set; }
-        public ICollection<Service> Services { get; set; }
+        public ICollection<ServiceItem> Services { get; set; }
         public ICollection<Package> Packages { get; set; }
         public ICollection<Message> Message { get; set; }
         public int EventPerDayLimit { get; set; }

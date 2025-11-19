@@ -12,7 +12,7 @@ namespace infrastructure.Repositary
 {
     public class AuthRepository : IAuthRepository
     {
-        private readonly ApplicationDbContext _context; // உங்கள் DbContext-இன் பெயர்
+        private readonly ApplicationDbContext _context; 
 
         public AuthRepository(ApplicationDbContext context)
         {
@@ -25,12 +25,12 @@ namespace infrastructure.Repositary
             return await _context.Customers.AnyAsync(x => x.Email == email);
         }
 
-        public async Task<Customer> GetCustomerByEmailAsync(string email)
+        public async Task<Customer?> GetCustomerByEmailAsync(string email)
         {
             return await _context.Customers.FirstOrDefaultAsync(x => x.Email == email);
         }
 
-        public async Task<Customer> AddCustomerAsync(Customer customer)
+        public async Task<Customer?> AddCustomerAsync(Customer customer)
         {
             _context.Customers.Add(customer);
             await _context.SaveChangesAsync();
@@ -43,12 +43,12 @@ namespace infrastructure.Repositary
             return await _context.Vendors.AnyAsync(x => x.Email == email);
         }
 
-        public async Task<Vendor> GetVendorByEmailAsync(string email)
+        public async Task<Vendor?> GetVendorByEmailAsync(string email)
         {
             return await _context.Vendors.FirstOrDefaultAsync(x => x.Email == email);
         }
 
-        public async Task<Vendor> AddVendorAsync(Vendor vendor)
+        public async Task<Vendor?> AddVendorAsync(Vendor vendor)
         {
             _context.Vendors.Add(vendor);
             await _context.SaveChangesAsync();
@@ -56,9 +56,13 @@ namespace infrastructure.Repositary
         }
 
         // --- Admin Repo ---
-        public async Task<Admin> GetAdminByEmailAsync(string email)
+        public async Task<Admin?> GetAdminByEmailAsync(string email)
         {
             return await _context.Admins.FirstOrDefaultAsync(x => x.AdminEmail == email);
+        }
+        public async Task<Customer?> GetCustomerByIdAsync(Guid customerId)
+        {
+            return await _context.Customers.FindAsync(customerId);
         }
     }
 }

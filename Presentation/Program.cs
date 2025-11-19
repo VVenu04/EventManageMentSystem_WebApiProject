@@ -1,7 +1,7 @@
 using Application;
 using Application.Interface.IAuth;
 using Application.Interface.IRepo;
-using Application.Service;
+using Application.Services;
 using infrastructure.Repositary;
 using infrastucure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -26,8 +26,6 @@ namespace Presentation
             #region Bridge between Application and Presentation
             builder.Services.AddService();
             #endregion
-
-
 
             #region Bridge between Infrastructure and Presentation
             builder.Services.AddInfrastructure(builder.Configuration);
