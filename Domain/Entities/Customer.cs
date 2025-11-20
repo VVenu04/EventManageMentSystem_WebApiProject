@@ -21,5 +21,6 @@ namespace Domain.Entities
 
         public ICollection<Booking> Bookings { get; set; }
         public ICollection<Message> Messages { get; set; }
+        public decimal WalletBalance { get; set; } = 0;
     }
 }
