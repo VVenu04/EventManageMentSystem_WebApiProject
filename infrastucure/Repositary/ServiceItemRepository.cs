@@ -70,7 +70,7 @@ namespace infrastructure.Repositary
         }
         public async Task<bool> IsServiceInAnyPackageAsync(Guid serviceId)
         {
-            return await _context.PackageItems.AnyAsync(pi => pi.ServiceID == serviceId);
+            return await _context.PackageItems.AnyAsync(pi => pi.ServiceItemID == serviceId);
         }
     }
 }

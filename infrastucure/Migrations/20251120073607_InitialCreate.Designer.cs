@@ -12,8 +12,8 @@ using infrastucure.Data;
 namespace infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251119161148_Initial-create")]
-    partial class Initialcreate
+    [Migration("20251120073607_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -175,6 +175,9 @@ namespace infrastructure.Migrations
                     b.Property<string>("ProfilePhoto")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("WalletBalance")
+                        .HasColumnType("decimal(18,2)");
+
                     b.HasKey("CustomerID");
 
                     b.ToTable("Customers");
@@ -279,17 +282,14 @@ namespace infrastructure.Migrations
                     b.Property<Guid>("PackageID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ServiceID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ServiceItemID")
+                    b.Property<Guid?>("ServiceItemID")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("PackageItemID");
 
                     b.HasIndex("PackageID");
 
-                    b.HasIndex("ServiceID");
+                    b.HasIndex("ServiceItemID");
 
                     b.ToTable("PackageItems");
                 });
@@ -329,12 +329,31 @@ namespace infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<decimal>("AdminCommission")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("AmountPaid")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<Guid>("BookingID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("PaymentMethod")
+                    b.Property<decimal>("CustomerCashback")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("PaymentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StripePaymentIntentId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("VendorEarnings")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("PaymentID");
 
@@ -596,9 +615,7 @@ namespace infrastructure.Migrations
 
                     b.HasOne("Domain.Entities.ServiceItem", "Service")
                         .WithMany("PackageItems")
-                        .HasForeignKey("ServiceID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ServiceItemID");
 
                     b.Navigation("Package");
 

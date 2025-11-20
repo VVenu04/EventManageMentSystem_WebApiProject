@@ -42,12 +42,12 @@ namespace Application.Services
             await _packageRepo.AddAsync(package);
             
             // Serviceகளைச் சேர்க்க தனி method-ஐ call செய்யலாம்
-            if (dto.ServiceIDs != null && dto.ServiceIDs.Any())
+            if (dto.ServiceItemIDs != null && dto.ServiceItemIDs.Any())
             {
                 await AddServicesToPackageAsync(new AddServicesToPackageDto
                 {
                     PackageID = package.PackageID,
-                    ServiceIDs = dto.ServiceIDs
+                    ServiceItemIDs = dto.ServiceItemIDs
                 }, ownerId);
             }
 
@@ -115,7 +115,7 @@ namespace Application.Services
                 package.PackageItems = new List<PackageItem>();
             }
 
-            foreach (var serviceId in dto.ServiceIDs)
+            foreach (var serviceId in dto.ServiceItemIDs)
             {
                 var service = await _serviceRepo.GetByIdAsync(serviceId);
                 if (service == null) throw new Exception("Service not found.");
@@ -125,13 +125,13 @@ namespace Application.Services
                     throw new Exception($"You can only add YOUR services. Service '{service.Name}' is not yours.");
                 }
 
-                if (!package.PackageItems.Any(pi => pi.ServiceID == serviceId))
+                if (!package.PackageItems.Any(pi => pi.ServiceItemID == serviceId))
                 {
                     package.PackageItems.Add(new PackageItem
                     {
                         PackageItemID = Guid.NewGuid(),
                         PackageID = package.PackageID,
-                        ServiceID = serviceId
+                        ServiceItemID = serviceId
                     });
 
                     package.TotalPrice += service.Price;
@@ -186,7 +186,7 @@ namespace Application.Services
                 VendorName = package.Vendor?.Name, // Vendor-ஐ Include செய்ததால் இது வேலை செய்யும்
                 ServicesInPackage = package.PackageItems.Select(item => new SimpleServiceDto
                 {
-                    ServiceID = item.ServiceItemID,
+                    ServiceItemID = item.ServiceItemID,
                     Name = item.Service?.Name, // Service-ஐ Include செய்ததால் இது வேலை செய்யும்
                     OriginalPrice = item.Service?.Price ?? 0
                 }).ToList()

@@ -9,6 +9,6 @@ namespace Application.DTOs.Package
     public class AddServicesToPackageDto
     {
         public Guid PackageID { get; set; }
-        public List<Guid> ServiceIDs { get; set; }= new List<Guid>();
+        public List<Guid> ServiceItemIDs { get; set; }= new List<Guid>();
     }
 }

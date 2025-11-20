@@ -279,17 +279,14 @@ namespace infrastructure.Migrations
                     b.Property<Guid>("PackageID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ServiceID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ServiceItemID")
+                    b.Property<Guid?>("ServiceItemID")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("PackageItemID");
 
                     b.HasIndex("PackageID");
 
-                    b.HasIndex("ServiceID");
+                    b.HasIndex("ServiceItemID");
 
                     b.ToTable("PackageItems");
                 });
@@ -615,9 +612,7 @@ namespace infrastructure.Migrations
 
                     b.HasOne("Domain.Entities.ServiceItem", "Service")
                         .WithMany("PackageItems")
-                        .HasForeignKey("ServiceID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ServiceItemID");
 
                     b.Navigation("Package");
 

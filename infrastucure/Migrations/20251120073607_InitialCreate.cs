@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Initialcreate : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -47,7 +47,8 @@ namespace infrastructure.Migrations
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ProfilePhoto = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    ProfilePhoto = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    WalletBalance = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -158,7 +159,13 @@ namespace infrastructure.Migrations
                 {
                     PaymentID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     BookingID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PaymentMethod = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    StripePaymentIntentId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AmountPaid = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    PaymentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AdminCommission = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    VendorEarnings = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    CustomerCashback = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -349,8 +356,7 @@ namespace infrastructure.Migrations
                 {
                     PackageItemID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PackageID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ServiceItemID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ServiceID = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    ServiceItemID = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -362,11 +368,10 @@ namespace infrastructure.Migrations
                         principalColumn: "PackageID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_PackageItems_ServiceItems_ServiceID",
-                        column: x => x.ServiceID,
+                        name: "FK_PackageItems_ServiceItems_ServiceItemID",
+                        column: x => x.ServiceItemID,
                         principalTable: "ServiceItems",
-                        principalColumn: "ServiceItemID",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "ServiceItemID");
                 });
 
             migrationBuilder.CreateTable(
@@ -435,9 +440,9 @@ namespace infrastructure.Migrations
                 column: "PackageID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PackageItems_ServiceID",
+                name: "IX_PackageItems_ServiceItemID",
                 table: "PackageItems",
-                column: "ServiceID");
+                column: "ServiceItemID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PackageRequests_PackageID",
