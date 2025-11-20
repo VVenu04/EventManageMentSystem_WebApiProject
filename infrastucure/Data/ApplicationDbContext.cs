@@ -29,5 +29,6 @@ namespace infrastucure.Data
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Payment> Payment { get; set; }
         public DbSet<Tracking> Tracking { get; set; }
+        public DbSet<PackageRequest> PackageRequests { get; set; }
     }
 }

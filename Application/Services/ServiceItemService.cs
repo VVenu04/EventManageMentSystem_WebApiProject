@@ -107,13 +107,30 @@ namespace Application.Services
         public async Task DeleteServiceAsync(Guid serviceId, Guid vendorId)
         {
             var service = await _serviceRepo.GetByIdAsync(serviceId);
-            if (service == null) throw new Exception("Service not found");
 
+            // 1. Service இருக்கிறதா?
+            if (service == null)
+            {
+                throw new Exception("Service not found");
+            }
+
+            // 2. இது அந்த Vendor-இன் Service தானா?
             if (service.VendorID != vendorId)
             {
                 throw new Exception("You are not authorized to delete this service");
             }
 
+            // --- 3. 🚨 புதிய Logic: Package-ல் உள்ளதா எனச் சோதி ---
+            bool isInPackage = await _serviceRepo.IsServiceInAnyPackageAsync(serviceId);
+
+            if (isInPackage)
+            {
+                // Package-ல் இருந்தால் Error காட்டு (அழிக்காதே)
+                throw new Exception($"Cannot delete '{service.Name}' because it is part of one or more Packages. Please remove it from the packages first.");
+            }
+            // --- ---
+
+            // 4. எல்லாம் சரியாக இருந்தால் Delete செய்
             await _serviceRepo.DeleteAsync(service);
         }
 

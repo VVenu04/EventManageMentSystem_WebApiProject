@@ -36,7 +36,9 @@ namespace infrastucure
             services.AddScoped<IServiceItemRepository, ServiceItemRepository>();
             services.AddScoped<IPackageRepository, PackageRepository>();
             services.AddScoped<IServiceItemRepository, ServiceItemRepository > ();
-            
+
+            services.AddScoped<IPackageRequestRepository, PackageRequestRepository>();
+
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             var connectionString = configuration.GetConnectionString("Smart");
 

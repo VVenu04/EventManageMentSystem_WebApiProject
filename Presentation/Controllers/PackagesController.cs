@@ -73,5 +73,40 @@ namespace Presentation.Controllers
             }
             return Guid.Empty;
         }
+        [HttpPost("invite")]
+        [Authorize(Roles = "Vendor")]
+        public async Task<IActionResult> InviteVendor(InviteVendorDto dto)
+        {
+            var senderId = GetCurrentUserId();
+            await _packageService.InviteVendorAsync(dto, senderId);
+            return Ok("Invitation sent successfully.");
+        }
+
+        [HttpPut("request/{requestId}/respond")]
+        [Authorize(Roles = "Vendor")]
+        public async Task<IActionResult> RespondToRequest(Guid requestId, [FromQuery] bool accept)
+        {
+            var vendorId = GetCurrentUserId();
+            await _packageService.RespondToInvitationAsync(requestId, vendorId, accept);
+            return Ok(accept ? "Invitation Accepted" : "Invitation Rejected");
+        }
+
+        [HttpPost("add-services")]
+        [Authorize(Roles = "Vendor")]
+        public async Task<IActionResult> AddServices(AddServicesToPackageDto dto)
+        {
+            var vendorId = GetCurrentUserId();
+            await _packageService.AddServicesToPackageAsync(dto, vendorId);
+            return Ok("Services added successfully.");
+        }
+
+        [HttpPut("{packageId}/publish")]
+        [Authorize(Roles = "Vendor")]
+        public async Task<IActionResult> PublishPackage(Guid packageId)
+        {
+            var vendorId = GetCurrentUserId();
+            await _packageService.PublishPackageAsync(packageId, vendorId);
+            return Ok("Package published to customers.");
+        }
     }
 }

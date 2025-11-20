@@ -14,6 +14,7 @@ namespace Domain.Entities
 
         public Guid PackageID { get; set; }
         public Guid ServiceItemID { get; set; }
+        public Guid ServiceID { get; set; }
 
         // Navigation
         public Package? Package { get; set; }
