@@ -1,6 +1,7 @@
 ﻿using Application.DTOs;
 using Application.Interface.IRepo;
 using Application.Interface.IService;
+using Application.Mapper; 
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,24 +17,51 @@ namespace Application.Service
         {
             _vendorRepo = vendorRepo;
         }
-        public Task<VendorDto> AddVendorAsync(VendorDto vendorDTO)
+
+        public async Task<VendorDto> AddVendorAsync(VendorDto vendorDTO)
         {
-            throw new NotImplementedException();
+            if (vendorDTO == null)
+            {
+                throw new ArgumentNullException(nameof(vendorDTO));
+            }
+
+            var vendor = VendorMapper.MapToVendor(vendorDTO);
+
+            //  HASH THE PASSWORD 
+            if (!string.IsNullOrEmpty(vendorDTO.Password))
+            {
+                vendor.PasswordHash = BCrypt.Net.BCrypt.HashPassword(vendorDTO.Password);
+            }
+          
+
+            var addedVendor = await _vendorRepo.AddAsync(vendor);
+            return VendorMapper.MapToVendorDTO(addedVendor);
         }
 
-        public Task DeleteVendorAsync(Guid Id)
+        //  DELETE VENDOR 
+        public async Task DeleteVendorAsync(Guid Id)
         {
-            throw new NotImplementedException();
+            var vendor = await _vendorRepo.GetByIdAsync(v => v.VendorID == Id);
+            if (vendor == null)
+            {
+         
+                throw new Exception($"Vendor with ID {Id} not found.");
+            }
+            await _vendorRepo.DeleteAsync(vendor);
         }
 
-        public Task<IEnumerable<VendorDto>> GetAllAsync()
+        // GET ALL VENDORS 
+        public async Task<IEnumerable<VendorDto>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            var vendors = await _vendorRepo.GetAllAsync();
+            return VendorMapper.MapToVendorDTOList(vendors);
         }
 
-        public Task<VendorDto> GetVendorAsync(Guid vendorId)
+        //  GET VENDOR BY ID 
+        public async Task<VendorDto> GetVendorAsync(Guid vendorId)
         {
-            throw new NotImplementedException();
+            var vendor = await _vendorRepo.GetByIdAsync(v => v.VendorID == vendorId);
+            return VendorMapper.MapToVendorDTO(vendor);
         }
     }
 }

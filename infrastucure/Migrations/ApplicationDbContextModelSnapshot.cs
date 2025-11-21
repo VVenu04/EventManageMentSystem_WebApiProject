@@ -278,7 +278,7 @@ namespace infrastructure.Migrations
                     b.Property<Guid>("PackageID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ServiceItemID")
+                    b.Property<Guid>("ServiceItemID")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("PackageItemID");
@@ -366,7 +366,6 @@ namespace infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ImageUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsCover")
@@ -606,7 +605,9 @@ namespace infrastructure.Migrations
 
                     b.HasOne("Domain.Entities.ServiceItem", "Service")
                         .WithMany("PackageItems")
-                        .HasForeignKey("ServiceItemID");
+                        .HasForeignKey("ServiceItemID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Package");
 

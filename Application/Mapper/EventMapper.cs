@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Application.Mapper
 {
-    public class EventMappper
+    public class EventMapper
     {
         public static Event MapToEvent(EventDto eventDto)
         {
@@ -22,9 +22,15 @@ namespace Application.Mapper
         public static EventDto MapToEventDto(Event @event)
         {
             if (@event == null) return null;
-            EventDto @eventDto = new EventDto();
+            EventDto eventDto = new EventDto();
+            eventDto.EventID = @event.EventID;
             eventDto.EventName = @event.EventName;
-            return (@eventDto);
+            return (eventDto);
+        }
+
+        public static IEnumerable<EventDto> MapToEventDtoList(IEnumerable<Event> events)
+        {
+            return events.Select(MapToEventDto);
         }
     }
 }
