@@ -28,7 +28,7 @@ namespace infrastucure
            services.AddScoped<ICustomerRepo, CustomerRepository>();
            services.AddScoped<IVendorRepo, VendorRepository>();
            services.AddScoped<IEventRepo, EventRepository>();
-           services.AddScoped<IFunctionRepo, FunctionRepository>();
+           
 
 
             services.AddScoped<IAuthRepository, AuthRepository>();

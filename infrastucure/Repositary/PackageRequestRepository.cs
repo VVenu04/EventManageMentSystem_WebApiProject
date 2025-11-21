@@ -26,12 +26,12 @@ namespace infrastructure.Repositary
             return request;
         }
 
-        public async Task<PackageRequest> GetByIdAsync(Guid requestId)
+        public async Task<PackageRequest?> GetByIdAsync(Guid requestId)
         {
             return await _context.PackageRequests.FindAsync(requestId);
         }
 
-        public async Task<PackageRequest> GetRequestAsync(Guid packageId, Guid vendorId)
+        public async Task<PackageRequest?> GetRequestAsync(Guid packageId, Guid vendorId)
         {
             return await _context.PackageRequests
                 .FirstOrDefaultAsync(r => r.PackageID == packageId && r.ReceiverVendorID == vendorId);
