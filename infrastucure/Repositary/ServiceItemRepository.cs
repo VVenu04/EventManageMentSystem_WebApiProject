@@ -68,5 +68,9 @@ namespace infrastructure.Repositary
             _context.ServiceItems.Remove(service);
             await _context.SaveChangesAsync();
         }
+        public async Task<bool> IsServiceInAnyPackageAsync(Guid serviceId)
+        {
+            return await _context.PackageItems.AnyAsync(pi => pi.ServiceItemID == serviceId);
+        }
     }
 }

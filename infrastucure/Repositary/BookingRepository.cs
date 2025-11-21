@@ -58,6 +58,11 @@ namespace infrastructure.Repositary
                 // 3. அவற்றின் எண்ணிக்கையைக் கொடு
                 .CountAsync();
         }
+        public async Task UpdateAsync(Booking booking)
+        {
+            _context.Bookings.Update(booking);
+            await _context.SaveChangesAsync();
+        }
     }
 }
 

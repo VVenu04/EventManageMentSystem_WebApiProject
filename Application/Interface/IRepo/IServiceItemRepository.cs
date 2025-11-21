@@ -18,6 +18,7 @@ namespace Application.Interface.IRepo
         Task<IEnumerable<ServiceItem>> GetAllAsync();
 
         Task<IEnumerable<ServiceItem>> GetByVendorIdAsync(Guid vendorId);
-        
+        Task<bool> IsServiceInAnyPackageAsync(Guid serviceId);
+
     }
 }

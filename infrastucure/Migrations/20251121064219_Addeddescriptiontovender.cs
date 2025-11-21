@@ -2,28 +2,27 @@
 
 #nullable disable
 
-namespace infrastucure.Migrations
+namespace infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Addbookinglogic : Migration
+    public partial class Addeddescriptiontovender : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<double>(
-                name: "TimeLimit",
-                table: "Services",
-                type: "float",
-                nullable: false,
-                defaultValue: 0.0);
+            migrationBuilder.AddColumn<string>(
+                name: "description",
+                table: "Vendors",
+                type: "nvarchar(max)",
+                nullable: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "TimeLimit",
-                table: "Services");
+                name: "description",
+                table: "Vendors");
         }
     }
 }

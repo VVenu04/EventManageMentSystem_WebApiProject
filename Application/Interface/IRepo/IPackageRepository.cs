@@ -15,8 +15,8 @@ namespace Application.Interface.IRepo
         // Create
         Task<Package> AddAsync(Package package);
 
-        // Update 
-        // Task UpdateAsync(Package package);
+        
+        Task UpdateAsync(Package package);
 
         // Delete 
         // Task DeleteAsync(Guid packageId);

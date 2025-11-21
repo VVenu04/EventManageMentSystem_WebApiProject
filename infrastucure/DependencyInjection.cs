@@ -36,9 +36,12 @@ namespace infrastucure
             services.AddScoped<IServiceItemRepository, ServiceItemRepository>();
             services.AddScoped<IPackageRepository, PackageRepository>();
             services.AddScoped<IServiceItemRepository, ServiceItemRepository > ();
-            
+
+            services.AddScoped<IPackageRequestRepository, PackageRequestRepository>();
+            services.AddScoped<IPaymentRepository, PaymentRepository>();
+
             services.AddScoped<ICategoryRepository, CategoryRepository>();
-            var connectionString = configuration.GetConnectionString("Smart");
+            var connectionString = configuration.GetConnectionString("Smart_Function");
 
             services.AddDbContext<ApplicationDbContext>(option => option.UseSqlServer(connectionString));
 

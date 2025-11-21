@@ -31,8 +31,13 @@ namespace infrastructure.Repositary
                 .Include(p => p.Vendor)
                 .Include(p => p.PackageItems)
                 .ThenInclude(pi => pi.Service)
-                .Where(p => p.Active == true) // Active
+                .Where(p => p.IsActive == true) // Active
                 .ToListAsync();
+        }
+        public async Task UpdateAsync(Package package)
+        {
+            _context.Packages.Update(package);
+            await _context.SaveChangesAsync();
         }
 
         public Task<Package?> GetPackageWithServicesAsync(Guid packageId)

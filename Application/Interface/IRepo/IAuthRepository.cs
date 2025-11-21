@@ -20,5 +20,10 @@ namespace Application.Interface.IRepo
         Task<Admin?> GetAdminByEmailAsync(string email);
 
         Task<Customer?> GetCustomerByIdAsync(Guid customerId);
+        Task UpdateCustomerAsync(Customer customer);
+        Task UpdateVendorAsync(Vendor vendor);
+        //Task UpdateCustomerAsync(Customer customer);
+        Task<Vendor> GetVendorByIdAsync(Guid vendorId);
+        //Task<Customer> GetCustomerByIdAsync(Guid customerId);
     }
 }

@@ -37,7 +37,7 @@ namespace Presentation.Controllers
         [HttpDelete("DeleteFunction")]
         public async Task<IActionResult> DeleteFunction(Guid Id)
         {
-            if (Id == null) { return BadRequest("id ela"); }
+            if (Id == Guid.Empty) { return BadRequest("id ela"); }
             await _functionService.DeleteFunctionAsync(Id);
             return Ok();
         }

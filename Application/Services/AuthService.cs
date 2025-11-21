@@ -137,6 +137,40 @@ namespace Application.Services
                 Role = role
             };
         }
+        // ...
+        public async Task<bool> UpdateVendorProfileAsync(Guid vendorId, UpdateVendorProfileDto dto)
+        {
+            var vendor = await _authRepo.GetVendorByIdAsync(vendorId); // (Repo-ல் இந்த method தேவை)
+            if (vendor == null) return false;
+
+            // உள்ளீடு இருந்தால் மட்டும் Update செய் (Null Coalescing)
+            if (!string.IsNullOrEmpty(dto.CompanyName)) vendor.CompanyName = dto.CompanyName;
+            if (!string.IsNullOrEmpty(dto.PhoneNumber)) vendor.PhoneNumber = dto.PhoneNumber;
+            if (!string.IsNullOrEmpty(dto.Location)) vendor.Location = dto.Location;
+            if (!string.IsNullOrEmpty(dto.Description)) vendor.Description = dto.Description;
+            if (!string.IsNullOrEmpty(dto.LogoUrl)) vendor.Logo = dto.LogoUrl;
+
+            if (dto.EventPerDayLimit > 0)
+            {
+                vendor.EventPerDayLimit = (int)dto.EventPerDayLimit;
+            }
+            await _authRepo.UpdateVendorAsync(vendor);
+            return true;
+        }
+
+        public async Task<bool> UpdateCustomerProfileAsync(Guid customerId, UpdateCustomerProfileDto dto)
+        {
+            var customer = await _authRepo.GetCustomerByIdAsync(customerId);
+            if (customer == null) return false;
+
+            if (!string.IsNullOrEmpty(dto.Name)) customer.Name = dto.Name;
+            if (!string.IsNullOrEmpty(dto.PhoneNumber)) customer.PhoneNumber = dto.PhoneNumber;
+            if (!string.IsNullOrEmpty(dto.Location)) customer.Location = dto.Location;
+            if (!string.IsNullOrEmpty(dto.ProfilePhotoUrl)) customer.ProfilePhoto = dto.ProfilePhotoUrl;
+
+            await _authRepo.UpdateCustomerAsync(customer);
+            return true;
+        }
     }
 }
 
