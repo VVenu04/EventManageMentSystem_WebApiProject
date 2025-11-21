@@ -15,5 +15,8 @@ namespace Application.Interface.IAuth
         Task<AuthResponseDto> LoginCustomerAsync(LoginDto dto);
         Task<AuthResponseDto> LoginVendorAsync(LoginDto dto);
         Task<AuthResponseDto> LoginAdminAsync(LoginDto dto);
+        Task<bool> UpdateVendorProfileAsync(Guid vendorId, UpdateVendorProfileDto dto);
+
+        Task<bool> UpdateCustomerProfileAsync(Guid customerId, UpdateCustomerProfileDto dto);
     }
 }

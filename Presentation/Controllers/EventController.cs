@@ -38,7 +38,7 @@ namespace Presentation.Controllers
         [HttpDelete("DeleteEvent")]
         public async Task<IActionResult> DeleteEvent(Guid Id)
         {
-            if (Id == null) { return BadRequest("id ela"); }
+            if (Id == Guid.Empty) { return BadRequest("id ela"); }
             await _eventService.DeleteEventAsync(Id);
             return Ok();
         }

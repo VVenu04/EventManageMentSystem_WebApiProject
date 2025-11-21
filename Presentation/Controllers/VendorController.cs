@@ -38,7 +38,7 @@ namespace Presentation.Controllers
         [HttpDelete("DeleteVendor")]
         public async Task<IActionResult> DeleteVendor(Guid Id)
         {
-            if (Id == null) { return BadRequest("id ela"); }
+            if (Id == Guid.Empty) { return BadRequest("id ela"); }
             await _vendorService.DeleteVendorAsync(Id);
             return Ok();
         }

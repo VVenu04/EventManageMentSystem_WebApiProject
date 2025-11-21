@@ -12,6 +12,6 @@ namespace Application.Interface.IGenericRepo
         Task<T> AddAsync(T entity);
         Task DeleteAsync(T entity);
         Task<IEnumerable<T>> GetAllAsync();
-        Task<T> GetByIdAsync(Expression<Func<T, bool>> condition);
+        Task<T?> GetByIdAsync(Expression<Func<T, bool>> condition);
     }
 }

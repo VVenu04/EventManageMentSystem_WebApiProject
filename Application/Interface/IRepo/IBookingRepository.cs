@@ -14,5 +14,6 @@ namespace Application.Interface.IRepo
 
         Task<Booking?> GetByIdAsync(Guid bookingId);
         Task<int> GetBookingCountForServiceOnDateAsync(Guid serviceId, DateTime eventDate);
+        Task UpdateAsync(Booking booking);
     }
 }
