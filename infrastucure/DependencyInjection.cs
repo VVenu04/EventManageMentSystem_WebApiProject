@@ -1,8 +1,7 @@
 ﻿using Application.Interface.IGenericRepo;
 using Application.Interface.IRepo;
 using Application.Interface.IService;
-using Application.Services;
-using Domain.Entities;
+using infrastructure;
 using infrastructure.Repositary;
 using infrastucure.Data;
 using infrastucure.GenericRepositary;
@@ -10,11 +9,6 @@ using infrastucure.Repositary;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace infrastucure
 {
@@ -39,6 +33,8 @@ namespace infrastucure
 
             services.AddScoped<IPackageRequestRepository, PackageRequestRepository>();
             services.AddScoped<IPaymentRepository, PaymentRepository>();
+            services.AddScoped<INotificationRepository, NotificationRepository>();
+            services.AddScoped<IRealTimeNotifier, SignalRNotifier>();
 
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             var connectionString = configuration.GetConnectionString("Smart_Function");
