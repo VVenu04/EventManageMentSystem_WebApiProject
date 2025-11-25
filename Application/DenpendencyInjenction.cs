@@ -26,6 +26,9 @@ namespace Application
             services.AddScoped<IPackageService, PackageService>();
             services.AddScoped<IServiceItemService, ServiceItemService>();
             services.AddScoped<IPaymentService, PaymentService>();
+            
+
+            services.AddScoped<INotificationService, NotificationService>();
 
             //services.AddScoped<IVendorService, VendorService>();
             //services.AddScoped<IUserService, UserService>();

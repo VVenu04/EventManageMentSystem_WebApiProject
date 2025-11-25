@@ -16,6 +16,7 @@ namespace Application.Services
         private readonly IPackageRepository _packageRepo;
         private readonly IServiceItemRepository _serviceRepo;
         private readonly IPackageRequestRepository _requestRepo;
+        private readonly INotificationService _notificationService; // <-- 1. Inject செய்யவும்
 
         public PackageService(IPackageRepository packageRepo, IServiceItemRepository serviceRepo, IPackageRequestRepository requestRepo)
         {
@@ -79,6 +80,12 @@ namespace Application.Services
             };
 
             await _requestRepo.AddAsync(request);
+            await _notificationService.SendNotificationAsync(
+                dto.VendorIDToInvite,
+                "You have been invited to collaborate on a new package!",
+                "PackageInvite",
+                dto.PackageID
+               );
         }
 
         // 3. Accept/Reject Invitation (Vendor B செயல்படுகிறார்)
