@@ -22,7 +22,7 @@ namespace infrastructure.Repositary
             _dbContext.Events.Update(@event);
             await _dbContext.SaveChangesAsync();
         }
-        public async Task<Event> GetByIdAsync(Guid id)
+        public async Task<Event?> GetByIdAsync(Guid id)
         {
             return await _dbContext.Events.FindAsync(id);
         }

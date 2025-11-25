@@ -26,7 +26,7 @@ namespace infrastructure.Repositary
             return payment;
         }
 
-        public async Task<Payment> GetByPaymentIntentIdAsync(string paymentIntentId)
+        public async Task<Payment?> GetByPaymentIntentIdAsync(string paymentIntentId)
         {
             return await _context.Payments
                 .FirstOrDefaultAsync(p => p.StripePaymentIntentId == paymentIntentId);

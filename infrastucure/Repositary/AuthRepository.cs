@@ -75,7 +75,7 @@ namespace infrastructure.Repositary
             _context.Vendors.Update(vendor);
             await _context.SaveChangesAsync();
         }
-        public async Task<Vendor> GetVendorByIdAsync(Guid vendorId)
+        public async Task<Vendor?> GetVendorByIdAsync(Guid vendorId)
         {
             return await _context.Vendors.FindAsync(vendorId);
         }
