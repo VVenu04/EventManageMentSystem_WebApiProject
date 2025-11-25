@@ -76,7 +76,7 @@ namespace Presentation.Controllers
             try
             {
                 await _eventService.DeleteEventAsync(Id);
-                return Ok(ApiResponse<object>.Success(null, "Event deleted successfully."));
+                return Ok(ApiResponse<object?>.Success(null, "Event deleted successfully."));
             }
             catch (Exception ex)
             {

@@ -16,12 +16,12 @@ namespace Domain.Entities
         public decimal TotalPrice { get; set; }
         public string Location { get; set; } = string.Empty;
 
-
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public DateTime EventDate { get; set; } 
 
-        public Customer? Customer { get; set; }
-        public Payment? Payment { get; set; }
+        public Customer Customer { get; set; }
+        public Payment Payment { get; set; }
         public ICollection<BookingItem> BookingItems { get; set; }=new List<BookingItem>();
 
 

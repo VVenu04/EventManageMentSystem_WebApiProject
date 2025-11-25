@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,10 @@ namespace Application.Interface.IRepo
     public interface IPaymentRepository
     {
         Task<Payment> AddAsync(Payment payment);
-        Task<Payment> GetByPaymentIntentIdAsync(string paymentIntentId);
+        Task<Payment?> GetByPaymentIntentIdAsync(string paymentIntentId);
+        Task<Payment?> GetByBookingIdAsync(Guid bookingId);
+
+        // Payment Status-ஐ (Refunded என) மாற்ற
+        Task UpdateAsync(Payment payment);
     }
 }

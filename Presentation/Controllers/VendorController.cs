@@ -78,7 +78,7 @@ namespace Presentation.Controllers
             {
                 await _vendorService.DeleteVendorAsync(Id);
                 // 5. Success Response
-                return Ok(ApiResponse<object>.Success(null, "Vendor deleted successfully."));
+                return Ok(ApiResponse<object?>.Success(null, "Vendor deleted successfully."));
             }
             catch (Exception ex)
             {

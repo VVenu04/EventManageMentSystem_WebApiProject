@@ -18,6 +18,7 @@ namespace Application.Services
         private readonly IPaymentRepository _paymentRepo;
         private readonly string _stripeSecretKey;
 
+
         public PaymentService(IBookingRepository bookingRepo,
                               IAuthRepository authRepo,
                               IPaymentRepository paymentRepo,
@@ -135,6 +136,56 @@ namespace Application.Services
             await _bookingRepo.UpdateAsync(booking); // (Repo-வில் இந்த method தேவை)
 
             return true;
+        }
+
+        public async Task<bool> RefundPaymentAsync(Guid bookingId)
+        {
+            // 1. Repo-வை வைத்து Payment-ஐ எடு (OLD: _context.Payments...)
+            var payment = await _paymentRepo.GetByBookingIdAsync(bookingId);
+
+            if (payment == null || payment.Status != "Succeeded")
+            {
+                throw new Exception("No successful payment found for this booking.");
+            }
+
+            try
+            {
+                // 2. Stripe-ல் Refund-ஐ உருவாக்கு
+                var refundOptions = new RefundCreateOptions
+                {
+                    PaymentIntent = payment.StripePaymentIntentId,
+                    Reason = RefundReasons.RequestedByCustomer
+                };
+
+                var refundService = new RefundService();
+                await refundService.CreateAsync(refundOptions);
+
+                // 3. Payment Status-ஐ Update செய்
+                payment.Status = "Refunded";
+
+                // 4. Wallet Logic
+                if (payment.CustomerCashback > 0)
+                {
+                    // Repo-வில் Include செய்திருப்பதால் payment.Booking.Customer null ஆக இருக்காது
+                    var customer = payment.Booking?.Customer;
+                    if (customer != null)
+                    {
+                        customer.WalletBalance -= payment.CustomerCashback;
+                        await _authRepo.UpdateCustomerAsync(customer);
+                    }
+                    // ஒருவேளை Include வேலை செய்யவில்லை என்றால், _authRepo.GetCustomerByIdAsync-ஐப் பயன்படுத்தலாம்
+                }
+
+                // (OLD: await _context.SaveChangesAsync();)
+                // 5. Repo-வை வைத்து Save செய்
+                await _paymentRepo.UpdateAsync(payment);
+
+                return true;
+            }
+            catch (StripeException ex)
+            {
+                throw new Exception($"Stripe Refund Failed: {ex.Message}");
+            }
         }
     }
 }

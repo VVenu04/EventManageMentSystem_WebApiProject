@@ -69,5 +69,22 @@ namespace Presentation.Controllers
             }
             return Guid.Empty;
         }
+
+        [HttpPut("{id}/cancel")]
+        [Authorize(Roles = "Customer")]
+        public async Task<IActionResult> CancelBooking(Guid id)
+        {
+            var customerId = GetCurrentCustomerId(); // Helper method
+
+            try
+            {
+                await _bookingService.CancelBookingAsync(id, customerId);
+                return Ok(new { message = "Booking cancelled and payment refunded successfully." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
     }
 }

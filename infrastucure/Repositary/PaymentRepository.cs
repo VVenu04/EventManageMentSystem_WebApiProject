@@ -31,5 +31,20 @@ namespace infrastructure.Repositary
             return await _context.Payments
                 .FirstOrDefaultAsync(p => p.StripePaymentIntentId == paymentIntentId);
         }
+
+        // --- 🚨 FIX: '?' சேர்க்கவும் ---
+        public async Task<Payment?> GetByBookingIdAsync(Guid bookingId)
+        {
+            return await _context.Payments
+                .Include(p => p.Booking)
+                .ThenInclude(b => b.Customer)
+                .FirstOrDefaultAsync(p => p.BookingID == bookingId);
+        }
+
+        public async Task UpdateAsync(Payment payment)
+        {
+            _context.Payments.Update(payment);
+            await _context.SaveChangesAsync();
+        }
     }
 }

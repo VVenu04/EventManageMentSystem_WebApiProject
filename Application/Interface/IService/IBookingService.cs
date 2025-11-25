@@ -12,5 +12,8 @@ namespace Application.Interface.IService
         Task<BookingConfirmationDto> CreateBookingAsync(CreateBookingDto createBookingDto, Guid customerId);
 
         Task<BookingConfirmationDto> GetBookingByIdAsync(Guid bookingId);
+
+        
+        Task CancelBookingAsync(Guid bookingId, Guid customerId);
     }
 }

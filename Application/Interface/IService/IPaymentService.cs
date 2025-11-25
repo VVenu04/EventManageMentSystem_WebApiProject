@@ -11,5 +11,6 @@ namespace Application.Interface.IService
     {
         Task<string> CreatePaymentIntentAsync(PaymentRequestDto dto);
         Task<bool> ConfirmPaymentAndDistributeFundsAsync(string paymentIntentId);
+        Task<bool> RefundPaymentAsync(Guid bookingId);
     }
 }
