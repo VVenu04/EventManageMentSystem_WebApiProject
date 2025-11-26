@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Application.DTOs.ServiceItem;
+using Application.Services;
+using Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Application.Services;
-using Domain.Entities;
 
 namespace Application.Interface.IRepo
 {
@@ -14,11 +15,12 @@ namespace Application.Interface.IRepo
         Task UpdateAsync(ServiceItem service);
         Task DeleteAsync(ServiceItem service);
 
-        Task<ServiceItem?> GetByIdAsync(Guid serviceId);
+        Task<ServiceItem> GetByIdAsync(Guid serviceId);
         Task<IEnumerable<ServiceItem>> GetAllAsync();
 
         Task<IEnumerable<ServiceItem>> GetByVendorIdAsync(Guid vendorId);
         Task<bool> IsServiceInAnyPackageAsync(Guid serviceId);
+        Task<IEnumerable<ServiceItem>> SearchServicesAsync(ServiceSearchDto searchDto);
 
     }
 }

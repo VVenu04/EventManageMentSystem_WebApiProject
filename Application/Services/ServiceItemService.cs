@@ -1,10 +1,10 @@
 ﻿using Application.DTOs.Service;
+using Application.DTOs.ServiceItem;
 using Application.Interface.IRepo;
 using Application.Interface.IService;
 using Application.Mapper;
-using System.Linq;
-
 using Domain.Entities;
+using System.Linq;
 
 namespace Application.Services
 {
@@ -150,7 +150,17 @@ namespace Application.Services
             var services = await _serviceRepo.GetByVendorIdAsync(vendorId);
             return services.Select(ServiceMapper.MapToServiceDto);
         }
+        public async Task<IEnumerable<ServiceItemDto>> SearchServicesAsync(ServiceSearchDto searchDto)
+        {
+            var services = await _serviceRepo.SearchServicesAsync(searchDto);
 
-        
+            // Mapper-ஐப் பயன்படுத்தி DTO-வாக மாற்று
+            return services.Select(ServiceMapper.MapToServiceDto);
+        }
+
+        Task<IEnumerable<ServiceItem>> IServiceItemService.SearchServicesAsync(ServiceSearchDto searchDto)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

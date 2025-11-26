@@ -1,4 +1,6 @@
 ﻿using Application.DTOs.Service;
+using Application.DTOs.ServiceItem;
+using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,5 +27,7 @@ namespace Application.Interface.IService
 
         // Customer/User-ஆல் ஒரு Vendor-இன் Services-ஐப் பார்க்க
         Task<IEnumerable<ServiceItemDto>> GetServicesByVendorAsync(Guid vendorId);
+        Task<IEnumerable<ServiceItem>> SearchServicesAsync(ServiceSearchDto searchDto);
+
     }
 }

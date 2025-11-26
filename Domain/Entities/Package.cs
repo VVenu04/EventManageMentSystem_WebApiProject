@@ -16,7 +16,7 @@ namespace Domain.Entities
         public decimal TotalPrice { get; set; }
         public bool IsActive { get; set; } = false; 
         public string Status { get; set; } = "Draft";
-        public Vendor? Vendor { get; set; }
+        public Vendor Vendor { get; set; }
 
        // public ICollection<PackageItem> PackageItems { get; set; }
         public ICollection<PackageRequest> PackageRequests { get; set; }= new List<PackageRequest>();
