@@ -86,5 +86,44 @@ namespace Presentation.Controllers
             var services = await _serviceService.SearchServicesAsync(searchDto);
             return Ok(services);
         }
+
+        // PUT: api/services/{id}
+        [HttpPut("{id}")]
+        [Authorize(Roles = "Vendor")] // Vendor மட்டும் தான் எடிட் செய்ய முடியும்
+        public async Task<IActionResult> UpdateService(Guid id, UpdateServiceDto updateServiceDto)
+        {
+            // 1. Token-ல் இருந்து Vendor ID-ஐ எடு
+            var vendorId = GetCurrentUserId();
+            if (vendorId == Guid.Empty) return Unauthorized("Invalid Token");
+
+            try
+            {
+                // 2. Service-ஐ update செய்
+                await _serviceService.UpdateServiceAsync(id, updateServiceDto, vendorId);
+                return Ok(new { message = "Service updated successfully." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Vendor")] // Vendor மட்டும் தான் அழிக்க முடியும்
+        public async Task<IActionResult> DeleteService(Guid id)
+        {
+            var vendorId = GetCurrentUserId(); // Token-ல் இருந்து ID எடு
+            if (vendorId == Guid.Empty) return Unauthorized();
+
+            try
+            {
+                await _serviceService.DeleteServiceAsync(id, vendorId);
+                return Ok(new { message = "Service deleted successfully." });
+            }
+            catch (Exception ex)
+            {
+                // எ.கா: "Cannot delete because it is part of a Package"
+                return BadRequest(new { message = ex.Message });
+            }
+        }
     }
 }

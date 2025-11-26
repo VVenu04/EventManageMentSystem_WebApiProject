@@ -13,9 +13,8 @@ namespace Application.Interface.IService
     {
         Task<ServiceItemDto> CreateServiceAsync(CreateServiceDto dto, Guid vendorId);
 
-        // Vendor-ஆல் ஒரு Service-ஐ update செய்ய
-        Task UpdateServiceAsync(Guid serviceId, CreateServiceDto updateServiceDto, Guid vendorId);
-
+        // 🚨 'CreateServiceDto'-வை 'UpdateServiceDto'-ஆக மாற்றவும்
+        Task UpdateServiceAsync(Guid serviceId, UpdateServiceDto updateServiceDto, Guid vendorId);
         // Vendor-ஆல் ஒரு Service-ஐ delete செய்ய
         Task DeleteServiceAsync(Guid serviceId, Guid vendorId);
 
