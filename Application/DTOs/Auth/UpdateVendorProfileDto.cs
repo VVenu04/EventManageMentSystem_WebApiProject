@@ -8,11 +8,11 @@ namespace Application.DTOs.Auth
 {
     public class UpdateVendorProfileDto
     {
-        public string? CompanyName { get; set; }
-        public string? PhoneNumber { get; set; }
-        public string? Location { get; set; }
-        public string? Description { get; set; }
-        public string? LogoUrl { get; set; } // (Photo upload செய்த பின் வரும் URL)
+        public string CompanyName { get; set; }
+        public string PhoneNumber { get; set; }
+        public string Location { get; set; }
+        public string Description { get; set; }
+        public string LogoUrl { get; set; } // (Photo upload செய்த பின் வரும் URL)
         public decimal EventPerDayLimit { get; set; }
     }
 }

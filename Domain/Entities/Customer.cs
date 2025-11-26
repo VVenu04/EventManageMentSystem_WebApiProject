@@ -16,8 +16,8 @@ namespace Domain.Entities
         public string Email { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
-        public string? Location { get; set; }
-        public string? ProfilePhoto { get; set; }
+        public string Location { get; set; }
+        public string ProfilePhoto { get; set; }
 
         public ICollection<Booking> Bookings { get; set; }= new List<Booking>();
         public ICollection<Message> Messages { get; set; } = new List<Message>();
