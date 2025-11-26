@@ -16,7 +16,7 @@ namespace Domain.Entities
         public string Data { get; set; }
 
         // Navigation
-        public Customer? Customer { get; set; }
-        public Vendor? Vendor { get; set; }
+        public Customer Customer { get; set; }
+        public Vendor Vendor { get; set; }
     }
 }

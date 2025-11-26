@@ -13,7 +13,7 @@ namespace Domain.Entities
         public Guid RequestID { get; set; }
 
         public Guid PackageID { get; set; }
-        public Package? Package { get; set; }
+        public Package Package { get; set; }
 
         public Guid SenderVendorID { get; set; } 
         public Guid ReceiverVendorID { get; set; } 

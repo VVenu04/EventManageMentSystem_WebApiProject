@@ -15,6 +15,6 @@ namespace Domain.Entities
         public string Status { get; set; } = string.Empty;
 
         // Navigation
-        public Booking? Booking { get; set; }
+        public Booking Booking { get; set; }
     }
 }

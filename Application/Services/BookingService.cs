@@ -16,7 +16,8 @@ namespace Application.Services
         private readonly IBookingRepository _bookingRepo;
         private readonly IServiceItemRepository _serviceRepo;
         private readonly IAuthRepository _authRepo;
-        private readonly IPackageRepository _packageRepo; 
+        private readonly IPackageRepository _packageRepo;
+        
         private readonly IPaymentService _paymentService;
         private readonly INotificationService _notificationService;
         public BookingService(IBookingRepository bookingRepo,

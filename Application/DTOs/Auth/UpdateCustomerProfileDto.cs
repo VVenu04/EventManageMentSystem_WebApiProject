@@ -8,9 +8,9 @@ namespace Application.DTOs.Auth
 {
     public class UpdateCustomerProfileDto
     {
-        public string? Name { get; set; }
-        public string? PhoneNumber { get; set; }
-        public string? Location { get; set; }
-        public string? ProfilePhotoUrl { get; set; }
+        public string Name { get; set; }
+        public string PhoneNumber { get; set; }
+        public string Location { get; set; }
+        public string ProfilePhotoUrl { get; set; }
     }
 }

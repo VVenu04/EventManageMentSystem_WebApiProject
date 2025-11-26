@@ -19,9 +19,9 @@ namespace Domain.Entities
         public decimal ItemPrice { get; set; }
         public string TrackingStatus { get; set; }
         // Navigation
-        public Booking? Booking { get; set; }
-        public ServiceItem? Service { get; set; }
-        public Package? Package { get; set; }
-        public Vendor? Vendor { get; set; }
+        public Booking Booking { get; set; }
+        public ServiceItem Service { get; set; }
+        public Package Package { get; set; }
+        public Vendor Vendor { get; set; }
     }
 }
