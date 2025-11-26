@@ -24,13 +24,15 @@ namespace Application.Services
                               IServiceItemRepository serviceRepo,
                               IAuthRepository authRepo,
                               IPackageRepository packageRepo,
-                              IPaymentService paymentService) 
+                              IPaymentService paymentService,
+                              INotificationService notificationService) 
         {
             _bookingRepo = bookingRepo;
             _serviceRepo = serviceRepo;
             _authRepo = authRepo;
             _packageRepo = packageRepo;
             _paymentService = paymentService;
+            _notificationService = notificationService;
         }
 
         public async Task<BookingConfirmationDto> CreateBookingAsync(CreateBookingDto createBookingDto, Guid customerId)
