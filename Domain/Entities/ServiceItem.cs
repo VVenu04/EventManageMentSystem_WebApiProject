@@ -30,7 +30,8 @@ namespace Domain.Entities
         public Event Event { get; set; }
         public Category Category { get; set; }
         //public ICollection<Booking> Bookings { get; set; }
-        public ICollection<BookingItem> BookingItems { get; set; } = new List<BookingItem>(); public ICollection<PackageItem> PackageItems { get; set; }
+        public ICollection<BookingItem> BookingItems { get; set; }
+        public ICollection<PackageItem> PackageItems { get; set; }
         public ICollection<ServiceImage> ServiceImages { get; set; }
 
 

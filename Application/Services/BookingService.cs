@@ -16,9 +16,10 @@ namespace Application.Services
         private readonly IBookingRepository _bookingRepo;
         private readonly IServiceItemRepository _serviceRepo;
         private readonly IAuthRepository _authRepo;
-        private readonly IPackageRepository _packageRepo; 
+        private readonly IPackageRepository _packageRepo;
+        
         private readonly IPaymentService _paymentService;
-
+        private readonly INotificationService _notificationService;
         public BookingService(IBookingRepository bookingRepo,
                               IServiceItemRepository serviceRepo,
                               IAuthRepository authRepo,
@@ -72,9 +73,30 @@ namespace Application.Services
 
             // 5. Save to Database
             await _bookingRepo.AddAsync(booking);
+
+            foreach (var item in bookingItemsList)
+            {
+                // ஒவ்வொரு Vendor-க்கும் தனித்தனி Notification
+                string msg = $"New Booking! Customer has booked your service on {createBookingDto.EventDate.ToShortDateString()}.";
+
+                await _notificationService.SendNotificationAsync(
+                    item.VendorID,
+                    msg,
+                    "BookingCreated",
+                    booking.BookingID
+                );
+            }
+
+            // Customer-க்கும் அனுப்பலாம்
+            await _notificationService.SendNotificationAsync(
+                customerId,
+                "Booking Successful! Please proceed to payment.",
+                "BookingConfirmation",
+                booking.BookingID
+            );
+
             
-           
-           
+
 
             // 7. Return Confirmation DTO (Mapper-ஐப் பயன்படுத்தி)
             return BookingMapper.MapToConfirmationDto(booking, customer, servicesToBook);
@@ -222,6 +244,17 @@ namespace Application.Services
             // 5. Update Booking Status
             booking.BookingStatus = "Cancelled";
             await _bookingRepo.UpdateAsync(booking);
+            foreach (var item in booking.BookingItems)
+            {
+                string msg = $"Booking Cancelled. A booking scheduled for {booking.EventDate.ToShortDateString()} has been cancelled by the customer.";
+
+                await _notificationService.SendNotificationAsync(
+                    item.VendorID,
+                    msg,
+                    "BookingCancelled",
+                    bookingId
+                );
+            }
         }
     }
 }

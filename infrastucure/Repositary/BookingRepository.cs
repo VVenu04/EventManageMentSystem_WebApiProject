@@ -63,6 +63,38 @@ namespace infrastructure.Repositary
             _context.Bookings.Update(booking);
             await _context.SaveChangesAsync();
         }
+        public async Task<Booking?> GetCartByCustomerIdAsync(Guid customerId)
+        {
+            return await _context.Bookings
+                .Include(b => b.BookingItems)
+                    .ThenInclude(bi => bi.Service)
+                .Include(b => b.BookingItems)
+                    .ThenInclude(bi => bi.Package)
+                .FirstOrDefaultAsync(b => b.CustomerID == customerId && b.BookingStatus == "Cart");
+        }
+
+        public async Task AddItemToCartAsync(BookingItem item)
+        {
+            _context.BookingItems.Add(item);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task RemoveItemFromCartAsync(Guid itemId)
+        {
+            var item = await _context.BookingItems.FindAsync(itemId);
+            if (item != null)
+            {
+                // Booking TotalPrice-ஐக் குறைக்கவும்
+                var booking = await _context.Bookings.FindAsync(item.BookingID);
+                if (booking != null)
+                {
+                    booking.TotalPrice -= item.ItemPrice;
+                }
+
+                _context.BookingItems.Remove(item);
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }
 

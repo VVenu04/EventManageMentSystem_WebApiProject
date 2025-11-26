@@ -2,11 +2,13 @@ using Application;
 using Application.Interface.IAuth;
 using Application.Interface.IRepo;
 using Application.Services;
+using infrastructure.Hubs;
 using infrastructure.Repositary;
 using infrastucure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+
 namespace Presentation
 {
     public class Program
@@ -21,7 +23,7 @@ namespace Presentation
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             // builder.Services.AddOpenApi();
-
+            builder.Services.AddSignalR();
 
             #region Bridge between Application and Presentation
             builder.Services.AddService();
@@ -84,6 +86,7 @@ namespace Presentation
 
             app.MapControllers();
 
+            app.MapHub<NotificationHub>("/notificationHub");
             app.Run();
         }
     }
