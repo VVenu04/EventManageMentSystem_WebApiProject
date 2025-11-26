@@ -79,6 +79,7 @@ namespace infrastructure.Repositary
             // 1. Query-ஐ உருவாக்கு (Includes உடன்)
             var query = _context.ServiceItems // (அல்லது ServiceItems)
                 .Include(s => s.Vendor)
+                .Include(s=>s.Event)
                 .Include(s => s.Category)
                 .Include(s => s.BookingItems!) // Availability Check-க்கு இது கட்டாயம்
                     .ThenInclude(bi => bi.Booking) // Booking Date-ஐப் பார்க்க இது கட்டாயம்
@@ -95,6 +96,12 @@ namespace infrastructure.Repositary
                     // 🚨 FIX: Vendor null-ஆ என்று பார்க்க வேண்டும்
                     (s.Vendor != null && s.Vendor.Name.ToLower().Contains(term))
                 );
+            }
+            if (searchDto.EventID.HasValue)
+            {
+                // பயனர் கேட்ட EventID உள்ள Services-ஐ மட்டும் காட்டு
+                // (அல்லது EventID null ஆக இருந்தால், அது எல்லா Event-க்கும் பொதுவானது என்று அர்த்தம்)
+                query = query.Where(s => s.EventID == searchDto.EventID.Value || s.EventID == null);
             }
 
             // 3. Filter by Category
