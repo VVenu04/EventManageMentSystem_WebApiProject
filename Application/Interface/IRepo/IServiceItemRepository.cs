@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Application.DTOs.ServiceItem;
+using Application.Services;
+using Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Application.Services;
-using Domain.Entities;
 
 namespace Application.Interface.IRepo
 {
@@ -19,6 +20,7 @@ namespace Application.Interface.IRepo
 
         Task<IEnumerable<ServiceItem>> GetByVendorIdAsync(Guid vendorId);
         Task<bool> IsServiceInAnyPackageAsync(Guid serviceId);
+        Task<IEnumerable<ServiceItem>> SearchServicesAsync(ServiceSearchDto searchDto);
 
     }
 }

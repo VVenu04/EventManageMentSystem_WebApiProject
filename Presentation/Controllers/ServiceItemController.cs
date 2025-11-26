@@ -1,4 +1,5 @@
 ﻿using Application.DTOs.Service;
+using Application.DTOs.ServiceItem;
 using Application.Interface.IService;
 using Application.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -74,6 +75,16 @@ namespace Presentation.Controllers
                 return userId;
             }
             return Guid.Empty;
+        }
+        [HttpGet("search")]
+        [AllowAnonymous] // யார் வேண்டுமானாலும் தேடலாம்
+        public async Task<ActionResult<IEnumerable<ServiceItemDto>>> SearchServices([FromQuery] ServiceSearchDto searchDto)
+        {
+            // [FromQuery] பயன்படுத்துவதால் URL-ல் data வரும்.
+            // எ.கா: api/services/search?searchTerm=wedding&minPrice=10000&eventDate=2025-12-20
+
+            var services = await _serviceService.SearchServicesAsync(searchDto);
+            return Ok(services);
         }
     }
 }
