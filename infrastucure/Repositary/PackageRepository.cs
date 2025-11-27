@@ -19,9 +19,11 @@ namespace infrastructure.Repositary
             _context = context;
         }
 
-        public Task<Package> AddAsync(Package package)
+        public async Task<Package> AddAsync(Package package)
         {
-            throw new NotImplementedException();
+            await _context.Packages.AddAsync(package);
+            await _context.SaveChangesAsync();
+            return package;
         }
 
         public async Task<IEnumerable<Package>> GetPackagesByVendorAsync(Guid vendorId)
@@ -31,7 +33,7 @@ namespace infrastructure.Repositary
                 .Include(p => p.Vendor)
                 .Include(p => p.PackageItems)
                 .ThenInclude(pi => pi.Service)
-                .Where(p => p.IsActive == true) // Active
+               //.Where(p => p.IsActive == true) // Active
                 .ToListAsync();
         }
         public async Task UpdateAsync(Package package)
@@ -40,9 +42,14 @@ namespace infrastructure.Repositary
             await _context.SaveChangesAsync();
         }
 
-        public Task<Package?> GetPackageWithServicesAsync(Guid packageId)
+        public async Task<Package?> GetPackageWithServicesAsync(Guid packageId)
         {
-            throw new NotImplementedException();
+            return await _context.Packages
+                .Include(p => p.Vendor)
+                .Include(p => p.PackageItems)
+                    .ThenInclude(pi => pi.Service) 
+                        .ThenInclude(s => s.ServiceImages) 
+                .FirstOrDefaultAsync(p => p.PackageID == packageId);
         }
     }
 }

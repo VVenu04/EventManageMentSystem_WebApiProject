@@ -94,8 +94,10 @@ namespace Presentation
 
             app.UseHttpsRedirection();
 
-            app.UseAuthorization();
+
             app.UseAuthentication();
+            app.UseAuthorization();
+         
 
 
             app.UseCors(x =>
