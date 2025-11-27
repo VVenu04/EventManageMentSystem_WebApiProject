@@ -16,13 +16,14 @@ namespace Application.Services
         private readonly IPackageRepository _packageRepo;
         private readonly IServiceItemRepository _serviceRepo;
         private readonly IPackageRequestRepository _requestRepo;
-        private readonly INotificationService _notificationService; // <-- 1. Inject செய்யவும்
+        private readonly INotificationService _notificationService; // <-- Dependency
 
-        public PackageService(IPackageRepository packageRepo, IServiceItemRepository serviceRepo, IPackageRequestRepository requestRepo)
+        public PackageService(IPackageRepository packageRepo, IServiceItemRepository serviceRepo, IPackageRequestRepository requestRepo, INotificationService notificationService)
         {
             _packageRepo = packageRepo;
             _serviceRepo = serviceRepo;
             _requestRepo = requestRepo;
+            _notificationService = notificationService;
 
         }
 
