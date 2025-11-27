@@ -7,6 +7,8 @@ using infrastructure.Repositary;
 using infrastucure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.Net;
+using System.Net.Mail;
 using System.Text;
 
 namespace Presentation
@@ -37,7 +39,25 @@ namespace Presentation
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             #endregion
+            builder.Services.AddSingleton<SmtpClient>(provider =>
+            {
+                var config = provider.GetRequiredService<IConfiguration>();
 
+                var smtpHost = config["EmailSettings:SmtpHost"];
+                var smtpPort = int.Parse(config["EmailSettings:SmtpPort"]);
+                var senderEmail = config["EmailSettings:SenderEmail"];
+                var senderPassword = config["EmailSettings:SenderPassword"];
+
+                var smtpClient = new SmtpClient(smtpHost, smtpPort)
+                {
+                    Credentials = new NetworkCredential(senderEmail, senderPassword),
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false
+                };
+
+                return smtpClient;
+            });
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
