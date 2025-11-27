@@ -11,5 +11,7 @@ namespace Application.Interface.IRepo
     public interface ICustomerRepo : IGenericRepo<Customer>
     {
         Task UpdateAsync(Customer customer);
+        Task<Customer> GetByEmailAsync(string email);
+        Task<Customer> GetByIdAsync(Guid id);
     }
 }

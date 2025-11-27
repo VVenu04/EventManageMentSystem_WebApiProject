@@ -1,4 +1,5 @@
 ﻿using Application.DTOs.Auth;
+using Application.DTOs.Forgot;
 using Application.Interface.IAuth;
 
 // Interface namespace-ஐ உறுதிப்படுத்தவும் (Application.Interface.IService அல்லது Application.Interfaces)
@@ -95,13 +96,82 @@ namespace Presentation.Controllers
             if (!success) return BadRequest("Failed to update profile.");
             return Ok("Profile updated successfully.");
         }
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponseDto
+                {
+                    Success = false,
+                    Message = "Invalid request data",
+                    Data = ModelState
+                });
+            }
+
+            var result = await _authService.ForgotPasswordAsync(dto);
+
+            if (result.Success)
+                return Ok(result);
+
+            return BadRequest(result);
+        }
+
+        /// <summary>
+        /// Verify OTP (Optional step before password reset)
+        /// </summary>
+        [HttpPost("verify-otp")]
+        public async Task<IActionResult> VerifyOtp([FromBody] VerifyOtpDto dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponseDto
+                {
+                    Success = false,
+                    Message = "Invalid request data",
+                    Data = ModelState
+                });
+            }
+
+            var result = await _authService.VerifyOtpAsync(dto);
+
+            if (result.Success)
+                return Ok(result);
+
+            return BadRequest(result);
+        }
+
+        /// <summary>
+        /// Reset password using OTP
+        /// </summary>
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponseDto
+                {
+                    Success = false,
+                    Message = "Invalid request data",
+                    Data = ModelState
+                });
+            }
+
+            var result = await _authService.ResetPasswordAsync(dto);
+
+            if (result.Success)
+                return Ok(result);
+
+            return BadRequest(result);
+        }
+    
 
         private Guid GetCurrentUserId()
         {
             var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
 
             if (userIdClaim != null && Guid.TryParse(userIdClaim.Value, out Guid userId))
-            {
+            {     
                 return userId;
             }
             return Guid.Empty;

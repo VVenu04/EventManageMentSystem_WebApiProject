@@ -9,7 +9,7 @@ namespace Application.Interface.IRepo
 {
     public interface IPackageRepository
     {
-        Task<Package?> GetPackageWithServicesAsync(Guid packageId);
+        Task<Package> GetPackageWithServicesAsync(Guid packageId);
         Task<IEnumerable<Package>> GetPackagesByVendorAsync(Guid vendorId);
 
         // Create
