@@ -1,6 +1,8 @@
 ﻿using Application.DTOs.Auth;
+using Application.DTOs.Forgot;
 using Application.Interface.IAuth;
 using Application.Interface.IRepo;
+using Application.Interface.IService;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -15,13 +17,17 @@ namespace Application.Services
     public class AuthService : IAuthService
 
     {
+        private readonly ICustomerRepo _customerRepo;
+        private readonly IEmailService _emailService;
         private readonly IAuthRepository _authRepo;
         private readonly ITokenService _tokenService;
 
-        public AuthService(IAuthRepository authRepo, ITokenService tokenService)
+        public AuthService(IAuthRepository authRepo, ITokenService tokenService, ICustomerRepo customerRepo , IEmailService emailService)
         {
             _authRepo = authRepo;
             _tokenService = tokenService;
+            _customerRepo = customerRepo;
+            _emailService = emailService;
         }
 
         // --- CUSTOMER ---
@@ -63,7 +69,169 @@ namespace Application.Services
 
             return CreateAuthResponse(customer.CustomerID, customer.Name, customer.Email, "Customer", "Login Successful");
         }
+        public async Task<ApiResponseDto> ForgotPasswordAsync(ForgotPasswordDto dto)
+        {
+            try
+            {
+                var user = await _customerRepo.GetByEmailAsync(dto.Email);
 
+                if (user == null)
+                {
+                    // Don't reveal that user doesn't exist (security best practice)
+                    return new ApiResponseDto
+                    {
+                        Success = true,
+                        Message = "If the email exists, an OTP has been sent to your email address."
+                    };
+                }
+
+                // Generate 6-digit OTP
+                var otp = GenerateOtp();
+
+                // Save OTP and expiry time (10 minutes validity)
+                user.PasswordResetOtp = otp;
+                user.PasswordResetOtpExpiry = DateTime.UtcNow.AddMinutes(10);
+
+                await _customerRepo.UpdateAsync(user);
+
+                // Send OTP via email
+                await _emailService.SendOtpEmailAsync(user.Email, otp, user.Name);
+
+                return new ApiResponseDto
+                {
+                    Success = true,
+                    Message = "If the email exists, an OTP has been sent to your email address."
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponseDto
+                {
+                    Success = false,
+                    Message = $"An error occurred: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<ApiResponseDto> VerifyOtpAsync(VerifyOtpDto dto)
+        {
+            try
+            {
+                var user = await _customerRepo.GetByEmailAsync(dto.Email);
+
+                if (user == null)
+                {
+                    return new ApiResponseDto
+                    {
+                        Success = false,
+                        Message = "Invalid email or OTP."
+                    };
+                }
+
+                // Check if OTP matches
+                if (user.PasswordResetOtp != dto.Otp)
+                {
+                    return new ApiResponseDto
+                    {
+                        Success = false,
+                        Message = "Invalid OTP. Please check and try again."
+                    };
+                }
+
+                // Check if OTP has expired
+                if (user.PasswordResetOtpExpiry == null ||
+                    user.PasswordResetOtpExpiry < DateTime.UtcNow)
+                {
+                    return new ApiResponseDto
+                    {
+                        Success = false,
+                        Message = "OTP has expired. Please request a new one."
+                    };
+                }
+
+                return new ApiResponseDto
+                {
+                    Success = true,
+                    Message = "OTP verified successfully. You can now reset your password."
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponseDto
+                {
+                    Success = false,
+                    Message = $"An error occurred: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<ApiResponseDto> ResetPasswordAsync(ResetPasswordDto dto)
+        {
+            try
+            {
+                var user = await _customerRepo.GetByEmailAsync(dto.Email);
+
+                if (user == null)
+                {
+                    return new ApiResponseDto
+                    {
+                        Success = false,
+                        Message = "Invalid email or OTP."
+                    };
+                }
+
+                // Verify OTP
+                if (user.PasswordResetOtp != dto.Otp)
+                {
+                    return new ApiResponseDto
+                    {
+                        Success = false,
+                        Message = "Invalid OTP. Please check and try again."
+                    };
+                }
+
+                // Check OTP expiry
+                if (user.PasswordResetOtpExpiry == null ||
+                    user.PasswordResetOtpExpiry < DateTime.UtcNow)
+                {
+                    return new ApiResponseDto
+                    {
+                        Success = false,
+                        Message = "OTP has expired. Please request a new one."
+                    };
+                }
+
+                // Hash the new password
+                user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
+
+                // Clear OTP fields
+                user.PasswordResetOtp = null;
+                user.PasswordResetOtpExpiry = null;
+                user.UpdatedAt = DateTime.UtcNow;
+
+                await _customerRepo.UpdateAsync(user);
+
+                return new ApiResponseDto
+                {
+                    Success = true,
+                    Message = "Password has been reset successfully. You can now login with your new password."
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponseDto
+                {
+                    Success = false,
+                    Message = $"An error occurred: {ex.Message}"
+                };
+            }
+        }
+
+        private string GenerateOtp()
+        {
+            var random = new Random();
+            return random.Next(100000, 999999).ToString(); // Generates 6-digit OTP
+        }
         // --- VENDOR ---
         public async Task<AuthResponseDto> RegisterVendorAsync(RegisterVendorDto dto)
         {
@@ -171,6 +339,8 @@ namespace Application.Services
             await _authRepo.UpdateCustomerAsync(customer);
             return true;
         }
+
+         
     }
 }
 
