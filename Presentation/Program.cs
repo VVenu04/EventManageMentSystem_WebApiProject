@@ -7,6 +7,8 @@ using infrastructure.Repositary;
 using infrastucure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Win32;
+using Presentation.Middleware;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
@@ -92,19 +94,19 @@ namespace Presentation
 
             }
 
+            app.UseMiddleware<ExceptionMiddleware>();  // (MIDDLEWARE) Error Handling (First)
+
             app.UseHttpsRedirection();
 
 
-            app.UseAuthentication();
-            app.UseAuthorization();
-         
-
-
-            app.UseCors(x =>
+            app.UseCors(x =>      // CORS (Before Auth)
             x.AllowAnyHeader()
             .AllowAnyMethod()
             .WithOrigins("http://localhost:4200", "http://localhost:5278"));
 
+            app.UseAuthentication();
+            app.UseAuthorization();
+         
 
             app.MapControllers();
 
