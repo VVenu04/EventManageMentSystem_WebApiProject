@@ -11,10 +11,10 @@ namespace Domain.Entities
     {
         [Key]
         public Guid CategoryID { get; set; }
-        public string CategoryName { get; set; }
+        public string CategoryName { get; set; } = string.Empty;
 
         // Navigation
-        public ICollection<Service>? Services { get; set; }
-        public ICollection<Event>? Events { get; set; }
+        public ICollection<ServiceItem> Services { get; set; }
+        public ICollection<Event> Events { get; set; }
     }
 }

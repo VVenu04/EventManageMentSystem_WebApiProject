@@ -1,6 +1,7 @@
 ﻿using Application.Interface.IGenericRepo;
 using Application.Interface.IRepo;
-using Domain.Entities;
+using Application.Interface.IService;
+using infrastructure;
 using infrastructure.Repositary;
 using infrastucure.Data;
 using infrastucure.GenericRepositary;
@@ -8,11 +9,6 @@ using infrastucure.Repositary;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace infrastucure
 {
@@ -22,12 +18,26 @@ namespace infrastucure
         {
            services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepo<>));
            services.AddScoped<IAdminRepo, AdminRepositary>();
-            services.AddScoped<IAuthRepository, AuthRepository>();
+           services.AddScoped<IAuthRepository, AuthRepository>();
+           services.AddScoped<ICustomerRepo, CustomerRepository>();
+           services.AddScoped<IVendorRepo, VendorRepository>();
+           services.AddScoped<IEventRepo, EventRepository>();
+           
 
-            //services.AddScoped<IVendorRepository, VendorRepository>();
-            //services.AddScoped<IUserRepository, UserRepository>();
 
-            var connectionString = configuration.GetConnectionString("Smart");
+   
+            services.AddScoped<IBookingRepository, BookingRepository>();
+            services.AddScoped<IServiceItemRepository, ServiceItemRepository>();
+            services.AddScoped<IPackageRepository, PackageRepository>();
+
+
+            services.AddScoped<IPackageRequestRepository, PackageRequestRepository>();
+            services.AddScoped<IPaymentRepository, PaymentRepository>();
+            services.AddScoped<INotificationRepository, NotificationRepository>();
+            services.AddScoped<IRealTimeNotifier, SignalRNotifier>();
+
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            var connectionString = configuration.GetConnectionString("Smart_Function");
 
             services.AddDbContext<ApplicationDbContext>(option => option.UseSqlServer(connectionString));
 

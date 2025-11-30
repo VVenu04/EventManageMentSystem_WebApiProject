@@ -12,16 +12,17 @@ namespace Domain.Entities
         [Key]
         public Guid BookingID { get; set; }
         public Guid CustomerID { get; set; }
-        public string BookingStatus { get; set; }
-
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public string BookingStatus { get; set; }= string.Empty;
         public decimal TotalPrice { get; set; }
+        public string Location { get; set; } = string.Empty;
 
-        // Navigation
-        public Customer? Customer { get; set; }
-        public Payment? Payment { get; set; }
-        public ICollection<BookingItem> BookingItems { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        public DateTime EventDate { get; set; } 
+
+        public Customer Customer { get; set; }
+        public Payment Payment { get; set; }
+        public ICollection<BookingItem> BookingItems { get; set; }=new List<BookingItem>();
 
 
 

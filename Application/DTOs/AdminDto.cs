@@ -11,6 +11,8 @@ namespace Application.DTOs
 {
     public class AdminDto
     {
+        public Guid AdminID { get; set; }
+
         [Required]
         public string AdminName { get; set; }
 

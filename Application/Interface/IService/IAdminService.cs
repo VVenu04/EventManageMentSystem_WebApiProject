@@ -10,7 +10,8 @@ namespace Application.Interface.IService
     public interface IAdminService
     {
         Task<AdminDto> AddAdminAsync(AdminDto adminDTO);
-
-
+        Task DeleteAdminAsync(Guid? Id);
+        Task<AdminDto> GetAdminAsync(Guid adminId);
+        Task<IEnumerable<AdminDto>> GetAllAsync();
     }
 }
