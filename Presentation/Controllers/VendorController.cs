@@ -11,7 +11,7 @@ namespace Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class VendorController : ControllerBase
+    public class VendorController : BaseApiController
     {
         private readonly IVendorService _vendorService;
         public VendorController(IVendorService vendorService)

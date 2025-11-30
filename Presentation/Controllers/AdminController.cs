@@ -11,7 +11,7 @@ namespace Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AdminController : ControllerBase
+    public class AdminController : BaseApiController
     {
         private readonly IAdminService _adminService;
         public AdminController(IAdminService adminServic)

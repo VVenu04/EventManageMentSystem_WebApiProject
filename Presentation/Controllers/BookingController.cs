@@ -13,7 +13,7 @@ namespace Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BookingController : ControllerBase
+    public class BookingController : BaseApiController
     {
         private readonly IBookingService _bookingService;
 
@@ -30,10 +30,9 @@ namespace Presentation.Controllers
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<BookingConfirmationDto>> CreateBooking(CreateBookingDto createBookingDto)
         {
-            var customerId = GetCurrentCustomerId();
 
             // 1. Auth Check
-            if (customerId == Guid.Empty)
+            if (CurrentUserId == Guid.Empty)
             {
                 return Unauthorized(ApiResponse<object>.Failure("Invalid customer token."));
             }
@@ -47,7 +46,7 @@ namespace Presentation.Controllers
 
             try
             {
-                var newBooking = await _bookingService.CreateBookingAsync(createBookingDto, customerId);
+                var newBooking = await _bookingService.CreateBookingAsync(createBookingDto, CurrentUserId);
 
                 // 3. Success Response
                 return CreatedAtAction(
@@ -96,14 +95,13 @@ namespace Presentation.Controllers
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CancelBooking(Guid id)
         {
-            var customerId = GetCurrentCustomerId();
-            if (customerId == Guid.Empty) return Unauthorized(ApiResponse<object>.Failure("Invalid Token"));
+            if (CurrentUserId == Guid.Empty) return Unauthorized(ApiResponse<object>.Failure("Invalid Token"));
 
             if (id == Guid.Empty) return BadRequest(ApiResponse<object>.Failure("Invalid Booking ID."));
 
             try
             {
-                await _bookingService.CancelBookingAsync(id, customerId);
+                await _bookingService.CancelBookingAsync(id, CurrentUserId);
 
                 // Success Response (No data needed, just message)
                 return Ok(ApiResponse<object>.Success(null, "Booking cancelled and payment refunded successfully."));
@@ -115,15 +113,7 @@ namespace Presentation.Controllers
             }
         }
 
-        //  Helper Method 
-        private Guid GetCurrentCustomerId()
-        {
-            var customerIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-            if (customerIdClaim != null && Guid.TryParse(customerIdClaim.Value, out Guid customerId))
-            {
-                return customerId;
-            }
-            return Guid.Empty;
-        }
+        
+        
     }
 }

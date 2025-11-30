@@ -1,6 +1,7 @@
 using Application;
 using Application.Interface.IAuth;
 using Application.Interface.IRepo;
+using Application.Interface.IService;
 using Application.Services;
 using infrastructure.Hubs;
 using infrastructure.Repositary;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Win32;
 using Presentation.Middleware;
+using Presentation.Providers;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
@@ -27,6 +29,12 @@ namespace Presentation
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             // builder.Services.AddOpenApi();
+
+            # region token and reguest checking
+            builder.Services.AddHttpContextAccessor();
+            builder.Services.AddScoped<ICurrentUserService, CurrentUserProvider>();
+            #endregion
+
             builder.Services.AddSignalR();
 
             #region Bridge between Application and Presentation
