@@ -1,9 +1,14 @@
-﻿using Application.Interface.IService;
+﻿using Application.Common; 
+using Application.Interface.IService;
 using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Presentation.Controllers
 {
@@ -19,35 +24,33 @@ namespace Presentation.Controllers
             _notificationService = notificationService;
         }
 
-        // 1. Get My Notifications (எனக்கான செய்திகளைப் பெறுதல்)
-        // GET: api/notifications
+        // GET: api/notification
         [HttpGet]
+        [ProducesResponseType(typeof(ApiResponse<IEnumerable<Notification>>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<Notification>>> GetMyNotifications()
         {
             var userId = GetCurrentUserId();
-            if (userId == Guid.Empty) return Unauthorized();
+            if (userId == Guid.Empty) return Unauthorized(ApiResponse<object>.Failure("Invalid User Token"));
 
             var notifications = await _notificationService.GetUserNotificationsAsync(userId);
-            return Ok(notifications);
+
+            // Return empty list instead of null
+            return Ok(ApiResponse<IEnumerable<Notification>>.Success(notifications ?? new List<Notification>()));
         }
 
-        // 2. Mark as Read (படித்துவிட்டதாகக் குறித்தல்)
-        // PUT: api/notifications/{id}/read
+        // PUT: api/notification/{id}/read
         [HttpPut("{id}/read")]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
         public async Task<IActionResult> MarkAsRead(Guid id)
         {
             await _notificationService.MarkAsReadAsync(id);
-            return Ok(new { message = "Notification marked as read." });
+            return Ok(ApiResponse<object>.Success(null, "Notification marked as read."));
         }
 
-        // --- Helper Method: Token-இல் இருந்து UserID எடுப்பது ---
         private Guid GetCurrentUserId()
         {
             var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-            if (userIdClaim != null && Guid.TryParse(userIdClaim.Value, out Guid userId))
-            {
-                return userId;
-            }
+            if (userIdClaim != null && Guid.TryParse(userIdClaim.Value, out Guid userId)) return userId;
             return Guid.Empty;
         }
     }
