@@ -14,11 +14,13 @@ namespace Application.Services
     public class CategoryService: ICategoryService
     {
         private readonly ICategoryRepository _categoryRepo;
+        private readonly IServiceItemRepository _serviceItemRepo;
 
 
-        public CategoryService(ICategoryRepository categoryRepo)
+        public CategoryService(ICategoryRepository categoryRepo, IServiceItemRepository serviceItemRepo)
         {
             _categoryRepo = categoryRepo;
+            _serviceItemRepo = serviceItemRepo; 
         }
 
         // --- ADD CATEGORY ---
@@ -53,10 +55,29 @@ namespace Application.Services
         public async Task DeleteCategoryAsync(Guid id)
         {
             var category = await _categoryRepo.GetByIdAsync(id);
-            if (category != null)
+            if (category == null)
             {
-                await _categoryRepo.DeleteAsync(category);
+                throw new Exception("Category not found");
             }
+
+            // 2. 🚨 இந்த Category-ஐப் பயன்படுத்தும் எல்லா Service-களையும் கண்டுபிடி
+            var servicesUsingCategory = await _serviceItemRepo.GetByCategoryIdAsync(id);
+
+            // 3. 🚨 அந்த Service-களில் இருந்து Category-ஐ நீக்கு (Unlink)
+            // (Service.cs-ல் CategoryID Nullable 'Guid?' ஆக இருக்க வேண்டும்)
+            foreach (var service in servicesUsingCategory)
+            {
+                service.CategoryID = null; // அல்லது null (Guid? ஆக இருந்தால்)
+
+                // குறிப்பு: உங்கள் Service Entity-ல் CategoryID 'Guid' (Not Null) ஆக இருந்தால், 
+                // நீங்கள் ஒரு 'Default/General' Category ID-ஐப் பயன்படுத்தலாம்.
+                // அல்லது Service Entity-ல் 'Guid?' (Nullable) என மாற்றினால் 'null' போடலாம்.
+
+                await _serviceItemRepo.UpdateAsync(service);
+            }
+
+            // 4. இப்போது Category-ஐத் தைரியமாக அழிக்கலாம்
+            await _categoryRepo.DeleteAsync(category);
         }
 
         // --- GET ALL CATEGORIES ---

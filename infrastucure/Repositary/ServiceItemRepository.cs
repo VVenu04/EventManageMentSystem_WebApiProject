@@ -153,5 +153,11 @@ namespace infrastructure.Repositary
         {
             throw new NotImplementedException();
         }
+        public async Task<IEnumerable<ServiceItem>> GetByCategoryIdAsync(Guid categoryId)
+        {
+            return await _context.ServiceItems
+                .Where(s => s.CategoryID == categoryId)
+                .ToListAsync();
+        }
     }
 }
