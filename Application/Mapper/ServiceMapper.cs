@@ -27,7 +27,7 @@ namespace Application.Mapper
                 VendorID = service.VendorID,
                 VendorName = service.Vendor?.Name, // Include-ஆல் இது வேலை செய்யும்
                 CategoryID = service.CategoryID,
-                CategoryName = service.Category?.CategoryName, // Include-ஆல் இது வேலை செய்யும்
+                CategoryName = service.Category?.CategoryName ?? "Unknown Category", // Null என்றால் "Unknown"
 
                 // --- Photos-ஐ Map செய்யவும் ---
                 ImageUrls = service.ServiceImages?

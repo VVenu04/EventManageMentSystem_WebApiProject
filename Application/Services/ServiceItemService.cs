@@ -60,8 +60,10 @@ namespace Application.Services
 
             await _serviceRepo.AddAsync(service);
 
-            var newServiceData = await _serviceRepo.GetByIdAsync(service.ServiceItemID);
-            return ServiceMapper.MapToServiceDto(newServiceData);
+            var fullServiceDetails = await _serviceRepo.GetByIdAsync(service.ServiceItemID);
+
+            // இப்போது Map செய்து அனுப்பினால் பெயர்கள் வரும்
+            return ServiceMapper.MapToServiceDto(fullServiceDetails);
         }
 
         public async Task UpdateServiceAsync(Guid serviceId, CreateServiceDto updateServiceDto, Guid vendorId)
