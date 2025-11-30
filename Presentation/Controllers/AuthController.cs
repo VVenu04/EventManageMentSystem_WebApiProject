@@ -1,20 +1,17 @@
 ﻿using Application.DTOs.Auth;
 using Application.DTOs.Forgot;
 using Application.Interface.IAuth;
-
-// Interface namespace-ஐ உறுதிப்படுத்தவும் (Application.Interface.IService அல்லது Application.Interfaces)
-using Application.Interface.IService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Security.Claims; // <-- 1. இந்த namespace மிக முக்கியம்
 using System.Threading.Tasks;
 
 namespace Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController : ControllerBase
+    // 1. இங்கே 'ControllerBase'-க்கு பதில் 'BaseApiController' பயன்படுத்தவும்
+    public class AuthController : BaseApiController
     {
         private readonly IAuthService _authService;
 
@@ -72,12 +69,9 @@ namespace Presentation.Controllers
         [Authorize(Roles = "Vendor")]
         public async Task<IActionResult> UpdateVendorProfile(UpdateVendorProfileDto dto)
         {
-            // 2. Helper method-ஐப் பயன்படுத்தி ID-ஐப் பெறுதல்
-            var vendorId = GetCurrentUserId();
+            if (CurrentUserId == Guid.Empty) return Unauthorized();
 
-            if (vendorId == Guid.Empty) return Unauthorized();
-
-            var success = await _authService.UpdateVendorProfileAsync(vendorId, dto);
+            var success = await _authService.UpdateVendorProfileAsync(CurrentUserId, dto);
 
             if (!success) return BadRequest("Failed to update profile.");
             return Ok("Profile updated successfully.");
@@ -87,94 +81,51 @@ namespace Presentation.Controllers
         [Authorize(Roles = "Customer")]
         public async Task<IActionResult> UpdateCustomerProfile(UpdateCustomerProfileDto dto)
         {
-            var customerId = GetCurrentUserId();
+            
+            if (CurrentUserId == Guid.Empty) return Unauthorized();
 
-            if (customerId == Guid.Empty) return Unauthorized();
-
-            var success = await _authService.UpdateCustomerProfileAsync(customerId, dto);
+            var success = await _authService.UpdateCustomerProfileAsync(CurrentUserId, dto);
 
             if (!success) return BadRequest("Failed to update profile.");
             return Ok("Profile updated successfully.");
         }
+
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto dto)
         {
             if (!ModelState.IsValid)
-            {
-                return BadRequest(new ApiResponseDto
-                {
-                    Success = false,
-                    Message = "Invalid request data",
-                    Data = ModelState
-                });
-            }
+                return BadRequest(new ApiResponseDto { Success = false, Message = "Invalid request data", Data = ModelState });
 
             var result = await _authService.ForgotPasswordAsync(dto);
 
-            if (result.Success)
-                return Ok(result);
-
+            if (result.Success) return Ok(result);
             return BadRequest(result);
         }
 
-        /// <summary>
-        /// Verify OTP (Optional step before password reset)
-        /// </summary>
         [HttpPost("verify-otp")]
         public async Task<IActionResult> VerifyOtp([FromBody] VerifyOtpDto dto)
         {
             if (!ModelState.IsValid)
-            {
-                return BadRequest(new ApiResponseDto
-                {
-                    Success = false,
-                    Message = "Invalid request data",
-                    Data = ModelState
-                });
-            }
+                return BadRequest(new ApiResponseDto { Success = false, Message = "Invalid request data", Data = ModelState });
 
             var result = await _authService.VerifyOtpAsync(dto);
 
-            if (result.Success)
-                return Ok(result);
-
+            if (result.Success) return Ok(result);
             return BadRequest(result);
         }
 
-        /// <summary>
-        /// Reset password using OTP
-        /// </summary>
         [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto dto)
         {
             if (!ModelState.IsValid)
-            {
-                return BadRequest(new ApiResponseDto
-                {
-                    Success = false,
-                    Message = "Invalid request data",
-                    Data = ModelState
-                });
-            }
+                return BadRequest(new ApiResponseDto { Success = false, Message = "Invalid request data", Data = ModelState });
 
             var result = await _authService.ResetPasswordAsync(dto);
 
-            if (result.Success)
-                return Ok(result);
-
+            if (result.Success) return Ok(result);
             return BadRequest(result);
         }
-    
 
-        private Guid GetCurrentUserId()
-        {
-            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-
-            if (userIdClaim != null && Guid.TryParse(userIdClaim.Value, out Guid userId))
-            {     
-                return userId;
-            }
-            return Guid.Empty;
-        }
+        
     }
 }

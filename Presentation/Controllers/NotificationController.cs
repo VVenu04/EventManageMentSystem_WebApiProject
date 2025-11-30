@@ -15,7 +15,7 @@ namespace Presentation.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class NotificationController : ControllerBase
+    public class NotificationController : BaseApiController
     {
         private readonly INotificationService _notificationService;
 
@@ -29,10 +29,9 @@ namespace Presentation.Controllers
         [ProducesResponseType(typeof(ApiResponse<IEnumerable<Notification>>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<Notification>>> GetMyNotifications()
         {
-            var userId = GetCurrentUserId();
-            if (userId == Guid.Empty) return Unauthorized(ApiResponse<object>.Failure("Invalid User Token"));
+            if (CurrentUserId == Guid.Empty) return Unauthorized(ApiResponse<object>.Failure("Invalid User Token"));
 
-            var notifications = await _notificationService.GetUserNotificationsAsync(userId);
+            var notifications = await _notificationService.GetUserNotificationsAsync(CurrentUserId);
 
             // Return empty list instead of null
             return Ok(ApiResponse<IEnumerable<Notification>>.Success(notifications ?? new List<Notification>()));
@@ -47,11 +46,6 @@ namespace Presentation.Controllers
             return Ok(ApiResponse<object>.Success(null, "Notification marked as read."));
         }
 
-        private Guid GetCurrentUserId()
-        {
-            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-            if (userIdClaim != null && Guid.TryParse(userIdClaim.Value, out Guid userId)) return userId;
-            return Guid.Empty;
-        }
+        
     }
 }

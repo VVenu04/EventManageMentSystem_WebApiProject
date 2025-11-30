@@ -1,6 +1,6 @@
-﻿using Application.Common; 
+﻿using Application.Common;
 using Application.DTOs.Service;
-using Application.DTOs.ServiceItem; 
+using Application.DTOs.ServiceItem;
 using Application.Interface.IService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -8,14 +8,13 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Presentation.Controllers
 {
-    
     [Route("api/Services")]
     [ApiController]
-    public class ServiceItemController : ControllerBase
+    public class ServiceItemController : BaseApiController // 1. Inherit from BaseApiController
     {
         private readonly IServiceItemService _serviceService;
 
@@ -31,8 +30,8 @@ namespace Presentation.Controllers
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<ServiceItemDto>> CreateService([FromBody] CreateServiceDto createServiceDto)
         {
-            var vendorId = GetCurrentUserId();
-            if (vendorId == Guid.Empty)
+            // 2. Use CurrentUserId directly
+            if (CurrentUserId == Guid.Empty)
             {
                 return Unauthorized(ApiResponse<object>.Failure("Invalid vendor token."));
             }
@@ -45,7 +44,8 @@ namespace Presentation.Controllers
 
             try
             {
-                var newService = await _serviceService.CreateServiceAsync(createServiceDto, vendorId);
+                // Pass CurrentUserId to service
+                var newService = await _serviceService.CreateServiceAsync(createServiceDto, CurrentUserId);
 
                 return CreatedAtAction(
                     nameof(GetService),
@@ -82,7 +82,8 @@ namespace Presentation.Controllers
         [HttpGet("vendor/{vendorId}")]
         [AllowAnonymous]
         [ProducesResponseType(typeof(ApiResponse<IEnumerable<ServiceItemDto>>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<ServiceItemDto>> GetServicesByVendor(Guid vendorId)
+        // குறிப்பு: Return Type-ஐ 'IEnumerable' என்று மாற்றியுள்ளேன் (List வருவதால்)
+        public async Task<ActionResult<IEnumerable<ServiceItemDto>>> GetServicesByVendor(Guid vendorId)
         {
             if (vendorId == Guid.Empty) return BadRequest(ApiResponse<object>.Failure("Invalid Vendor ID."));
 
@@ -115,14 +116,13 @@ namespace Presentation.Controllers
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
         public async Task<IActionResult> UpdateService(Guid id, [FromBody] UpdateServiceDto updateServiceDto)
         {
-            var vendorId = GetCurrentUserId();
-            if (vendorId == Guid.Empty) return Unauthorized(ApiResponse<object>.Failure("Invalid Token"));
+            if (CurrentUserId == Guid.Empty) return Unauthorized(ApiResponse<object>.Failure("Invalid Token"));
 
             if (id == Guid.Empty) return BadRequest(ApiResponse<object>.Failure("Invalid Service ID."));
 
             try
             {
-                await _serviceService.UpdateServiceAsync(id, updateServiceDto, vendorId);
+                await _serviceService.UpdateServiceAsync(id, updateServiceDto, CurrentUserId);
                 return Ok(ApiResponse<object>.Success(null, "Service updated successfully."));
             }
             catch (Exception ex)
@@ -137,12 +137,11 @@ namespace Presentation.Controllers
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
         public async Task<IActionResult> DeleteService(Guid id)
         {
-            var vendorId = GetCurrentUserId();
-            if (vendorId == Guid.Empty) return Unauthorized(ApiResponse<object>.Failure("Invalid Token"));
+            if (CurrentUserId == Guid.Empty) return Unauthorized(ApiResponse<object>.Failure("Invalid Token"));
 
             try
             {
-                await _serviceService.DeleteServiceAsync(id, vendorId);
+                await _serviceService.DeleteServiceAsync(id, CurrentUserId);
                 return Ok(ApiResponse<object>.Success(null, "Service deleted successfully."));
             }
             catch (Exception ex)
@@ -152,15 +151,6 @@ namespace Presentation.Controllers
             }
         }
 
-        //  Helper Method 
-        private Guid GetCurrentUserId()
-        {
-            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-            if (userIdClaim != null && Guid.TryParse(userIdClaim.Value, out Guid userId))
-            {
-                return userId;
-            }
-            return Guid.Empty;
-        }
+        
     }
 }
