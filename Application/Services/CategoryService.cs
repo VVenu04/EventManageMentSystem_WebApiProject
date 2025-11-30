@@ -34,7 +34,7 @@ namespace Application.Services
             var category = new Category
             {
                 CategoryID = Guid.NewGuid(),
-                CategoryName = categoryDTO.CategoryName
+                CategoryName = categoryDTO.Name
                 // வேறு Properties இருந்தால் இங்கே சேர்க்கவும்
             };
 
@@ -44,7 +44,7 @@ namespace Application.Services
             return new CategoryDto
             {
                 CategoryID = addedCategory.CategoryID,
-                CategoryName = addedCategory.CategoryName
+                Name = addedCategory.CategoryName
             };
         }
 
@@ -71,7 +71,7 @@ namespace Application.Services
                 categoryDtos.Add(new CategoryDto
                 {
                     CategoryID = cat.CategoryID,
-                    CategoryName = cat.CategoryName
+                    Name = cat.CategoryName
                 });
             }
             return categoryDtos;
@@ -90,7 +90,7 @@ namespace Application.Services
             return new CategoryDto
             {
                 CategoryID = category.CategoryID,
-                CategoryName = category.CategoryName
+                Name = category.CategoryName
             };
         }
 

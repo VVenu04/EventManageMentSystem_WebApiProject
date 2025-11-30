@@ -9,6 +9,6 @@ namespace Application.DTOs
     public class CategoryDto
     {
         public Guid CategoryID { get; set; }
-        public string CategoryName { get; set; }
+        public string Name { get; set; }
     }
 }
