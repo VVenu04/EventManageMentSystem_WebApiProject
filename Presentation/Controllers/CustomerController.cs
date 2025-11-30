@@ -77,7 +77,7 @@ namespace Presentation.Controllers
             try
             {
                 await _customerService.DeleteCustomerAsync(Id);
-                return Ok(ApiResponse<object>.Success(null, "Customer deleted successfully."));
+                return Ok(ApiResponse<object?>.Success(null, "Customer deleted successfully."));
             }
             catch (Exception ex)
             {

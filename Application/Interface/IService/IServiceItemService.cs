@@ -1,4 +1,6 @@
 ﻿using Application.DTOs.Service;
+using Application.DTOs.ServiceItem;
+using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +13,8 @@ namespace Application.Interface.IService
     {
         Task<ServiceItemDto> CreateServiceAsync(CreateServiceDto dto, Guid vendorId);
 
-        // Vendor-ஆல் ஒரு Service-ஐ update செய்ய
-        Task UpdateServiceAsync(Guid serviceId, CreateServiceDto updateServiceDto, Guid vendorId);
-
+        // 🚨 'CreateServiceDto'-வை 'UpdateServiceDto'-ஆக மாற்றவும்
+        Task UpdateServiceAsync(Guid serviceId, UpdateServiceDto updateServiceDto, Guid vendorId);
         // Vendor-ஆல் ஒரு Service-ஐ delete செய்ய
         Task DeleteServiceAsync(Guid serviceId, Guid vendorId);
 
@@ -25,5 +26,7 @@ namespace Application.Interface.IService
 
         // Customer/User-ஆல் ஒரு Vendor-இன் Services-ஐப் பார்க்க
         Task<IEnumerable<ServiceItemDto>> GetServicesByVendorAsync(Guid vendorId);
+        Task<IEnumerable<ServiceItem>> SearchServicesAsync(ServiceSearchDto searchDto);
+
     }
 }

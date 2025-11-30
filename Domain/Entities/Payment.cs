@@ -12,7 +12,15 @@ namespace Domain.Entities
         [Key]
         public Guid PaymentID { get; set; }
         public Guid BookingID { get; set; }
-        public string PaymentMethod { get; set; }
+
+        public string StripePaymentIntentId { get; set; } // Stripe Transaction ID
+        public decimal AmountPaid { get; set; } 
+        public DateTime PaymentDate { get; set; } = DateTime.UtcNow;
+        public string Status { get; set; } // "Pending", "Succeeded", "Failed"
+
+        public decimal AdminCommission { get; set; } 
+        public decimal VendorEarnings { get; set; }  
+        public decimal CustomerCashback { get; set; } 
 
         // Navigation
         public Booking Booking { get; set; }

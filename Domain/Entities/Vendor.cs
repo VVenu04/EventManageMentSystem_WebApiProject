@@ -25,5 +25,6 @@ namespace Domain.Entities
         public int EventPerDayLimit { get; set; }
         public int TimeLimit { get; set; }
         public string Logo { get; set; }
+        public string Description { get; set; }
     }
 }

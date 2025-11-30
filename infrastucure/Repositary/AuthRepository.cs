@@ -63,6 +63,31 @@ namespace infrastructure.Repositary
         public async Task<Customer?> GetCustomerByIdAsync(Guid customerId)
         {
             return await _context.Customers.FindAsync(customerId);
+     
         }
+        public async Task UpdateCustomerAsync(Customer customer)
+        {
+            _context.Customers.Update(customer);
+            await _context.SaveChangesAsync();
+        }
+        public async Task UpdateVendorAsync(Vendor vendor)
+        {
+            _context.Vendors.Update(vendor);
+            await _context.SaveChangesAsync();
+        }
+        public async Task<Vendor?> GetVendorByIdAsync(Guid vendorId)
+        {
+            return await _context.Vendors.FindAsync(vendorId);
+        }
+
+        //public async Task<Customer> GetCustomerByIdAsync(Guid customerId)
+        //{
+        //    return await _context.Customers.FindAsync(customerId);
+        //}
+        //public async Task UpdateCustomerAsync(Customer customer)
+        //{
+        //    _context.Customers.Update(customer);
+        //    await _context.SaveChangesAsync();
+        //}
     }
 }

@@ -40,7 +40,7 @@ namespace infrastucure.GenericRepositary
             return await _dbContext.Set<T>().AsNoTracking().ToListAsync();
         }
 
-        public async  Task<T> GetByIdAsync(Expression<Func<T, bool>> condition)
+        public async  Task<T?> GetByIdAsync(Expression<Func<T, bool>> condition)
         {
 
             return await _dbContext.Set<T>().AsNoTracking().FirstOrDefaultAsync(condition);

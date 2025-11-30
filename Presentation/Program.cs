@@ -2,11 +2,15 @@ using Application;
 using Application.Interface.IAuth;
 using Application.Interface.IRepo;
 using Application.Services;
+using infrastructure.Hubs;
 using infrastructure.Repositary;
 using infrastucure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.Net;
+using System.Net.Mail;
 using System.Text;
+
 namespace Presentation
 {
     public class Program
@@ -21,7 +25,7 @@ namespace Presentation
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             // builder.Services.AddOpenApi();
-
+            builder.Services.AddSignalR();
 
             #region Bridge between Application and Presentation
             builder.Services.AddService();
@@ -35,7 +39,25 @@ namespace Presentation
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             #endregion
+            builder.Services.AddSingleton<SmtpClient>(provider =>
+            {
+                var config = provider.GetRequiredService<IConfiguration>();
 
+                var smtpHost = config["EmailSettings:SmtpHost"];
+                var smtpPort = int.Parse(config["EmailSettings:SmtpPort"]);
+                var senderEmail = config["EmailSettings:SenderEmail"];
+                var senderPassword = config["EmailSettings:SenderPassword"];
+
+                var smtpClient = new SmtpClient(smtpHost, smtpPort)
+                {
+                    Credentials = new NetworkCredential(senderEmail, senderPassword),
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false
+                };
+
+                return smtpClient;
+            });
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -72,8 +94,10 @@ namespace Presentation
 
             app.UseHttpsRedirection();
 
-            app.UseAuthorization();
+
             app.UseAuthentication();
+            app.UseAuthorization();
+         
 
 
             app.UseCors(x =>
@@ -84,6 +108,7 @@ namespace Presentation
 
             app.MapControllers();
 
+            app.MapHub<NotificationHub>("/notificationHub");
             app.Run();
         }
     }

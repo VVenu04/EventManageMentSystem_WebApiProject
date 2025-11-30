@@ -8,7 +8,7 @@ using infrastucure.Data;
 
 #nullable disable
 
-namespace infrastucure.Migrations
+namespace infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -65,6 +65,9 @@ namespace infrastucure.Migrations
 
                     b.Property<string>("BookingStatus")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("CustomerID")
                         .HasColumnType("uniqueidentifier");
@@ -142,6 +145,9 @@ namespace infrastucure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
@@ -154,11 +160,23 @@ namespace infrastucure.Migrations
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PasswordResetOtp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("PasswordResetOtpExpiry")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProfilePhoto")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("WalletBalance")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("CustomerID");
 
@@ -209,8 +227,23 @@ namespace infrastucure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Message")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("RelatedEntityID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserID")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("NotificationID");
 
@@ -223,13 +256,16 @@ namespace infrastucure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
                     b.Property<Guid?>("EventID")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TotalPrice")
@@ -256,7 +292,7 @@ namespace infrastucure.Migrations
                     b.Property<Guid>("PackageID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ServiceItemID")
+                    b.Property<Guid?>("ServiceItemID")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("PackageItemID");
@@ -268,24 +304,70 @@ namespace infrastucure.Migrations
                     b.ToTable("PackageItems");
                 });
 
+            modelBuilder.Entity("Domain.Entities.PackageRequest", b =>
+                {
+                    b.Property<Guid>("RequestID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("PackageID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ReceiverVendorID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SenderVendorID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("RequestID");
+
+                    b.HasIndex("PackageID");
+
+                    b.ToTable("PackageRequests");
+                });
+
             modelBuilder.Entity("Domain.Entities.Payment", b =>
                 {
                     b.Property<Guid>("PaymentID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<decimal>("AdminCommission")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("AmountPaid")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<Guid>("BookingID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("PaymentMethod")
+                    b.Property<decimal>("CustomerCashback")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("PaymentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StripePaymentIntentId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("VendorEarnings")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("PaymentID");
 
                     b.HasIndex("BookingID")
                         .IsUnique();
 
-                    b.ToTable("Payment");
+                    b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("Domain.Entities.ServiceImage", b =>
@@ -384,6 +466,9 @@ namespace infrastucure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CompanyName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
@@ -524,13 +609,22 @@ namespace infrastucure.Migrations
 
                     b.HasOne("Domain.Entities.ServiceItem", "Service")
                         .WithMany("PackageItems")
-                        .HasForeignKey("ServiceItemID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ServiceItemID");
 
                     b.Navigation("Package");
 
                     b.Navigation("Service");
+                });
+
+            modelBuilder.Entity("Domain.Entities.PackageRequest", b =>
+                {
+                    b.HasOne("Domain.Entities.Package", "Package")
+                        .WithMany("PackageRequests")
+                        .HasForeignKey("PackageID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Package");
                 });
 
             modelBuilder.Entity("Domain.Entities.Payment", b =>
@@ -629,6 +723,8 @@ namespace infrastucure.Migrations
             modelBuilder.Entity("Domain.Entities.Package", b =>
                 {
                     b.Navigation("PackageItems");
+
+                    b.Navigation("PackageRequests");
                 });
 
             modelBuilder.Entity("Domain.Entities.ServiceItem", b =>

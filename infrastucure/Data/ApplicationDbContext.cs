@@ -27,7 +27,8 @@ namespace infrastucure.Data
         public DbSet<ServiceItem> ServiceItems { get; set; }
         public DbSet<Vendor> Vendors { get; set; }
         public DbSet<Notification> Notifications { get; set; }
-        public DbSet<Payment> Payment { get; set; }
+        public DbSet<Payment> Payments { get; set; }
         public DbSet<Tracking> Tracking { get; set; }
+        public DbSet<PackageRequest> PackageRequests { get; set; }
     }
 }
