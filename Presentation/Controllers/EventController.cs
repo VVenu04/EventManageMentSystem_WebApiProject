@@ -11,7 +11,7 @@ namespace Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EventController : ControllerBase
+    public class EventController : BaseApiController
     {
         private readonly IEventService _eventService;
         public EventController(IEventService eventService)

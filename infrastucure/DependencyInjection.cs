@@ -25,11 +25,11 @@ namespace infrastucure
            
 
 
-            services.AddScoped<IAuthRepository, AuthRepository>();
+   
             services.AddScoped<IBookingRepository, BookingRepository>();
             services.AddScoped<IServiceItemRepository, ServiceItemRepository>();
             services.AddScoped<IPackageRepository, PackageRepository>();
-            services.AddScoped<IServiceItemRepository, ServiceItemRepository > ();
+
 
             services.AddScoped<IPackageRequestRepository, PackageRequestRepository>();
             services.AddScoped<IPaymentRepository, PaymentRepository>();

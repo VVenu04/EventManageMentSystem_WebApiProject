@@ -1,12 +1,18 @@
 using Application;
 using Application.Interface.IAuth;
 using Application.Interface.IRepo;
+using Application.Interface.IService;
 using Application.Services;
 using infrastructure.Hubs;
 using infrastructure.Repositary;
 using infrastucure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Win32;
+using Presentation.Middleware;
+using Presentation.Providers;
+using System.Net;
+using System.Net.Mail;
 using System.Text;
 
 namespace Presentation
@@ -23,6 +29,12 @@ namespace Presentation
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             // builder.Services.AddOpenApi();
+
+            # region token and reguest checking
+            builder.Services.AddHttpContextAccessor();
+            builder.Services.AddScoped<ICurrentUserService, CurrentUserProvider>();
+            #endregion
+
             builder.Services.AddSignalR();
 
             #region Bridge between Application and Presentation
@@ -37,7 +49,25 @@ namespace Presentation
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             #endregion
+            builder.Services.AddSingleton<SmtpClient>(provider =>
+            {
+                var config = provider.GetRequiredService<IConfiguration>();
 
+                var smtpHost = config["EmailSettings:SmtpHost"];
+                var smtpPort = int.Parse(config["EmailSettings:SmtpPort"]);
+                var senderEmail = config["EmailSettings:SenderEmail"];
+                var senderPassword = config["EmailSettings:SenderPassword"];
+
+                var smtpClient = new SmtpClient(smtpHost, smtpPort)
+                {
+                    Credentials = new NetworkCredential(senderEmail, senderPassword),
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false
+                };
+
+                return smtpClient;
+            });
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -72,17 +102,19 @@ namespace Presentation
 
             }
 
+            app.UseMiddleware<ExceptionMiddleware>();  // (MIDDLEWARE) Error Handling (First)
+
             app.UseHttpsRedirection();
 
-            app.UseAuthorization();
-            app.UseAuthentication();
 
-
-            app.UseCors(x =>
+            app.UseCors(x =>      // CORS (Before Auth)
             x.AllowAnyHeader()
             .AllowAnyMethod()
             .WithOrigins("http://localhost:4200", "http://localhost:5278"));
 
+            app.UseAuthentication();
+            app.UseAuthorization();
+         
 
             app.MapControllers();
 

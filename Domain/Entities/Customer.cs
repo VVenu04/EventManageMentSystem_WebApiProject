@@ -22,5 +22,12 @@ namespace Domain.Entities
         public ICollection<Booking> Bookings { get; set; }= new List<Booking>();
         public ICollection<Message> Messages { get; set; } = new List<Message>();
         public decimal WalletBalance { get; set; } = 0;
+        public string? PasswordResetOtp { get; set; }
+
+        public DateTime? PasswordResetOtpExpiry { get; set; }
+
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        public DateTime? UpdatedAt { get; set; }
     }
 }

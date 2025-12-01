@@ -4,7 +4,10 @@ using Application.Interface.IRepo;
 using Application.Interface.IService;
 using Application.Mapper;
 using Domain.Entities;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Application.Services
 {
@@ -39,7 +42,7 @@ namespace Application.Services
             {
                 ServiceImageID = Guid.NewGuid(),
                 ImageUrl = url,
-                IsCover = (index == 0) 
+                IsCover = (index == 0)
             }).ToList();
 
             var service = new ServiceItem
@@ -55,7 +58,7 @@ namespace Application.Services
                 TimeLimit = dto.TimeLimit,
                 VendorID = vendorId,
                 Active = true,
-                ServiceImages = serviceImages 
+                ServiceImages = serviceImages
             };
 
             await _serviceRepo.AddAsync(service);
@@ -66,7 +69,7 @@ namespace Application.Services
             return ServiceMapper.MapToServiceDto(fullServiceDetails);
         }
 
-        public async Task UpdateServiceAsync(Guid serviceId, CreateServiceDto updateServiceDto, Guid vendorId)
+        public async Task UpdateServiceAsync(Guid serviceId, UpdateServiceDto updateServiceDto, Guid vendorId)
         {
             var service = await _serviceRepo.GetByIdAsync(serviceId);
             if (service == null) throw new Exception("Service not found");
@@ -82,6 +85,7 @@ namespace Application.Services
             if (updateServiceDto.ImageUrls.Count > 5)
                 throw new Exception("You cannot add more than 5 photos per service.");
 
+            // Update Properties
             service.Name = updateServiceDto.Name;
             service.Description = updateServiceDto.Description;
             service.Price = updateServiceDto.Price;
@@ -91,6 +95,7 @@ namespace Application.Services
             service.EventPerDayLimit = updateServiceDto.EventPerDayLimit;
             service.TimeLimit = updateServiceDto.TimeLimit;
 
+            // Update Images
             service.ServiceImages.Clear();
             foreach (var (url, index) in updateServiceDto.ImageUrls.Select((url, index) => (url, index)))
             {
@@ -98,41 +103,24 @@ namespace Application.Services
                 {
                     ServiceImageID = Guid.NewGuid(),
                     ImageUrl = url,
-                    IsCover = (index == 0)
+                    IsCover = (index == 0),
+                    ServiceItemID = service.ServiceItemID
                 });
             }
 
-            // 6. Save changes
             await _serviceRepo.UpdateAsync(service);
         }
 
         public async Task DeleteServiceAsync(Guid serviceId, Guid vendorId)
         {
             var service = await _serviceRepo.GetByIdAsync(serviceId);
+            if (service == null) throw new Exception("Service not found");
 
-            // 1. Service இருக்கிறதா?
-            if (service == null)
-            {
-                throw new Exception("Service not found");
-            }
+            if (service.VendorID != vendorId) throw new Exception("Unauthorized");
 
-            // 2. இது அந்த Vendor-இன் Service தானா?
-            if (service.VendorID != vendorId)
-            {
-                throw new Exception("You are not authorized to delete this service");
-            }
+            if (await _serviceRepo.IsServiceInAnyPackageAsync(serviceId))
+                throw new Exception($"Cannot delete '{service.Name}' because it is part of one or more Packages.");
 
-            // --- 3. 🚨 புதிய Logic: Package-ல் உள்ளதா எனச் சோதி ---
-            bool isInPackage = await _serviceRepo.IsServiceInAnyPackageAsync(serviceId);
-
-            if (isInPackage)
-            {
-                // Package-ல் இருந்தால் Error காட்டு (அழிக்காதே)
-                throw new Exception($"Cannot delete '{service.Name}' because it is part of one or more Packages. Please remove it from the packages first.");
-            }
-            // --- ---
-
-            // 4. எல்லாம் சரியாக இருந்தால் Delete செய்
             await _serviceRepo.DeleteAsync(service);
         }
 
@@ -147,22 +135,17 @@ namespace Application.Services
             var services = await _serviceRepo.GetAllAsync();
             return services.Select(ServiceMapper.MapToServiceDto);
         }
+
         public async Task<IEnumerable<ServiceItemDto>> GetServicesByVendorAsync(Guid vendorId)
         {
             var services = await _serviceRepo.GetByVendorIdAsync(vendorId);
             return services.Select(ServiceMapper.MapToServiceDto);
         }
+
         public async Task<IEnumerable<ServiceItemDto>> SearchServicesAsync(ServiceSearchDto searchDto)
         {
             var services = await _serviceRepo.SearchServicesAsync(searchDto);
-
-            // Mapper-ஐப் பயன்படுத்தி DTO-வாக மாற்று
             return services.Select(ServiceMapper.MapToServiceDto);
-        }
-
-        Task<IEnumerable<ServiceItem>> IServiceItemService.SearchServicesAsync(ServiceSearchDto searchDto)
-        {
-            throw new NotImplementedException();
         }
     }
 }
