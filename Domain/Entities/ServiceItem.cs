@@ -16,7 +16,7 @@ namespace Domain.Entities
         public string Name { get; set; } 
 
         public Guid VendorID { get; set; }
-        public Guid CategoryID { get; set; }
+        public Guid? CategoryID { get; set; }
         public Guid? EventID { get; set; }
 
         public string Description { get; set; }

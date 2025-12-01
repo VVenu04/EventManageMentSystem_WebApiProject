@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
@@ -12,19 +9,17 @@ namespace Domain.Entities
         [Key]
         public Guid BookingID { get; set; }
         public Guid CustomerID { get; set; }
-        public string BookingStatus { get; set; }= string.Empty;
+        public string BookingStatus { get; set; } = string.Empty;
         public decimal TotalPrice { get; set; }
         public string Location { get; set; } = string.Empty;
-
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime EventDate { get; set; }
 
-        public DateTime EventDate { get; set; } 
+        // Navigation Properties
+        public Customer? Customer { get; set; }
+        public Payment? Payment { get; set; }
 
-        public Customer Customer { get; set; }
-        public Payment Payment { get; set; }
-        public ICollection<BookingItem> BookingItems { get; set; }=new List<BookingItem>();
-
-
-
+        // 🚨 முக்கிய மாற்றம்: இது List ஆக இருக்க வேண்டும், string ஆக இருக்கக்கூடாது
+        public ICollection<BookingItem> BookingItems { get; set; } = new List<BookingItem>();
     }
 }

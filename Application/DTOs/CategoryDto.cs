@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Application.DTOs
 {
-    public class EventDto
+    public class CategoryDto
     {
-        public Guid EventID { get; set; }
+        public Guid CategoryID { get; set; }
         public string Name { get; set; }
     }
 }
