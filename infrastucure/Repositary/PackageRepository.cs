@@ -51,5 +51,14 @@ namespace infrastructure.Repositary
                         .ThenInclude(s => s.ServiceImages) 
                 .FirstOrDefaultAsync(p => p.PackageID == packageId);
         }
+        public async Task<IEnumerable<Package>> GetAllAsync()
+        {
+            return await _context.Packages
+                .Include(p => p.Vendor) // Owner Name காட்ட
+                .Include(p => p.PackageItems)
+                    .ThenInclude(pi => pi.Service) // Service Details காட்ட
+                        .ThenInclude(s => s.Vendor) // Service Provider Name காட்ட
+                .ToListAsync();
+        }
     }
 }

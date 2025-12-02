@@ -178,6 +178,13 @@ namespace Application.Services
             // பல packages-ஐ DTO-ஆக மாற்று
             return packages.Select(MapToPackageDto);
         }
+        public async Task<IEnumerable<PackageDto>> GetAllPackagesAsync()
+        {
+            var packages = await _packageRepo.GetAllAsync();
+
+            // ஏற்கனவே உள்ள 'MapToPackageDto' மெதடைப் பயன்படுத்தி மாற்றவும்
+            return packages.Select(MapToPackageDto);
+        }
 
 
         // --- Helper Method: Manual Mapping ---

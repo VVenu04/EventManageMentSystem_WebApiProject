@@ -101,8 +101,16 @@ namespace Presentation.Controllers
         {
             try
             {
+                // 🚨 FIX: DTO Null ஆக இருந்தால் Empty Object உருவாக்கு
+                searchDto ??= new ServiceSearchDto();
+
                 var services = await _serviceService.SearchServicesAsync(searchDto);
-                return Ok(ApiResponse<IEnumerable<ServiceItemDto>>.Success(services ?? new List<ServiceItemDto>()));
+
+                // Service Layer-ல் ஏற்கனவே Mapping நடந்திருந்தால்:
+                return Ok(ApiResponse<IEnumerable<ServiceItemDto>>.Success(services));
+
+                // அல்லது இங்கே Map செய்வதாக இருந்தால்:
+                // return Ok(ApiResponse<IEnumerable<ServiceItemDto>>.Success(services.Select(ServiceMapper.MapToServiceDto)));
             }
             catch (Exception ex)
             {

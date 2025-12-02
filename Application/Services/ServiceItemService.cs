@@ -144,7 +144,11 @@ namespace Application.Services
 
         public async Task<IEnumerable<ServiceItemDto>> SearchServicesAsync(ServiceSearchDto searchDto)
         {
+            // 🚨 இங்கே 'throw new NotImplementedException()' இருக்கக்கூடாது.
+
             var services = await _serviceRepo.SearchServicesAsync(searchDto);
+
+            // Map Entity to DTO
             return services.Select(ServiceMapper.MapToServiceDto);
         }
     }

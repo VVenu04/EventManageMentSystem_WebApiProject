@@ -27,5 +27,6 @@ namespace Application.Interface.IService
 
         // 4. Package-ஐ வெளியிட (Publish)
         Task PublishPackageAsync(Guid packageId, Guid vendorId);
+        Task<IEnumerable<PackageDto>> GetAllPackagesAsync();
     }
 }
