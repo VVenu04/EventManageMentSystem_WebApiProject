@@ -15,5 +15,6 @@ namespace Application.Interface.IService
 
         Task<IEnumerable<BookingConfirmationDto>> GetBookingsByVendorAsync(Guid vendorId);
         Task CancelBookingAsync(Guid bookingId, Guid customerId);
+        Task<IEnumerable<BookingConfirmationDto>> GetBookingsByCustomerAsync(Guid customerId);
     }
 }

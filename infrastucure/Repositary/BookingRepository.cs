@@ -26,6 +26,15 @@ namespace infrastructure.Repositary
             await _context.SaveChangesAsync();
             return booking;
         }
+        public async Task<IEnumerable<Booking>> GetBookingsByCustomerAsync(Guid customerId)
+        {
+            return await _context.Bookings
+                .Include(b => b.BookingItems).ThenInclude(bi => bi.Service)
+                .Include(b => b.BookingItems).ThenInclude(bi => bi.Package)
+                .Where(b => b.CustomerID == customerId)
+                .OrderByDescending(b => b.CreatedAt)
+                .ToListAsync();
+        }
 
         public async Task<Booking?> GetByIdAsync(Guid bookingId)
         {

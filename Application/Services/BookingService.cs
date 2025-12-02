@@ -104,6 +104,13 @@ namespace Application.Services
             return BookingMapper.MapToConfirmationDto(booking, customer, servicesToBook);
         }
 
+        public async Task<IEnumerable<BookingConfirmationDto>> GetBookingsByCustomerAsync(Guid customerId)
+        {
+            // Repo-வில் இந்த மெதட் இருக்க வேண்டும்
+            var bookings = await _bookingRepo.GetBookingsByCustomerAsync(customerId);
+            return bookings.Select(b => BookingMapper.MapToConfirmationDto(b)).ToList();
+        }
+
         public async Task<IEnumerable<BookingConfirmationDto>> GetBookingsByVendorAsync(Guid vendorId)
         {
             var bookings = await _bookingRepo.GetBookingsByVendorAsync(vendorId);

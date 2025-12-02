@@ -133,7 +133,25 @@ namespace Presentation.Controllers
                 return BadRequest(ApiResponse<object>.Failure(ex.Message));
             }
         }
+        [HttpGet("my-bookings")]
+        [Authorize(Roles = "Customer")]
+        [ProducesResponseType(typeof(ApiResponse<IEnumerable<BookingConfirmationDto>>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetMyBookings()
+        {
+            if (CurrentUserId == Guid.Empty) return Unauthorized(ApiResponse<object>.Failure("Invalid Token"));
 
+            try
+            {
+                // Service-ல் இந்த மெதட் தேவை (கீழே பார்க்கவும்)
+                var bookings = await _bookingService.GetBookingsByCustomerAsync(CurrentUserId);
+
+                return Ok(ApiResponse<IEnumerable<BookingConfirmationDto>>.Success(bookings ?? new List<BookingConfirmationDto>()));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ApiResponse<object>.Failure(ex.Message));
+            }
+        }
 
 
     }
