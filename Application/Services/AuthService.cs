@@ -1,12 +1,19 @@
-﻿using Application.DTOs.Auth;
+﻿using Application.DTOs;
+using Application.DTOs.Auth;
 using Application.DTOs.Forgot;
+using Application.DTOs.Google;
 using Application.Interface.IAuth;
 using Application.Interface.IRepo;
 using Application.Interface.IService;
 using Domain.Entities;
+using Google.Apis.Auth;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,16 +28,120 @@ namespace Application.Services
         private readonly IEmailService _emailService;
         private readonly IAuthRepository _authRepo;
         private readonly ITokenService _tokenService;
+        private readonly IConfiguration _config;
 
-        public AuthService(IAuthRepository authRepo, ITokenService tokenService, ICustomerRepo customerRepo , IEmailService emailService)
+        public AuthService(IConfiguration config, IAuthRepository authRepo, ITokenService tokenService, ICustomerRepo customerRepo , IEmailService emailService)
         {
             _authRepo = authRepo;
             _tokenService = tokenService;
             _customerRepo = customerRepo;
             _emailService = emailService;
+            _config = config;
         }
 
         // --- CUSTOMER ---
+        public async Task<GoogleAuthResponseDto> SignInWithGoogleAsync(string idToken)
+        {
+            // 1) Validate Google ID token
+            var settings = new GoogleJsonWebSignature.ValidationSettings()
+            {
+                Audience = new[] { _config["Google:ClientId"] } // must match your client id
+            };
+
+            GoogleJsonWebSignature.Payload payload;
+            try
+            {
+                payload = await GoogleJsonWebSignature.ValidateAsync(idToken, settings);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Invalid Google ID token.", ex);
+            }
+
+            // 2) Find or create user
+            var googleId = payload.Subject; // "sub"
+            var email = payload.Email!;
+            var name = payload.Name ?? payload.Email!;
+            var picture = payload.Picture;
+
+            var user = await _customerRepo.GetByGoogleIdAsync(googleId)
+                       ?? await _customerRepo.GetByEmailAsync(email);
+
+            if (user == null)
+            {
+                user = new Customer
+                {
+                    GoogleId = googleId,
+                    Email = email,
+                    Name = name,
+                    ProfilePhoto = picture
+                };
+                await _customerRepo.AddAsync(user);
+                await _customerRepo.SaveChangesAsync();
+            }
+            else
+            {
+                // If existing user had no GoogleId, set it
+                if (string.IsNullOrEmpty(user.GoogleId))
+                {
+                    user.GoogleId = googleId;
+                    await _customerRepo.SaveChangesAsync();
+                }
+            }
+
+            // 3) Create JWT
+            var token = GenerateJwtToken(user, out DateTime expires);
+
+            // 4) Build response
+           // var userDto = _mapper.Map<UserDto>(user);
+           var userDto = new CustomerDto
+            {
+                CustomerID = user.CustomerID,
+                Name = user.Name,
+                Email = user.Email,
+                ProfilePhoto = user.ProfilePhoto
+            };
+
+            return new  GoogleAuthResponseDto
+            {
+                Token = token,
+                ExpiresAt = expires,
+                Customer = userDto
+            };
+        }
+        private string GenerateJwtToken(Customer user, out DateTime expires)
+        {
+            var jwtSection = _config.GetSection("Jwt");
+            var key = jwtSection["Key"] ?? throw new InvalidOperationException("Jwt:Key missing");
+            var issuer = jwtSection["Issuer"];
+            var audience = jwtSection["Audience"];
+            var expireMinutes = int.Parse(jwtSection["ExpireMinutes"] ?? "60");
+
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.CustomerID.ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim("name", user.Name),
+                new Claim("googleId", user.GoogleId),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            };
+
+            expires = DateTime.UtcNow.AddMinutes(expireMinutes);
+
+            var token = new JwtSecurityToken(
+                issuer: issuer,
+                audience: audience,
+                claims: claims,
+                expires: expires,
+                signingCredentials: credentials
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
         public async Task<AuthResponseDto> RegisterCustomerAsync(RegisterCustomerDto dto)
         {
 

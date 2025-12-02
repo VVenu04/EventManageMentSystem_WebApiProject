@@ -21,5 +21,6 @@ namespace Application.Interface.IAuth
         Task<ApiResponseDto> ForgotPasswordAsync(ForgotPasswordDto dto);
         Task<ApiResponseDto> VerifyOtpAsync(VerifyOtpDto dto);
         Task<ApiResponseDto> ResetPasswordAsync(ResetPasswordDto dto);
+        Task<DTOs.Google.GoogleAuthResponseDto> SignInWithGoogleAsync(string idToken);
     }
 }

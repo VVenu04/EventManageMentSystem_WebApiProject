@@ -18,7 +18,10 @@ namespace infrastucure.GenericRepositary
         {
             _dbContext = dbContext;
         }
-
+        public async Task SaveChangesAsync()
+        {
+            await _dbContext.SaveChangesAsync();
+        }
 
         public async Task<T> AddAsync(T entity)
         {
