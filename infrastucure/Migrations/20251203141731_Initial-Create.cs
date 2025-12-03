@@ -47,8 +47,13 @@ namespace infrastructure.Migrations
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Location = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    GoogleId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ProfilePhoto = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    WalletBalance = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    WalletBalance = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    PasswordResetOtp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PasswordResetOtpExpiry = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -314,6 +319,18 @@ namespace infrastructure.Migrations
                         principalTable: "Packages",
                         principalColumn: "PackageID",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PackageRequests_Vendors_ReceiverVendorID",
+                        column: x => x.ReceiverVendorID,
+                        principalTable: "Vendors",
+                        principalColumn: "VendorID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_PackageRequests_Vendors_SenderVendorID",
+                        column: x => x.SenderVendorID,
+                        principalTable: "Vendors",
+                        principalColumn: "VendorID",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -361,7 +378,9 @@ namespace infrastructure.Migrations
                 {
                     PackageItemID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PackageID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ServiceItemID = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    ServiceItemID = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ItemPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    VendorID = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -453,6 +472,16 @@ namespace infrastructure.Migrations
                 name: "IX_PackageRequests_PackageID",
                 table: "PackageRequests",
                 column: "PackageID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PackageRequests_ReceiverVendorID",
+                table: "PackageRequests",
+                column: "ReceiverVendorID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PackageRequests_SenderVendorID",
+                table: "PackageRequests",
+                column: "SenderVendorID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Packages_EventID",

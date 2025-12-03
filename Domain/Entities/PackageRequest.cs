@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities
 {
@@ -13,12 +14,22 @@ namespace Domain.Entities
         public Guid RequestID { get; set; }
 
         public Guid PackageID { get; set; }
+
+        // Navigation for Package
+        [ForeignKey("PackageID")]
         public Package Package { get; set; }
 
-        public Guid SenderVendorID { get; set; } 
-        public Guid ReceiverVendorID { get; set; } 
+        public Guid SenderVendorID { get; set; }
 
-        public string Status { get; set; } = "Pending"; // "Pending", "Accepted", "Rejected"
+        [ForeignKey("SenderVendorID")]
+        public Vendor SenderVendor { get; set; }
+
+        public Guid ReceiverVendorID { get; set; }
+
+        [ForeignKey("ReceiverVendorID")]
+        public Vendor ReceiverVendor { get; set; }
+
+        public string Status { get; set; } = "Pending";
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

@@ -62,7 +62,7 @@ namespace Presentation.Controllers
             try
             {
                 await _cartService.RemoveFromCartAsync(itemId);
-                return Ok(ApiResponse<object>.Success(null, "Item removed from cart."));
+                return Ok(ApiResponse<object?>.Success(null, "Item removed from cart."));
             }
             catch (Exception ex)
             {
@@ -78,7 +78,7 @@ namespace Presentation.Controllers
             try
             {
                 await _cartService.CheckoutAsync(CurrentUserId);
-                return Ok(ApiResponse<object>.Success(null, "Checkout successful. Proceed to payment."));
+                return Ok(ApiResponse<object?>.Success(null, "Checkout successful. Proceed to payment."));
             }
             catch (Exception ex)
             {

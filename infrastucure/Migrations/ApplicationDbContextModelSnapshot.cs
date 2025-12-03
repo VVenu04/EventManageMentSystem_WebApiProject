@@ -292,10 +292,16 @@ namespace infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<decimal>("ItemPrice")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<Guid>("PackageID")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("ServiceItemID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("VendorID")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("PackageItemID");
@@ -331,6 +337,10 @@ namespace infrastructure.Migrations
                     b.HasKey("RequestID");
 
                     b.HasIndex("PackageID");
+
+                    b.HasIndex("ReceiverVendorID");
+
+                    b.HasIndex("SenderVendorID");
 
                     b.ToTable("PackageRequests");
                 });
@@ -627,7 +637,23 @@ namespace infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Domain.Entities.Vendor", "ReceiverVendor")
+                        .WithMany()
+                        .HasForeignKey("ReceiverVendorID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Vendor", "SenderVendor")
+                        .WithMany()
+                        .HasForeignKey("SenderVendorID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Package");
+
+                    b.Navigation("ReceiverVendor");
+
+                    b.Navigation("SenderVendor");
                 });
 
             modelBuilder.Entity("Domain.Entities.Payment", b =>

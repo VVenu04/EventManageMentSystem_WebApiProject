@@ -14,11 +14,12 @@ namespace Domain.Entities
 
         public Guid PackageID { get; set; }
         public Guid? ServiceItemID { get; set; }
-
+        public decimal ItemPrice { get; set; }
         //public Guid ServiceID { get; set; }
-
+        public Guid VendorID { get; set; }
         // Navigation
         public Package Package { get; set; }
         public ServiceItem Service { get; set; }
+        //public Vendor Vendor { get; set; }
     }
 }

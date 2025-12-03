@@ -12,7 +12,7 @@ using infrastucure.Data;
 namespace infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251130133605_InitialCreate")]
+    [Migration("20251203141731_Initial-Create")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -148,7 +148,13 @@ namespace infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GoogleId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Location")
@@ -160,11 +166,20 @@ namespace infrastructure.Migrations
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PasswordResetOtp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("PasswordResetOtpExpiry")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProfilePhoto")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<decimal>("WalletBalance")
                         .HasColumnType("decimal(18,2)");
@@ -280,10 +295,16 @@ namespace infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<decimal>("ItemPrice")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<Guid>("PackageID")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("ServiceItemID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("VendorID")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("PackageItemID");
@@ -319,6 +340,10 @@ namespace infrastructure.Migrations
                     b.HasKey("RequestID");
 
                     b.HasIndex("PackageID");
+
+                    b.HasIndex("ReceiverVendorID");
+
+                    b.HasIndex("SenderVendorID");
 
                     b.ToTable("PackageRequests");
                 });
@@ -615,7 +640,23 @@ namespace infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Domain.Entities.Vendor", "ReceiverVendor")
+                        .WithMany()
+                        .HasForeignKey("ReceiverVendorID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Vendor", "SenderVendor")
+                        .WithMany()
+                        .HasForeignKey("SenderVendorID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Package");
+
+                    b.Navigation("ReceiverVendor");
+
+                    b.Navigation("SenderVendor");
                 });
 
             modelBuilder.Entity("Domain.Entities.Payment", b =>
