@@ -11,7 +11,6 @@ namespace Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    // 1. இங்கே 'ControllerBase'-க்கு பதில் 'BaseApiController' பயன்படுத்தவும்
     public class AuthController : BaseApiController
     {
         private readonly IAuthService _authService;
@@ -29,7 +28,9 @@ namespace Presentation.Controllers
             if (!result.IsSuccess) return BadRequest(result.Message);
             return Ok(result);
         }
-        [HttpPost("google")]
+
+
+        [HttpPost("customer/google-login")]
         [AllowAnonymous]
         public async Task<IActionResult> SignInWithGoogle([FromBody] GoogleAuthRequestDto dto)
         {

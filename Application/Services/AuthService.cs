@@ -9,13 +9,17 @@ using Domain.Entities;
 using Google.Apis.Auth;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Stripe;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+ 
+
 
 namespace Application.Services
 {
@@ -40,7 +44,7 @@ namespace Application.Services
         }
 
         // --- CUSTOMER ---
-        public async Task<GoogleAuthResponseDto> SignInWithGoogleAsync(string idToken)
+        public async Task<AuthResponseDto> SignInWithGoogleAsync(string idToken)
         {
             // 1) Validate Google ID token
             var settings = new GoogleJsonWebSignature.ValidationSettings()
@@ -69,7 +73,7 @@ namespace Application.Services
 
             if (user == null)
             {
-                user = new Customer
+                user = new Domain.Entities.Customer
                 {
                     GoogleId = googleId,
                     Email = email,
@@ -89,58 +93,62 @@ namespace Application.Services
                 }
             }
 
-            // 3) Create JWT
-            var token = GenerateJwtToken(user, out DateTime expires);
+            return CreateAuthResponse(user.CustomerID, user.Name, user.Email, "Customer", "Login Successful");
 
-            // 4) Build response
-           // var userDto = _mapper.Map<UserDto>(user);
-           var userDto = new CustomerDto
-            {
-                CustomerID = user.CustomerID,
-                Name = user.Name,
-                Email = user.Email,
-                ProfilePhoto = user.ProfilePhoto
-            };
+            // // 3) Create JWT
+            // var token = GenerateJwtToken(user, out DateTime expires);
 
-            return new  GoogleAuthResponseDto
-            {
-                Token = token,
-                ExpiresAt = expires,
-                Customer = userDto
-            };
+            // // 4) Build response
+            //// var userDto = _mapper.Map<UserDto>(user);
+            //var userDto = new CustomerDto
+            // {
+            //     CustomerID = user.CustomerID,
+            //     Name = user.Name,
+            //     Email = user.Email,
+            //     ProfilePhoto = user.ProfilePhoto
+            // };
+
+            // return new  GoogleAuthResponseDto
+            // {
+            //     Token = token,
+            //     ExpiresAt = expires,
+            //     Customer = userDto
+            // };
         }
-        private string GenerateJwtToken(Customer user, out DateTime expires)
-        {
-            var jwtSection = _config.GetSection("Jwt");
-            var key = jwtSection["Key"] ?? throw new InvalidOperationException("Jwt:Key missing");
-            var issuer = jwtSection["Issuer"];
-            var audience = jwtSection["Audience"];
-            var expireMinutes = int.Parse(jwtSection["ExpireMinutes"] ?? "60");
+    
 
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+        //private string GenerateJwtToken(Customer user, out DateTime expires)
+        //{
+        //    var jwtSection = _config.GetSection("Jwt");
+        //    var key = jwtSection["Key"] ?? throw new InvalidOperationException("Jwt:Key missing");
+        //    var issuer = jwtSection["Issuer"];
+        //    var audience = jwtSection["Audience"];
+        //    var expireMinutes = int.Parse(jwtSection["ExpireMinutes"] ?? "60");
 
-            var claims = new[]
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, user.CustomerID.ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim("name", user.Name),
-                new Claim("googleId", user.GoogleId),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-            };
+        //    var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
+        //    var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-            expires = DateTime.UtcNow.AddMinutes(expireMinutes);
+        //    var claims = new[]
+        //    {
+        //        new Claim(JwtRegisteredClaimNames.Sub, user.CustomerID.ToString()),
+        //        new Claim(JwtRegisteredClaimNames.Email, user.Email),
+        //        new Claim("name", user.Name),
+        //        new Claim("googleId", user.GoogleId),
+        //        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+        //    };
 
-            var token = new JwtSecurityToken(
-                issuer: issuer,
-                audience: audience,
-                claims: claims,
-                expires: expires,
-                signingCredentials: credentials
-            );
+        //    expires = DateTime.UtcNow.AddMinutes(expireMinutes);
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
+        //    var token = new JwtSecurityToken(
+        //        issuer: issuer,
+        //        audience: audience,
+        //        claims: claims,
+        //        expires: expires,
+        //        signingCredentials: credentials
+        //    );
+
+        //    return new JwtSecurityTokenHandler().WriteToken(token);
+        //}
 
         public async Task<AuthResponseDto> RegisterCustomerAsync(RegisterCustomerDto dto)
         {
@@ -150,7 +158,7 @@ namespace Application.Services
                 return new AuthResponseDto { IsSuccess = false, Message = "Email already exists" };
             }
 
-            var customer = new Customer
+            var customer = new Domain.Entities.Customer
             {
                 CustomerID = Guid.NewGuid(),
                 Name = dto.Name,
