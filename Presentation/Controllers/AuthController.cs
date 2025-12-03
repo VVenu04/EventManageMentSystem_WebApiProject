@@ -1,5 +1,6 @@
 ﻿using Application.DTOs.Auth;
 using Application.DTOs.Forgot;
+using Application.DTOs.Google;
 using Application.Interface.IAuth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +11,6 @@ namespace Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    // 1. இங்கே 'ControllerBase'-க்கு பதில் 'BaseApiController' பயன்படுத்தவும்
     public class AuthController : BaseApiController
     {
         private readonly IAuthService _authService;
@@ -28,6 +28,30 @@ namespace Presentation.Controllers
             if (!result.IsSuccess) return BadRequest(result.Message);
             return Ok(result);
         }
+
+
+        [HttpPost("customer/google-login")]
+        [AllowAnonymous]
+        public async Task<IActionResult> SignInWithGoogle([FromBody] GoogleAuthRequestDto dto)
+        {
+            if (string.IsNullOrWhiteSpace(dto?.IdToken))
+                return BadRequest("IdToken is required.");
+
+            try
+            {
+               var result = await _authService.SignInWithGoogleAsync(dto.IdToken);
+                return Ok(result);
+            }
+            catch (ApplicationException ex)
+            {
+                return Unauthorized(new { error = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                // For debugging - in production, log properly
+                return StatusCode(500, new { error = "An error occurred", details = ex.Message });
+            }
+        }   
 
         [HttpPost("customer/login")]
         public async Task<ActionResult<AuthResponseDto>> LoginCustomer(LoginDto dto)

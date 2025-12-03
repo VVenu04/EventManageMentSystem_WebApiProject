@@ -18,6 +18,7 @@ namespace Application.Mapper
             customer.PhoneNumber = customerdto.PhoneNumber;
             customer.ProfilePhoto = customerdto.ProfilePhoto;
             customer.Location = customerdto.Location;
+            customer.GoogleId = customerdto.GoogleId;
             //customer.PasswordHash = customerdto.PasswordHash;   --> // We do NOT map the password here. The SERVICE will handle hashing process
             return customer;    
         }
@@ -31,6 +32,7 @@ namespace Application.Mapper
             customerDto.PhoneNumber = customer.PhoneNumber;
             customerDto.ProfilePhoto = customer.ProfilePhoto;
             customerDto.Location = customer.Location;
+            customerDto.GoogleId = customer.GoogleId;
             // customerDto.PasswordHash = customer.PasswordHash;
             customerDto.Password = null; // <-- Send null back
             return customerDto;
