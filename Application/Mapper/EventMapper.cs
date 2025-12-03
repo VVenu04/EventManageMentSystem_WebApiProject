@@ -15,7 +15,7 @@ namespace Application.Mapper
             if (eventDto == null)
                 return null;
             Event @event = new Event();
-            @event.EventName = eventDto.EventName;
+            @event.EventName = eventDto.Name;
             return @event;
         }
 
@@ -24,7 +24,7 @@ namespace Application.Mapper
             if (@event == null) return null;
             EventDto eventDto = new EventDto();
             eventDto.EventID = @event.EventID;
-            eventDto.EventName = @event.EventName;
+            eventDto.Name = @event.EventName;
             return (eventDto);
         }
 
