@@ -1,4 +1,5 @@
-﻿using Application.DTOs.Auth;
+﻿using Application.Common;
+using Application.DTOs.Auth;
 using Application.DTOs.Forgot;
 using Application.DTOs.Google;
 using Application.Interface.IAuth;
@@ -105,13 +106,14 @@ namespace Presentation.Controllers
         [Authorize(Roles = "Customer")]
         public async Task<IActionResult> UpdateCustomerProfile(UpdateCustomerProfileDto dto)
         {
-            
             if (CurrentUserId == Guid.Empty) return Unauthorized();
 
             var success = await _authService.UpdateCustomerProfileAsync(CurrentUserId, dto);
 
-            if (!success) return BadRequest("Failed to update profile.");
-            return Ok("Profile updated successfully.");
+            if (!success) return BadRequest(ApiResponse<object>.Failure("Failed to update profile."));
+
+            // 🚨 மாற்றம்: வெறும் string-க்கு பதில் ApiResponse அல்லது JSON அனுப்புங்கள்
+            return Ok(ApiResponse<object>.Success(null, "Profile updated successfully."));
         }
 
         [HttpPost("forgot-password")]
