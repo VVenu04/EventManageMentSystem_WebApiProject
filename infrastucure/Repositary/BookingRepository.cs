@@ -26,6 +26,15 @@ namespace infrastructure.Repositary
             await _context.SaveChangesAsync();
             return booking;
         }
+        public async Task<IEnumerable<Booking>> GetBookingsByCustomerAsync(Guid customerId)
+        {
+            return await _context.Bookings
+                .Include(b => b.BookingItems).ThenInclude(bi => bi.Service)
+                .Include(b => b.BookingItems).ThenInclude(bi => bi.Package)
+                .Where(b => b.CustomerID == customerId)
+                .OrderByDescending(b => b.CreatedAt)
+                .ToListAsync();
+        }
 
         public async Task<Booking?> GetByIdAsync(Guid bookingId)
         {
@@ -94,6 +103,19 @@ namespace infrastructure.Repositary
                 _context.BookingItems.Remove(item);
                 await _context.SaveChangesAsync();
             }
+        }
+        public async Task<IEnumerable<Booking>> GetBookingsByVendorAsync(Guid vendorId)
+        {
+            return await _context.Bookings
+                .Include(b => b.Customer) // Customer பெயர் காட்ட
+                .Include(b => b.BookingItems)
+                    .ThenInclude(bi => bi.Service) // Service பெயர் காட்ட
+                .Include(b => b.BookingItems)
+                    .ThenInclude(bi => bi.Package) // Package பெயர் காட்ட
+                                                   // அந்த Vendor-க்குச் சொந்தமான Item ஏதேனும் உள்ளதா எனத் தேடுகிறது
+                .Where(b => b.BookingItems.Any(bi => bi.VendorID == vendorId))
+                .OrderByDescending(b => b.CreatedAt) // புதியது முதலில்
+                .ToListAsync();
         }
     }
 }

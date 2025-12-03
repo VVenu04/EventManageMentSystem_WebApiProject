@@ -8,7 +8,7 @@ namespace Application.DTOs.ServiceItem
 {
     public class ServiceSearchDto
     {
-        public string SearchTerm { get; set; }= string.Empty;
+        public string? SearchTerm { get; set; }= string.Empty;
         public Guid? EventID { get; set; }
 
         public Guid? CategoryID { get; set; }   // (குறிப்பிட்ட Category மட்டும்)

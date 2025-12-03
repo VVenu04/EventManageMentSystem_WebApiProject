@@ -11,7 +11,7 @@ namespace Application.Interface.IRepo
     {
         Task<bool> IsServiceBookedOnDateAsync(Guid serviceId, DateTime eventDate);
         Task<Booking> AddAsync(Booking booking);
-
+        Task<IEnumerable<Booking>> GetBookingsByVendorAsync(Guid vendorId);
         Task<Booking> GetByIdAsync(Guid bookingId);
         Task<int> GetBookingCountForServiceOnDateAsync(Guid serviceId, DateTime eventDate);
         Task UpdateAsync(Booking booking);
@@ -19,5 +19,6 @@ namespace Application.Interface.IRepo
         Task<Booking> GetCartByCustomerIdAsync(Guid customerId); // Status = "Cart" உள்ளதை மட்டும் எடு
         Task AddItemToCartAsync(BookingItem item);
         Task RemoveItemFromCartAsync(Guid itemId);
+        Task<IEnumerable<Booking>> GetBookingsByCustomerAsync(Guid customerId);
     }
 }

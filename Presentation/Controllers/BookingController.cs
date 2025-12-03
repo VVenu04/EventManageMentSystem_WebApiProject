@@ -113,7 +113,46 @@ namespace Presentation.Controllers
             }
         }
 
-        
-        
+        [HttpGet("vendor/{vendorId}")]
+        // [Authorize(Roles = "Admin,Vendor")] // தேவைப்பட்டால் சேர்க்கவும்
+        [ProducesResponseType(typeof(ApiResponse<IEnumerable<BookingConfirmationDto>>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetBookingsByVendor(Guid vendorId)
+        {
+            try
+            {
+                if (vendorId == Guid.Empty)
+                    return BadRequest(ApiResponse<object>.Failure("Invalid Vendor ID"));
+
+                var bookings = await _bookingService.GetBookingsByVendorAsync(vendorId);
+
+                // Empty List வந்தால் கூட Success அனுப்பலாம் (Frontend-ல் கையாள்வதற்கு)
+                return Ok(ApiResponse<IEnumerable<BookingConfirmationDto>>.Success(bookings ?? new List<BookingConfirmationDto>()));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ApiResponse<object>.Failure(ex.Message));
+            }
+        }
+        [HttpGet("my-bookings")]
+        [Authorize(Roles = "Customer")]
+        [ProducesResponseType(typeof(ApiResponse<IEnumerable<BookingConfirmationDto>>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetMyBookings()
+        {
+            if (CurrentUserId == Guid.Empty) return Unauthorized(ApiResponse<object>.Failure("Invalid Token"));
+
+            try
+            {
+                // Service-ல் இந்த மெதட் தேவை (கீழே பார்க்கவும்)
+                var bookings = await _bookingService.GetBookingsByCustomerAsync(CurrentUserId);
+
+                return Ok(ApiResponse<IEnumerable<BookingConfirmationDto>>.Success(bookings ?? new List<BookingConfirmationDto>()));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ApiResponse<object>.Failure(ex.Message));
+            }
+        }
+
+
     }
 }

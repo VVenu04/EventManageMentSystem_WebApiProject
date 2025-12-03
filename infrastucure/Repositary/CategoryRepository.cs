@@ -16,9 +16,9 @@ namespace infrastructure.Repositary
         {
         }
 
-        public Task<Category> GetByIdAsync(Guid id)
+        public async Task<Category> GetByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            return await _dbContext.Categories.FindAsync(id);
         }
 
         public async Task UpdateAsync(Category category)

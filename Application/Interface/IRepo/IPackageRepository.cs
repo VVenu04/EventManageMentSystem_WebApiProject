@@ -14,8 +14,8 @@ namespace Application.Interface.IRepo
 
         // Create
         Task<Package> AddAsync(Package package);
+        Task<IEnumerable<Package>> GetAllAsync();
 
-        
         Task UpdateAsync(Package package);
 
         // Delete 

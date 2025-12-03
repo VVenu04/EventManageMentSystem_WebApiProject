@@ -22,6 +22,24 @@ namespace Presentation.Controllers
             _packageService = packageService;
         }
 
+
+        [HttpGet] // இதுதான் 'GET api/Packages' என்ற அழைப்பை ஏற்கும்
+        [AllowAnonymous] // அல்லது [Authorize(Roles = "Admin")]
+        [ProducesResponseType(typeof(ApiResponse<IEnumerable<PackageDto>>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAllPackages()
+        {
+            try
+            {
+                var packages = await _packageService.GetAllPackagesAsync();
+                return Ok(ApiResponse<IEnumerable<PackageDto>>.Success(packages ?? new List<PackageDto>()));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ApiResponse<object>.Failure(ex.Message));
+            }
+        }
+
+
         // POST: CreatePackage 
         [HttpPost]
         [Authorize(Roles = "Vendor")]
