@@ -108,12 +108,25 @@ namespace Presentation.Controllers
         {
             if (CurrentUserId == Guid.Empty) return Unauthorized();
 
+            // 1. Update the profile
             var success = await _authService.UpdateCustomerProfileAsync(CurrentUserId, dto);
 
             if (!success) return BadRequest(ApiResponse<object>.Failure("Failed to update profile."));
 
-            // 🚨 மாற்றம்: வெறும் string-க்கு பதில் ApiResponse அல்லது JSON அனுப்புங்கள்
-            return Ok(ApiResponse<object>.Success(null, "Profile updated successfully."));
+            // 2. 🚨 FIX: Fetch the updated user to return to Frontend
+            // (இதற்கு AuthService-ல் GetUserById அல்லது AuthRepo-ஐ பயன்படுத்தலாம்)
+            // இங்கு எளிமைக்காக DTO-வில் இருந்தே அனுப்புகிறோம், ஆனால் ரியல்-டைமில் DB-ல் இருந்து எடுப்பது நல்லது.
+
+            var updatedData = new
+            {
+                displayName = dto.Name,       // Frontend 'displayName' எதிர்பார்க்கிறது
+                phoneNumber = dto.PhoneNumber,
+                location = dto.Location,
+                img = dto.ProfilePhotoUrl
+            };
+
+            // 3. Return the updated data inside Success
+            return Ok(ApiResponse<object>.Success(updatedData, "Profile updated successfully."));
         }
 
         [HttpPost("forgot-password")]
