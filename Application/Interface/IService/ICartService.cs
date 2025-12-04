@@ -18,6 +18,6 @@ namespace Application.Interface.IService
         Task RemoveFromCartAsync(Guid bookingItemId);
 
         // Cart-ஐ Checkout செய்ய (Booking-ஆக மாற்ற)
-        Task CheckoutAsync(Guid customerId);
+        Task<Guid> CheckoutAsync(Guid customerId);
     }
 }
