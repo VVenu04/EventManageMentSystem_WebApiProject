@@ -29,7 +29,7 @@ namespace Application
   
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<ICategoryService, CategoryService>();
-
+            services.AddScoped<IAIService, AIService>();
             services.AddScoped<INotificationService, NotificationService>();
 
             //services.AddScoped<IVendorService, VendorService>();

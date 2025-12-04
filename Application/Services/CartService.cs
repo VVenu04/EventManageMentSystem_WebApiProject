@@ -127,14 +127,20 @@ namespace Application.Services
             // TotalPrice-ஐ update செய்ய மறக்காதீர்கள் (Logic Repo-வில் அல்லது இங்கேயே எழுதலாம்)
         }
 
-        public async Task CheckoutAsync(Guid customerId)
+        public async Task<Guid> CheckoutAsync(Guid customerId)
         {
             var cart = await _bookingRepo.GetCartByCustomerIdAsync(customerId);
-            if (cart == null) throw new Exception("Cart is empty");
 
-            // Status-ஐ "Pending" அல்லது "Confirmed" என மாற்று
+            if (cart == null) throw new Exception("Cart is empty or not found.");
+
+            // Status-ஐ "Pending" என மாற்று
             cart.BookingStatus = BookingStatus.Pending;
+
             await _bookingRepo.UpdateAsync(cart);
+
+            // 🚨 FIX: Return the BookingID
+            return cart.BookingID;
         }
+
     }
 }
