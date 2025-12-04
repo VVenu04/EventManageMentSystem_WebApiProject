@@ -1,4 +1,5 @@
-﻿using Application.DTOs.Auth;
+﻿using Application.DTOs;
+using Application.DTOs.Auth;
 using Application.DTOs.Forgot;
 using System;
 using System.Collections.Generic;
@@ -22,5 +23,7 @@ namespace Application.Interface.IAuth
         Task<ApiResponseDto> VerifyOtpAsync(VerifyOtpDto dto);
         Task<ApiResponseDto> ResetPasswordAsync(ResetPasswordDto dto);
         Task<AuthResponseDto> SignInWithGoogleAsync(string idToken);
+        Task<CustomerDto> GetCustomerProfileAsync(Guid customerId);
+        Task<VendorDto> GetVendorProfileAsync(Guid vendorId);
     }
 }
