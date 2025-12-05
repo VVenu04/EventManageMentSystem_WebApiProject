@@ -23,7 +23,7 @@ namespace infrastructure.Repositary
                 .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
         }
 
-        public async Task<Customer> GetByGoogleIdAsync(string googleId)
+        public async Task<Customer> CustomerGetByGoogleIdAsync(string googleId)
         {
             return await _dbContext.Customers.FirstOrDefaultAsync(u => u.GoogleId == googleId);
         }

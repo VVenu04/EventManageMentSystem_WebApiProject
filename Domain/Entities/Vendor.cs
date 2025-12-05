@@ -24,7 +24,16 @@ namespace Domain.Entities
         public ICollection<Message> Message { get; set; }
         public int EventPerDayLimit { get; set; }
         public int TimeLimit { get; set; }
+        public string GoogleId { get; set; }
+        public string ProfilePhoto { get; set; }
         public string Logo { get; set; }
         public string Description { get; set; }
+        public string? PasswordResetOtp { get; set; }
+
+        public DateTime? PasswordResetOtpExpiry { get; set; }
+
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        public DateTime? UpdatedAt { get; set; }
     }
 }
