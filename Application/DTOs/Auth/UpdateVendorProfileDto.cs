@@ -14,5 +14,6 @@ namespace Application.DTOs.Auth
         public string Description { get; set; }
         public string LogoUrl { get; set; } // (Photo upload செய்த பின் வரும் URL)
         public decimal EventPerDayLimit { get; set; }
+        public string Email { get; set; }
     }
 }
