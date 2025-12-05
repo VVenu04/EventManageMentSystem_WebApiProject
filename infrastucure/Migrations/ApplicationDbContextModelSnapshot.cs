@@ -420,9 +420,6 @@ namespace infrastructure.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("EventID")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<decimal>("EventPerDayLimit")
                         .HasColumnType("decimal(18,2)");
 
@@ -445,8 +442,6 @@ namespace infrastructure.Migrations
                     b.HasKey("ServiceItemID");
 
                     b.HasIndex("CategoryID");
-
-                    b.HasIndex("EventID");
 
                     b.HasIndex("VendorID");
 
@@ -537,6 +532,21 @@ namespace infrastructure.Migrations
                     b.HasIndex("EventID");
 
                     b.ToTable("Vendors");
+                });
+
+            modelBuilder.Entity("EventServiceItem", b =>
+                {
+                    b.Property<Guid>("EventsEventID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ServicesServiceItemID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("EventsEventID", "ServicesServiceItemID");
+
+                    b.HasIndex("ServicesServiceItemID");
+
+                    b.ToTable("EventServiceItem");
                 });
 
             modelBuilder.Entity("CategoryEvent", b =>
@@ -702,10 +712,6 @@ namespace infrastructure.Migrations
                         .WithMany("Services")
                         .HasForeignKey("CategoryID");
 
-                    b.HasOne("Domain.Entities.Event", "Event")
-                        .WithMany("Services")
-                        .HasForeignKey("EventID");
-
                     b.HasOne("Domain.Entities.Vendor", "Vendor")
                         .WithMany("Services")
                         .HasForeignKey("VendorID")
@@ -713,8 +719,6 @@ namespace infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
-
-                    b.Navigation("Event");
 
                     b.Navigation("Vendor");
                 });
@@ -735,6 +739,21 @@ namespace infrastructure.Migrations
                     b.HasOne("Domain.Entities.Event", null)
                         .WithMany("Vendors")
                         .HasForeignKey("EventID");
+                });
+
+            modelBuilder.Entity("EventServiceItem", b =>
+                {
+                    b.HasOne("Domain.Entities.Event", null)
+                        .WithMany()
+                        .HasForeignKey("EventsEventID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.ServiceItem", null)
+                        .WithMany()
+                        .HasForeignKey("ServicesServiceItemID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Domain.Entities.Booking", b =>
@@ -759,8 +778,6 @@ namespace infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.Event", b =>
                 {
                     b.Navigation("Packages");
-
-                    b.Navigation("Services");
 
                     b.Navigation("Vendors");
                 });

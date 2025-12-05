@@ -27,7 +27,7 @@ namespace Application.Interface.IService
         // Customer/User-ஆல் ஒரு Vendor-இன் Services-ஐப் பார்க்க
         Task<IEnumerable<ServiceItemDto>> GetServicesByVendorAsync(Guid vendorId);
 
-              // FIXED: Changed the return type from ServiceItem to ServiceItemDto (28th Nov)
+        // FIXED: Changed the return type from ServiceItem to ServiceItemDto (28th Nov)
         Task<IEnumerable<ServiceItemDto>> SearchServicesAsync(ServiceSearchDto searchDto);
 
     }
