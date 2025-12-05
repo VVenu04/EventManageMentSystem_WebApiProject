@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class NewUpdates : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -47,8 +47,13 @@ namespace infrastructure.Migrations
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Location = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    GoogleId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ProfilePhoto = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    WalletBalance = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    WalletBalance = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    PasswordResetOtp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PasswordResetOtpExpiry = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -145,8 +150,14 @@ namespace infrastructure.Migrations
                     Location = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EventPerDayLimit = table.Column<int>(type: "int", nullable: false),
                     TimeLimit = table.Column<int>(type: "int", nullable: false),
+                    GoogleId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ProfilePhoto = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Logo = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PasswordResetOtp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PasswordResetOtpExpiry = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     EventID = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>

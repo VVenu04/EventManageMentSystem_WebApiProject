@@ -18,9 +18,13 @@ namespace Application.Interface.IAuth
         Task<AuthResponseDto> LoginAdminAsync(LoginDto dto);
         Task<bool> UpdateVendorProfileAsync(Guid vendorId, UpdateVendorProfileDto dto);
         Task<bool> UpdateCustomerProfileAsync(Guid customerId, UpdateCustomerProfileDto dto);
-        Task<ApiResponseDto> ForgotPasswordAsync(ForgotPasswordDto dto);
-        Task<ApiResponseDto> VerifyOtpAsync(VerifyOtpDto dto);
-        Task<ApiResponseDto> ResetPasswordAsync(ResetPasswordDto dto);
-        Task<AuthResponseDto> SignInWithGoogleAsync(string idToken);
+        Task<ApiResponseDto> CustomerForgotPasswordAsync(ForgotPasswordDto dto);
+        Task<ApiResponseDto> CustomerVerifyOtpAsync(VerifyOtpDto dto);
+        Task<ApiResponseDto> CustomerResetPasswordAsync(ResetPasswordDto dto);
+        Task<AuthResponseDto> CustomerSignInWithGoogleAsync(string idToken);
+        Task<ApiResponseDto> VendorForgotPasswordAsync(ForgotPasswordDto dto);
+        Task<ApiResponseDto> VendorVerifyOtpAsync(VerifyOtpDto dto);
+        Task<ApiResponseDto> VendorResetPasswordAsync(ResetPasswordDto dto);
+        Task<AuthResponseDto> VendorSignInWithGoogleAsync(string idToken);
     }
 }

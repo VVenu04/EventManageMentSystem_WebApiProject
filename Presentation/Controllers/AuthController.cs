@@ -32,14 +32,14 @@ namespace Presentation.Controllers
 
         [HttpPost("customer/google-login")]
         [AllowAnonymous]
-        public async Task<IActionResult> SignInWithGoogle([FromBody] GoogleAuthRequestDto dto)
+        public async Task<IActionResult> CustomerSignInWithGoogle([FromBody] GoogleAuthRequestDto dto)
         {
             if (string.IsNullOrWhiteSpace(dto?.IdToken))
                 return BadRequest("IdToken is required.");
 
             try
             {
-               var result = await _authService.SignInWithGoogleAsync(dto.IdToken);
+               var result = await _authService.CustomerSignInWithGoogleAsync(dto.IdToken);
                 return Ok(result);
             }
             catch (ApplicationException ex)
@@ -51,7 +51,30 @@ namespace Presentation.Controllers
                 // For debugging - in production, log properly
                 return StatusCode(500, new { error = "An error occurred", details = ex.Message });
             }
-        }   
+        }
+        [HttpPost("vendor/google-login")]
+        [AllowAnonymous]
+        public async Task<IActionResult> VendorSignInWithGoogle([FromBody] GoogleAuthRequestDto dto)
+        {
+            if (string.IsNullOrWhiteSpace(dto?.IdToken))
+                return BadRequest("IdToken is required.");
+
+            try
+            {
+                var result = await _authService.VendorSignInWithGoogleAsync(dto.IdToken);
+                return Ok(result);
+            }
+            catch (ApplicationException ex)
+            {
+                return Unauthorized(new { error = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                // For debugging - in production, log properly
+                return StatusCode(500, new { error = "An error occurred", details = ex.Message });
+            }
+        }
+
 
         [HttpPost("customer/login")]
         public async Task<ActionResult<AuthResponseDto>> LoginCustomer(LoginDto dto)
@@ -114,42 +137,78 @@ namespace Presentation.Controllers
             return Ok("Profile updated successfully.");
         }
 
-        [HttpPost("forgot-password")]
-        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto dto)
+        [HttpPost("customer/forgot-password")]
+        public async Task<IActionResult> CustomerForgotPassword([FromBody] ForgotPasswordDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(new ApiResponseDto { Success = false, Message = "Invalid request data", Data = ModelState });
 
-            var result = await _authService.ForgotPasswordAsync(dto);
+            var result = await _authService.CustomerForgotPasswordAsync(dto);
 
             if (result.Success) return Ok(result);
             return BadRequest(result);
         }
 
-        [HttpPost("verify-otp")]
-        public async Task<IActionResult> VerifyOtp([FromBody] VerifyOtpDto dto)
+        [HttpPost("customer/verify-otp")]
+        public async Task<IActionResult> CustomerVerifyOtp([FromBody] VerifyOtpDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(new ApiResponseDto { Success = false, Message = "Invalid request data", Data = ModelState });
 
-            var result = await _authService.VerifyOtpAsync(dto);
+            var result = await _authService.CustomerVerifyOtpAsync(dto);
 
             if (result.Success) return Ok(result);
             return BadRequest(result);
         }
 
-        [HttpPost("reset-password")]
-        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto dto)
+        [HttpPost("customer/reset-password")]
+        public async Task<IActionResult> CustomerResetPassword([FromBody] ResetPasswordDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(new ApiResponseDto { Success = false, Message = "Invalid request data", Data = ModelState });
 
-            var result = await _authService.ResetPasswordAsync(dto);
+            var result = await _authService.CustomerResetPasswordAsync(dto);
 
             if (result.Success) return Ok(result);
             return BadRequest(result);
         }
 
-        
+        [HttpPost("vendor/forgot-password")]
+        public async Task<IActionResult> VendorForgotPassword([FromBody] ForgotPasswordDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(new ApiResponseDto { Success = false, Message = "Invalid request data", Data = ModelState });
+
+            var result = await _authService.VendorForgotPasswordAsync(dto);
+
+            if (result.Success) return Ok(result);
+            return BadRequest(result);
+        }
+
+        [HttpPost("vendor/verify-otp")]
+        public async Task<IActionResult> VendorVerifyOtp([FromBody] VerifyOtpDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(new ApiResponseDto { Success = false, Message = "Invalid request data", Data = ModelState });
+
+            var result = await _authService.VendorVerifyOtpAsync(dto);
+
+            if (result.Success) return Ok(result);
+            return BadRequest(result);
+        }
+
+        [HttpPost("vendor/reset-password")]
+        public async Task<IActionResult> VendorResetPassword([FromBody] ResetPasswordDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(new ApiResponseDto { Success = false, Message = "Invalid request data", Data = ModelState });
+
+            var result = await _authService.VendorResetPasswordAsync(dto);
+
+            if (result.Success) return Ok(result);
+            return BadRequest(result);
+        }
+
+
     }
 }

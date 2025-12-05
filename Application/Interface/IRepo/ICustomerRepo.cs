@@ -13,6 +13,6 @@ namespace Application.Interface.IRepo
         Task UpdateAsync(Customer customer);
         Task<Customer> GetByEmailAsync(string email);
         Task<Customer> GetByIdAsync(Guid id);
-        Task<Customer> GetByGoogleIdAsync(string googleId);
+        Task<Customer> CustomerGetByGoogleIdAsync(string googleId);
     }
 }
