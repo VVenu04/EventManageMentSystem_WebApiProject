@@ -7,44 +7,43 @@ using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Application.Services
 {
-    public class PackageService:IPackageService
+    public class PackageService : IPackageService
     {
         private readonly IPackageRepository _packageRepo;
         private readonly IServiceItemRepository _serviceRepo;
         private readonly IPackageRequestRepository _requestRepo;
-        private readonly INotificationService _notificationService; // <-- Dependency
+        private readonly INotificationService _notificationService;
 
-        public PackageService(IPackageRepository packageRepo, IServiceItemRepository serviceRepo, IPackageRequestRepository requestRepo, INotificationService notificationService)
+        public PackageService(IPackageRepository packageRepo,
+                              IServiceItemRepository serviceRepo,
+                              IPackageRequestRepository requestRepo,
+                              INotificationService notificationService)
         {
             _packageRepo = packageRepo;
             _serviceRepo = serviceRepo;
             _requestRepo = requestRepo;
             _notificationService = notificationService;
-
         }
 
+        // 1. Create Package (Draft)
         public async Task<PackageDto> CreatePackageAsync(CreatePackageDto dto, Guid ownerId)
         {
-            // ... (பழைய logic: Package உருவாக்குவது, ஆனால் Status = "Draft") ...
             var package = new Package
             {
                 PackageID = Guid.NewGuid(),
                 Name = dto.Name,
                 VendorID = ownerId,
-                Status = "Draft", // முதலில் Draft ஆக இருக்கும்
+                Status = "Draft",
                 IsActive = false,
-                TotalPrice = 0 // பிறகு Update செய்யலாம்
+                TotalPrice = 0
             };
 
-            // (Services சேர்க்கும் logic இங்கே வரும்...)
             await _packageRepo.AddAsync(package);
-            
-            // Serviceகளைச் சேர்க்க தனி method-ஐ call செய்யலாம்
+
             if (dto.ServiceItemIDs != null && dto.ServiceItemIDs.Any())
             {
                 await AddServicesToPackageAsync(new AddServicesToPackageDto
@@ -57,20 +56,104 @@ namespace Application.Services
             return await GetPackageByIdAsync(package.PackageID);
         }
 
-        // 2. Invite Vendor (Vendor A அழைப்பு விடுக்கிறார்)
-        public async Task InviteVendorAsync(InviteVendorDto dto, Guid senderId)
+        // 2. Add Services (With Collaboration Logic)
+        public async Task AddServicesToPackageAsync(AddServicesToPackageDto dto, Guid ownerId)
         {
             var package = await _packageRepo.GetPackageWithServicesAsync(dto.PackageID);
             if (package == null) throw new Exception("Package not found.");
 
-            // Owner மட்டும்தான் Invite செய்ய முடியும்
-            if (package.VendorID != senderId)
-                throw new Exception("Only the package owner can invite others.");
+            if (package.VendorID != ownerId) throw new Exception("Only the package owner can add services.");
 
-            // ஏற்கனவே Invite செய்துள்ளாரா?
+            foreach (var serviceId in dto.ServiceItemIDs)
+            {
+                // Check duplicate service
+                if (package.PackageItems.Any(pi => pi.ServiceItemID == serviceId)) continue;
+
+                var service = await _serviceRepo.GetByIdAsync(serviceId);
+                if (service == null) throw new Exception("Service not found.");
+
+                // A. Own Service -> Add Directly
+                if (service.VendorID == ownerId)
+                {
+                    package.PackageItems.Add(new PackageItem
+                    {
+                        PackageItemID = Guid.NewGuid(),
+                        PackageID = package.PackageID,
+                        ServiceItemID = serviceId,
+                        ItemPrice = service.Price,
+                        VendorID = service.VendorID // Store Vendor ID
+                    });
+                    package.TotalPrice += service.Price;
+                }
+                // B. Other Vendor Service -> Create Request & Add (Pending)
+                else
+                {
+                    package.PackageItems.Add(new PackageItem
+                    {
+                        PackageItemID = Guid.NewGuid(),
+                        PackageID = package.PackageID,
+                        ServiceItemID = serviceId,
+                        ItemPrice = service.Price,
+                        VendorID = service.VendorID // Store Vendor ID
+                    });
+                    package.TotalPrice += service.Price;
+
+                    // Collaboration Request Check
+                    var existingRequest = await _requestRepo.GetRequestAsync(package.PackageID, service.VendorID);
+
+                    if (existingRequest == null)
+                    {
+                        var request = new PackageRequest
+                        {
+                            RequestID = Guid.NewGuid(),
+                            PackageID = package.PackageID,
+                            SenderVendorID = ownerId,
+                            ReceiverVendorID = service.VendorID,
+                            Status = "Pending",
+                            CreatedAt = DateTime.UtcNow
+                        };
+                        await _requestRepo.AddAsync(request);
+
+                        await _notificationService.SendNotificationAsync(
+                            service.VendorID,
+                            $"Collaboration Invite: '{package.Vendor?.Name}' wants to add your service '{service.Name}' to package '{package.Name}'.",
+                            "PackageInvite",
+                            package.PackageID
+                        );
+                    }
+                }
+            }
+            await _packageRepo.UpdateAsync(package);
+        }
+
+        // 3. Publish Package (Check Requests)
+        public async Task PublishPackageAsync(Guid packageId, Guid vendorId)
+        {
+            var package = await _packageRepo.GetPackageWithServicesAsync(packageId);
+            if (package == null) throw new Exception("Package not found.");
+            if (package.VendorID != vendorId) throw new Exception("Unauthorized.");
+
+            // Validate pending collaborations
+            var pendingRequests = await _requestRepo.GetPendingRequestsForVendorAsync(packageId); // Need this method in Repo
+            if (pendingRequests.Any())
+            {
+                throw new Exception("Cannot publish: Waiting for partner vendors to accept collaboration.");
+            }
+
+            package.Status = "Published";
+            package.IsActive = true;
+            await _packageRepo.UpdateAsync(package);
+        }
+
+        // 4. Invite Vendor (Explicit)
+        public async Task InviteVendorAsync(InviteVendorDto dto, Guid senderId)
+        {
+            var package = await _packageRepo.GetPackageWithServicesAsync(dto.PackageID);
+            if (package == null) throw new Exception("Package not found.");
+            if (package.VendorID != senderId) throw new Exception("Only owner can invite.");
+
             var existingRequest = await _requestRepo.GetRequestAsync(dto.PackageID, dto.VendorIDToInvite);
-            if (existingRequest != null)
-                throw new Exception("Request already sent to this vendor.");
+            if (existingRequest != null) throw new Exception("Request already sent.");
 
             var request = new PackageRequest
             {
@@ -78,116 +161,63 @@ namespace Application.Services
                 PackageID = dto.PackageID,
                 SenderVendorID = senderId,
                 ReceiverVendorID = dto.VendorIDToInvite,
-                Status = "Pending"
+                Status = "Pending",
+                CreatedAt = DateTime.UtcNow
             };
 
             await _requestRepo.AddAsync(request);
+
             await _notificationService.SendNotificationAsync(
                 dto.VendorIDToInvite,
-                "You have been invited to collaborate on a new package!",
+                "You have been invited to collaborate!",
                 "PackageInvite",
                 dto.PackageID
-               );
+            );
         }
 
-        // 3. Accept/Reject Invitation (Vendor B செயல்படுகிறார்)
+        // 5. Respond to Invitation
         public async Task RespondToInvitationAsync(Guid requestId, Guid vendorId, bool isAccepted)
         {
             var request = await _requestRepo.GetByIdAsync(requestId);
             if (request == null) throw new Exception("Request not found.");
 
-            if (request.ReceiverVendorID != vendorId)
-                throw new Exception("Unauthorized to respond to this request.");
+            if (request.ReceiverVendorID != vendorId) throw new Exception("Unauthorized.");
 
             request.Status = isAccepted ? "Accepted" : "Rejected";
             await _requestRepo.UpdateAsync(request);
+
+            // Notify Owner
+            string statusMsg = isAccepted ? "accepted" : "rejected";
+            await _notificationService.SendNotificationAsync(
+                request.SenderVendorID,
+                $"Vendor has {statusMsg} your collaboration request.",
+                "CollaborationUpdate",
+                request.PackageID
+            );
         }
 
-        // 4. Add Services (Vendor A மற்றும் Vendor B இருவரும் செய்யலாம்)
-        public async Task AddServicesToPackageAsync(AddServicesToPackageDto dto, Guid vendorId)
+        // 6. Get Vendor Packages
+        public async Task<IEnumerable<PackageDto>> GetPackagesByVendorIdAsync(Guid vendorId)
         {
-            // Permission Check: இவர் Owner-ஆ அல்லது Accepted Collaborator-ஆ?
-            bool isAuthorized = await _requestRepo.IsVendorApprovedForPackageAsync(dto.PackageID, vendorId);
-            if (!isAuthorized)
-            {
-                throw new Exception("You are not authorized to add services to this package. Wait for approval.");
-            }
-
-            var package = await _packageRepo.GetPackageWithServicesAsync(dto.PackageID);
-
-            if (package == null)
-            {
-                throw new Exception("Package not found.");
-            }
-            if (package.PackageItems == null)
-            {
-                package.PackageItems = new List<PackageItem>();
-            }
-
-            foreach (var serviceId in dto.ServiceItemIDs)
-            {
-                var service = await _serviceRepo.GetByIdAsync(serviceId);
-                if (service == null) throw new Exception("Service not found.");
-
-                if (service.VendorID != vendorId)
-                {
-                    throw new Exception($"You can only add YOUR services. Service '{service.Name}' is not yours.");
-                }
-
-                if (!package.PackageItems.Any(pi => pi.ServiceItemID == serviceId))
-                {
-                    package.PackageItems.Add(new PackageItem
-                    {
-                        PackageItemID = Guid.NewGuid(),
-                        PackageID = package.PackageID,
-                        ServiceItemID = serviceId
-                    });
-
-                    package.TotalPrice += service.Price;
-                }
-            }
-
-            // Save changes
-            await _packageRepo.UpdateAsync(package); // UpdateAsync-ஐ implement செய்யவும்
+            var packages = await _packageRepo.GetPackagesByVendorAsync(vendorId);
+            return packages.Select(MapToPackageDto);
         }
 
-        // 5. Publish Package (Vendor A only)
-        public async Task PublishPackageAsync(Guid packageId, Guid vendorId)
+        // 7. Get All Packages
+        public async Task<IEnumerable<PackageDto>> GetAllPackagesAsync()
         {
-            var package = await _packageRepo.GetPackageWithServicesAsync(packageId);
-            if (package == null)
-            {
-                throw new Exception("Package not found.");
-            }
-            if (package.VendorID != vendorId) throw new Exception("Only owner can publish.");
-
-            package.Status = "Published";
-            package.IsActive = true;
-            await _packageRepo.UpdateAsync(package);
+            var packages = await _packageRepo.GetAllAsync();
+            return packages.Select(MapToPackageDto);
         }
 
+        // 8. Get Package By ID
         public async Task<PackageDto> GetPackageByIdAsync(Guid packageId)
         {
             var package = await _packageRepo.GetPackageWithServicesAsync(packageId);
             return MapToPackageDto(package);
         }
 
-        public async Task<IEnumerable<PackageDto>> GetPackagesByVendorIdAsync(Guid vendorId)
-        {
-            var packages = await _packageRepo.GetPackagesByVendorAsync(vendorId);
-            // பல packages-ஐ DTO-ஆக மாற்று
-            return packages.Select(MapToPackageDto);
-        }
-        public async Task<IEnumerable<PackageDto>> GetAllPackagesAsync()
-        {
-            var packages = await _packageRepo.GetAllAsync();
-
-            // ஏற்கனவே உள்ள 'MapToPackageDto' மெதடைப் பயன்படுத்தி மாற்றவும்
-            return packages.Select(MapToPackageDto);
-        }
-
-
-        // --- Helper Method: Manual Mapping ---
+        // --- Helper Method ---
         private PackageDto MapToPackageDto(Package package)
         {
             if (package == null) return null;
@@ -199,14 +229,60 @@ namespace Application.Services
                 TotalPrice = package.TotalPrice,
                 Active = package.IsActive,
                 VendorID = package.VendorID,
-                VendorName = package.Vendor?.Name, // Vendor-ஐ Include செய்ததால் இது வேலை செய்யும்
+                VendorName = package.Vendor?.Name ?? "Unknown Vendor",
                 ServicesInPackage = package.PackageItems.Select(item => new SimpleServiceDto
                 {
-                    ServiceItemID = item.ServiceItemID,
-                    Name = item.Service?.Name, // Service-ஐ Include செய்ததால் இது வேலை செய்யும்
-                    OriginalPrice = item.Service?.Price ?? 0
+                    ServiceItemID = item.ServiceItemID ?? Guid.Empty,
+                    Name = item.Service?.Name ?? "Unknown Service",
+                    OriginalPrice = item.ItemPrice
                 }).ToList()
             };
+        }
+
+        public async Task<IEnumerable<PackageRequestDto>> GetPendingRequestsAsync(Guid vendorId)
+        {
+            var requests = await _requestRepo.GetPendingRequestsByVendorAsync(vendorId);
+
+            // Map Entity to DTO
+            var requestDtos = new List<PackageRequestDto>();
+
+            foreach (var req in requests)
+            {
+                // Sender Info (Navigation Property இல்லையென்றால் தனியாக எடுக்கவும்)
+                var sender = req.SenderVendor;
+                // அல்லது: var sender = await _vendorRepo.GetByIdAsync(req.SenderVendorID);
+
+                requestDtos.Add(new PackageRequestDto
+                {
+                    RequestID = req.RequestID,
+                    PackageID = req.PackageID,
+                    PackageName = req.Package?.Name ?? "Unknown Package",
+                    SenderVendorID = req.SenderVendorID,
+                    SenderName = sender?.Name ?? "Unknown Vendor",
+                    SenderLogo = sender?.Logo,
+                    Status = req.Status,
+                    CreatedAt = req.CreatedAt
+                });
+            }
+
+            return requestDtos;
+        }
+        public async Task<PackageDto> GetPackagePreviewForCollabAsync(Guid packageId, Guid requestingVendorId)
+        {
+            // 1. அந்த பேக்கேஜுக்கான Request இந்த வெண்டருக்கு வந்துள்ளதா எனச் சரிபார்
+            var request = await _requestRepo.GetRequestAsync(packageId, requestingVendorId);
+
+            // Request இல்லை என்றால் பார்க்க அனுமதி இல்லை
+            if (request == null)
+            {
+                throw new Exception("Access Denied: You do not have an invitation for this package.");
+            }
+
+            // 2. பேக்கேஜ் விபரங்களை எடு
+            var package = await _packageRepo.GetPackageWithServicesAsync(packageId);
+
+            // 3. DTO-ாக மாற்றி அனுப்பு (ஏற்கனவே உள்ள Helper-ஐப் பயன்படுத்தலாம்)
+            return MapToPackageDto(package);
         }
     }
 }

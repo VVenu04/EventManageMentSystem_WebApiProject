@@ -62,5 +62,15 @@ namespace infrastructure.Repositary
 
             return isApprovedCollaborator;
         }
+       
+        public async Task<IEnumerable<PackageRequest>> GetPendingRequestsByVendorAsync(Guid vendorId)
+        {
+            return await _context.PackageRequests
+                .Include(r => r.Package)
+                .Include(r => r.SenderVendor) // ✅ இப்போது இது பிழையின்றி வேலை செய்யும்
+                .Where(r => r.ReceiverVendorID == vendorId && r.Status == "Pending")
+                .OrderByDescending(r => r.CreatedAt)
+                .ToListAsync();
+        }
     }
 }

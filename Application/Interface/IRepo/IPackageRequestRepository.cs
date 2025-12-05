@@ -17,5 +17,6 @@ namespace Application.Interface.IRepo
         Task<IEnumerable<PackageRequest>> GetPendingRequestsForVendorAsync(Guid vendorId);
 
         Task<bool> IsVendorApprovedForPackageAsync(Guid packageId, Guid vendorId);
+        Task<IEnumerable<PackageRequest>> GetPendingRequestsByVendorAsync(Guid vendorId);
     }
 }

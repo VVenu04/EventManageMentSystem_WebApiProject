@@ -62,7 +62,7 @@ namespace Presentation.Controllers
             try
             {
                 await _cartService.RemoveFromCartAsync(itemId);
-                return Ok(ApiResponse<object>.Success(null, "Item removed from cart."));
+                return Ok(ApiResponse<object?>.Success(null, "Item removed from cart."));
             }
             catch (Exception ex)
             {
@@ -70,6 +70,7 @@ namespace Presentation.Controllers
             }
         }
 
+       
         [HttpPost("checkout")]
         public async Task<IActionResult> Checkout()
         {
@@ -77,8 +78,13 @@ namespace Presentation.Controllers
 
             try
             {
-                await _cartService.CheckoutAsync(CurrentUserId);
-                return Ok(ApiResponse<object>.Success(null, "Checkout successful. Proceed to payment."));
+                // Service-ல் CheckoutAsync மெதட் BookingID-ஐ ரிட்டர்ன் செய்யும்படி மாற்ற வேண்டும்
+                // அல்லது Cart-ஐ Pending-ஆக மாற்றிய பின், அந்த Booking Object-ஐ ரிட்டர்ன் செய்யவும்.
+
+                var bookingId = await _cartService.CheckoutAsync(CurrentUserId); // Service-ஐயும் மாற்ற வேண்டும்
+
+                // 🚨 FIX: Return BookingID so Frontend can go to Payment Page
+                return Ok(ApiResponse<object>.Success(new { bookingId }, "Checkout successful."));
             }
             catch (Exception ex)
             {

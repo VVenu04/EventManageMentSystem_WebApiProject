@@ -322,6 +322,25 @@ namespace Application.Services
 
             return CreateAuthResponse(vendor.VendorID, vendor.Name, vendor.Email, "Vendor", "Registration Successful");
         }
+        public async Task<VendorDto> GetVendorProfileAsync(Guid vendorId)
+        {
+            var vendor = await _authRepo.GetVendorByIdAsync(vendorId);
+            if (vendor == null) return null;
+
+            return new VendorDto
+            {
+                VendorID = vendor.VendorID,
+                Name = vendor.Name,
+                Email = vendor.Email,
+                CompanyName = vendor.CompanyName,
+                PhoneNumber = vendor.PhoneNumber,
+                Location = vendor.Location,
+                Description = vendor.Description,
+                Logo = vendor.Logo,
+                EventPerDayLimit = vendor.EventPerDayLimit
+                // RegisterNumber etc.
+            };
+        }
 
         public async Task<AuthResponseDto> LoginVendorAsync(LoginDto dto)
         {
@@ -619,7 +638,22 @@ namespace Application.Services
             return true;
         }
 
-         
+        public async Task<CustomerDto> GetCustomerProfileAsync(Guid customerId)
+        {
+            var customer = await _authRepo.GetCustomerByIdAsync(customerId);
+            if (customer == null) return null;
+
+            return new CustomerDto
+            {
+                CustomerID = customer.CustomerID,
+                Name = customer.Name,
+                Email = customer.Email,
+                PhoneNumber = customer.PhoneNumber,
+                Location = customer.Location,
+                ProfilePhoto = customer.ProfilePhoto,
+                WalletBalance = customer.WalletBalance
+            };
+        }
     }
 }
 

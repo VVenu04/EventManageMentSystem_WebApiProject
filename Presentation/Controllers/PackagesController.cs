@@ -22,78 +22,53 @@ namespace Presentation.Controllers
             _packageService = packageService;
         }
 
+        // ==========================================
+        // 1. PUBLIC ENDPOINTS (Customers & Guests)
+        // ==========================================
 
-        [HttpGet] // இதுதான் 'GET api/Packages' என்ற அழைப்பை ஏற்கும்
-        [AllowAnonymous] // அல்லது [Authorize(Roles = "Admin")]
+        // GET: api/Packages (Get All Active Packages)
+        [HttpGet]
+        [AllowAnonymous]
         [ProducesResponseType(typeof(ApiResponse<IEnumerable<PackageDto>>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllPackages()
         {
             try
             {
                 var packages = await _packageService.GetAllPackagesAsync();
+                // Return empty list if null
                 return Ok(ApiResponse<IEnumerable<PackageDto>>.Success(packages ?? new List<PackageDto>()));
             }
             catch (Exception ex)
             {
-                return BadRequest(ApiResponse<object>.Failure(ex.Message));
+                return StatusCode(500, ApiResponse<object>.Failure($"Internal Server Error: {ex.Message}"));
             }
         }
 
-
-        // POST: CreatePackage 
-        [HttpPost]
-        [Authorize(Roles = "Vendor")]
-        [ProducesResponseType(typeof(ApiResponse<PackageDto>), StatusCodes.Status201Created)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CreatePackage([FromBody] CreatePackageDto createPackageDto)
-        {
-            // Change 1: Use CurrentUserId property directly
-            if (CurrentUserId == Guid.Empty)
-            {
-                return Unauthorized(ApiResponse<object>.Failure("Authentication failed: Invalid vendor token."));
-            }
-
-            if (!ModelState.IsValid)
-            {
-                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-                return BadRequest(ApiResponse<object>.Failure("Validation failed.", errors));
-            }
-
-            try
-            {
-                // Change 2: Pass CurrentUserId
-                var newPackage = await _packageService.CreatePackageAsync(createPackageDto, CurrentUserId);
-
-                return CreatedAtAction(
-                    nameof(GetPackage),
-                    new { id = newPackage.PackageID },
-                    ApiResponse<PackageDto>.Success(newPackage, "Package draft created successfully."));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ApiResponse<object>.Failure(ex.Message));
-            }
-        }
-
-        // GET: GetPackage 
+        // GET: api/Packages/{id} (Get Single Package Details)
         [HttpGet("{id}")]
         [AllowAnonymous]
         [ProducesResponseType(typeof(ApiResponse<PackageDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetPackage(Guid id)
         {
-            if (id == Guid.Empty) return BadRequest(ApiResponse<object>.Failure("Invalid ID."));
+            if (id == Guid.Empty) return BadRequest(ApiResponse<object>.Failure("Invalid Package ID."));
 
-            var package = await _packageService.GetPackageByIdAsync(id);
-
-            if (package == null)
+            try
             {
-                return NotFound(ApiResponse<object>.Failure($"Package with ID {id} not found."));
+                var package = await _packageService.GetPackageByIdAsync(id);
+                if (package == null)
+                {
+                    return NotFound(ApiResponse<object>.Failure("Package not found."));
+                }
+                return Ok(ApiResponse<PackageDto>.Success(package));
             }
-            return Ok(ApiResponse<PackageDto>.Success(package));
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<object>.Failure(ex.Message));
+            }
         }
 
-        // GET: GetPackagesByVendor 
+        // GET: api/Packages/vendor/{vendorId} (Get Vendor's Packages)
         [HttpGet("vendor/{vendorId}")]
         [AllowAnonymous]
         [ProducesResponseType(typeof(ApiResponse<IEnumerable<PackageDto>>), StatusCodes.Status200OK)]
@@ -101,21 +76,100 @@ namespace Presentation.Controllers
         {
             if (vendorId == Guid.Empty) return BadRequest(ApiResponse<object>.Failure("Invalid Vendor ID."));
 
-            var packages = await _packageService.GetPackagesByVendorIdAsync(vendorId);
-
-            // Return success even if list is empty
-            return Ok(ApiResponse<IEnumerable<PackageDto>>.Success(packages ?? new List<PackageDto>()));
+            try
+            {
+                var packages = await _packageService.GetPackagesByVendorIdAsync(vendorId);
+                return Ok(ApiResponse<IEnumerable<PackageDto>>.Success(packages ?? new List<PackageDto>()));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<object>.Failure(ex.Message));
+            }
         }
 
-        // POST: InviteVendor 
+        // ==========================================
+        // 2. VENDOR ENDPOINTS (Authenticated)
+        // ==========================================
+
+        // POST: api/Packages (Create Package Draft)
+        [HttpPost]
+        [Authorize(Roles = "Vendor")]
+        [ProducesResponseType(typeof(ApiResponse<PackageDto>), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> CreatePackage([FromBody] CreatePackageDto createPackageDto)
+        {
+            if (CurrentUserId == Guid.Empty) return Unauthorized(ApiResponse<object>.Failure("Invalid Token."));
+
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                return BadRequest(ApiResponse<object>.Failure("Validation Failed", errors));
+            }
+
+            try
+            {
+                // Pass CurrentUserId (Vendor ID) from Token
+                var newPackage = await _packageService.CreatePackageAsync(createPackageDto, CurrentUserId);
+
+                return CreatedAtAction(
+                    nameof(GetPackage),
+                    new { id = newPackage.PackageID },
+                    ApiResponse<PackageDto>.Success(newPackage, "Package draft created successfully.")
+                );
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ApiResponse<object>.Failure(ex.Message));
+            }
+        }
+
+        // PUT: api/Packages/{id}/publish (Publish Package)
+        [HttpPut("{packageId}/publish")]
+        [Authorize(Roles = "Vendor")]
+        public async Task<IActionResult> PublishPackage(Guid packageId)
+        {
+            if (CurrentUserId == Guid.Empty) return Unauthorized(ApiResponse<object>.Failure("Invalid Token."));
+
+            try
+            {
+                await _packageService.PublishPackageAsync(packageId, CurrentUserId);
+                return Ok(ApiResponse<object>.Success(null, "Package published successfully."));
+            }
+            catch (Exception ex)
+            {
+                // Example: "Cannot publish: Waiting for partner approval."
+                return BadRequest(ApiResponse<object>.Failure(ex.Message));
+            }
+        }
+
+        // POST: api/Packages/add-services (Add Services to Package)
+        [HttpPost("add-services")]
+        [Authorize(Roles = "Vendor")]
+        public async Task<IActionResult> AddServices([FromBody] AddServicesToPackageDto dto)
+        {
+            if (CurrentUserId == Guid.Empty) return Unauthorized(ApiResponse<object>.Failure("Invalid Token."));
+
+            try
+            {
+                await _packageService.AddServicesToPackageAsync(dto, CurrentUserId);
+                return Ok(ApiResponse<object>.Success(null, "Services added to package successfully."));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ApiResponse<object>.Failure(ex.Message));
+            }
+        }
+
+        // ==========================================
+        // 3. COLLABORATION ENDPOINTS
+        // ==========================================
+
+        // POST: api/Packages/invite (Invite another vendor)
         [HttpPost("invite")]
         [Authorize(Roles = "Vendor")]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
         public async Task<IActionResult> InviteVendor([FromBody] InviteVendorDto dto)
         {
-            if (CurrentUserId == Guid.Empty) return Unauthorized(ApiResponse<object>.Failure("Invalid token."));
-
-            if (!ModelState.IsValid) return BadRequest(ApiResponse<object>.Failure("Validation failed.", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList()));
+            if (CurrentUserId == Guid.Empty) return Unauthorized(ApiResponse<object>.Failure("Invalid Token."));
 
             try
             {
@@ -128,18 +182,17 @@ namespace Presentation.Controllers
             }
         }
 
-        // PUT: RespondToRequest 
+        // PUT: api/Packages/request/{id}/respond?accept=true (Accept/Reject Invite)
         [HttpPut("request/{requestId}/respond")]
         [Authorize(Roles = "Vendor")]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
         public async Task<IActionResult> RespondToRequest(Guid requestId, [FromQuery] bool accept)
         {
-            if (CurrentUserId == Guid.Empty) return Unauthorized(ApiResponse<object>.Failure("Invalid token."));
+            if (CurrentUserId == Guid.Empty) return Unauthorized(ApiResponse<object>.Failure("Invalid Token."));
 
             try
             {
                 await _packageService.RespondToInvitationAsync(requestId, CurrentUserId, accept);
-                return Ok(ApiResponse<object>.Success(null, accept ? "Invitation Accepted" : "Invitation Rejected"));
+                return Ok(ApiResponse<object>.Success(null, accept ? "Invitation Accepted." : "Invitation Rejected."));
             }
             catch (Exception ex)
             {
@@ -147,44 +200,45 @@ namespace Presentation.Controllers
             }
         }
 
-        // POST: AddServices 
-        [HttpPost("add-services")]
+        // GET: api/Packages/requests/{vendorId}
+        [HttpGet("requests/{vendorId}")]
         [Authorize(Roles = "Vendor")]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> AddServices([FromBody] AddServicesToPackageDto dto)
+        [ProducesResponseType(typeof(ApiResponse<IEnumerable<PackageRequestDto>>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetPendingRequests(Guid vendorId)
         {
-            if (CurrentUserId == Guid.Empty) return Unauthorized(ApiResponse<object>.Failure("Invalid token."));
+            // Security Check
+            if (CurrentUserId != vendorId)
+            {
+                return Unauthorized(ApiResponse<object>.Failure("Access Denied."));
+            }
 
             try
             {
-                await _packageService.AddServicesToPackageAsync(dto, CurrentUserId);
-                return Ok(ApiResponse<object>.Success(null, "Services added successfully."));
+                // 🚨 FIX: பழைய Placeholder-ஐ நீக்கிவிட்டு, உண்மையான Service Call-ஐப் பயன்படுத்தவும்.
+                var requests = await _packageService.GetPendingRequestsAsync(vendorId);
+
+                // List காலியாக இருந்தால் Empty List அனுப்புவோம் (Null அனுப்பக்கூடாது)
+                return Ok(ApiResponse<IEnumerable<PackageRequestDto>>.Success(requests ?? new List<PackageRequestDto>()));
             }
             catch (Exception ex)
             {
                 return BadRequest(ApiResponse<object>.Failure(ex.Message));
             }
         }
-
-        // PUT: PublishPackage 
-        [HttpPut("{packageId}/publish")]
+        [HttpGet("{packageId}/preview-for-collab")]
         [Authorize(Roles = "Vendor")]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> PublishPackage(Guid packageId)
+        public async Task<IActionResult> GetPackagePreview(Guid packageId)
         {
-            if (CurrentUserId == Guid.Empty) return Unauthorized(ApiResponse<object>.Failure("Invalid token."));
-
             try
             {
-                await _packageService.PublishPackageAsync(packageId, CurrentUserId);
-                return Ok(ApiResponse<object>.Success(null, "Package published to customers."));
+                // CurrentUserId = Login செய்த Vendor (Vendor B)
+                var package = await _packageService.GetPackagePreviewForCollabAsync(packageId, CurrentUserId);
+                return Ok(ApiResponse<PackageDto>.Success(package));
             }
             catch (Exception ex)
             {
                 return BadRequest(ApiResponse<object>.Failure(ex.Message));
             }
         }
-
-        
     }
 }
