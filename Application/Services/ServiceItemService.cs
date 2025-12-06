@@ -17,12 +17,12 @@ namespace Application.Services
         private readonly ICategoryRepository _categoryRepo;
         private readonly IEventRepo _eventRepo;
 
-        //public ServiceItemService(IServiceItemRepository serviceRepo, ICategoryRepository categoryRepo, IEventRepo eventRepo)
-        //{
-        //    _serviceRepo = serviceRepo;
-        //    _categoryRepo = categoryRepo;
-        //    _eventRepo = eventRepo;
-        //}
+        public ServiceItemService(IServiceItemRepository serviceRepo, ICategoryRepository categoryRepo, IEventRepo eventRepo)
+        {
+           _serviceRepo = serviceRepo;
+            _categoryRepo = categoryRepo;
+            _eventRepo = eventRepo;
+        }
 
         //public async Task<ServiceItemDto> CreateServiceAsync(CreateServiceDto dto, Guid vendorId)
         //{

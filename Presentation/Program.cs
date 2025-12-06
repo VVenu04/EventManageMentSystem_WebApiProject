@@ -8,12 +8,14 @@ using infrastructure.Repositary;
 using infrastucure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Microsoft.Win32;
 using Presentation.Middleware;
 using Presentation.Providers;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
+using Microsoft.OpenApi.Models;
 
 namespace Presentation
 {
@@ -47,7 +49,39 @@ namespace Presentation
 
             #region Swagger
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Presentation", Version = "v1" });
+
+                // 1. Definition: Tells Swagger "We use JWT Bearer tokens"
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Please enter 'Bearer [space] and then your token'",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+
+                // 2. Requirement: Tells Swagger "Apply this security to all endpoints"
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                },
+                Scheme = "oauth2",
+                Name = "Bearer",
+                In = ParameterLocation.Header
+            },
+            new List<string>()
+        }
+    });
+            });
             #endregion
             builder.Services.AddSingleton<SmtpClient>(provider =>
             {

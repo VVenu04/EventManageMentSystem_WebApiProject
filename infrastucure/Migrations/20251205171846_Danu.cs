@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Danu : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -150,8 +150,14 @@ namespace infrastructure.Migrations
                     Location = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EventPerDayLimit = table.Column<int>(type: "int", nullable: false),
                     TimeLimit = table.Column<int>(type: "int", nullable: false),
+                    GoogleId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ProfilePhoto = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Logo = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PasswordResetOtp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PasswordResetOtpExpiry = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     EventID = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
@@ -270,7 +276,6 @@ namespace infrastructure.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     VendorID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CategoryID = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    EventID = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     EventPerDayLimit = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
@@ -286,11 +291,6 @@ namespace infrastructure.Migrations
                         column: x => x.CategoryID,
                         principalTable: "Categories",
                         principalColumn: "CategoryID");
-                    table.ForeignKey(
-                        name: "FK_ServiceItems_Events_EventID",
-                        column: x => x.EventID,
-                        principalTable: "Events",
-                        principalColumn: "EventID");
                     table.ForeignKey(
                         name: "FK_ServiceItems_Vendors_VendorID",
                         column: x => x.VendorID,
@@ -373,6 +373,30 @@ namespace infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "EventServiceItem",
+                columns: table => new
+                {
+                    EventsEventID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ServicesServiceItemID = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EventServiceItem", x => new { x.EventsEventID, x.ServicesServiceItemID });
+                    table.ForeignKey(
+                        name: "FK_EventServiceItem_Events_EventsEventID",
+                        column: x => x.EventsEventID,
+                        principalTable: "Events",
+                        principalColumn: "EventID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_EventServiceItem_ServiceItems_ServicesServiceItemID",
+                        column: x => x.ServicesServiceItemID,
+                        principalTable: "ServiceItems",
+                        principalColumn: "ServiceItemID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PackageItems",
                 columns: table => new
                 {
@@ -449,6 +473,11 @@ namespace infrastructure.Migrations
                 column: "EventsEventID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_EventServiceItem_ServicesServiceItemID",
+                table: "EventServiceItem",
+                column: "ServicesServiceItemID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Messages_CustomerID",
                 table: "Messages",
                 column: "CustomerID");
@@ -510,11 +539,6 @@ namespace infrastructure.Migrations
                 column: "CategoryID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ServiceItems_EventID",
-                table: "ServiceItems",
-                column: "EventID");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ServiceItems_VendorID",
                 table: "ServiceItems",
                 column: "VendorID");
@@ -541,6 +565,9 @@ namespace infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "CategoryEvent");
+
+            migrationBuilder.DropTable(
+                name: "EventServiceItem");
 
             migrationBuilder.DropTable(
                 name: "Messages");
