@@ -90,8 +90,16 @@ namespace Application.Services
                 // If existing user had no GoogleId, set it
                 if (string.IsNullOrEmpty(user.GoogleId))
                 {
-                    user.GoogleId = googleId;
-                    await _customerRepo.SaveChangesAsync();
+                    //user.GoogleId = googleId;
+                    //await _customerRepo.SaveChangesAsync();
+                    user =new Domain.Entities.Customer
+                    {
+                        GoogleId = googleId,
+                        Email = email,
+                        Name = name,
+                        ProfilePhoto = picture
+                    };
+                    await _customerRepo.UpdateAsync(user);
                 }
             }
 
@@ -124,12 +132,18 @@ namespace Application.Services
         public async Task<AuthResponseDto> LoginCustomerAsync(LoginDto dto)
         {
             var customer = await _authRepo.GetCustomerByEmailAsync(dto.Email);
-
+           
             if (customer == null)
             {
                 return new AuthResponseDto { IsSuccess = false, Message = "Invalid Email" };
             }
 
+            // if(customer.PasswordHash == null )
+            if (string.IsNullOrEmpty(customer.PasswordHash))
+            {
+                return new AuthResponseDto { IsSuccess = false, Message = "Google tra poda " };
+            }
+                    
             if (!BCrypt.Net.BCrypt.Verify(dto.Password, customer.PasswordHash))
             {
                 return new AuthResponseDto { IsSuccess = false, Message = "Invalid Password" };
@@ -350,6 +364,10 @@ namespace Application.Services
             {
                 return new AuthResponseDto { IsSuccess = false, Message = "Invalid Email" };
             }
+            if (string.IsNullOrEmpty(vendor.PasswordHash))
+            {
+                return new AuthResponseDto { IsSuccess = false, Message = "Google tra poda " };
+            }
 
             if (!BCrypt.Net.BCrypt.Verify(dto.Password, vendor.PasswordHash))
             {
@@ -425,8 +443,8 @@ namespace Application.Services
             var name = payload.Name ?? payload.Email!;
             var picture = payload.Picture;
 
-            var user = await _vendorRepo.VendorGetByGoogleIdAsync(googleId)
-                       ?? await _vendorRepo.GetByEmailAsync(email);
+            var user =  
+                        await _vendorRepo.GetByEmailAsync(email);
 
             if (user == null)
             {
@@ -445,8 +463,16 @@ namespace Application.Services
                 // If existing user had no GoogleId, set it
                 if (string.IsNullOrEmpty(user.GoogleId))
                 {
-                    user.GoogleId = googleId;
-                    await _vendorRepo.SaveChangesAsync();
+                    //user.GoogleId = googleId;
+                    //await _vendorRepo.SaveChangesAsync();
+                    user = new Domain.Entities.Vendor
+                    {
+                        GoogleId = googleId,
+                        Email = email,
+                        Name = name,
+                        ProfilePhoto = picture
+                    };
+                    await _vendorRepo.UpdateAsync(user);
                 }
             }
 
