@@ -34,7 +34,7 @@ namespace infrastructure.Repositary
             return await _context.ServiceItems
                 .Include(s => s.Vendor)
                 .Include(s => s.Category)
-                .Include(s => s.Event)
+                .Include(s => s.Events)
                 .Include(s => s.ServiceImages)
                 .FirstOrDefaultAsync(s => s.ServiceItemID == serviceId);
         }
@@ -44,7 +44,7 @@ namespace infrastructure.Repositary
             return await _context.ServiceItems
                 .Include(s => s.Vendor)
                 .Include(s => s.Category)
-                .Include(s => s.Event)
+                .Include(s => s.Events)
                 .Include(s => s.ServiceImages)
                 .ToListAsync();
         }
@@ -53,7 +53,7 @@ namespace infrastructure.Repositary
         {
             return await _context.ServiceItems
                 .Include(s => s.Category)
-                .Include(s => s.Event)
+                .Include(s => s.Events)
                 .Where(s => s.VendorID == vendorId)
                 .Include(s => s.ServiceImages)
                 .ToListAsync();
@@ -80,7 +80,7 @@ namespace infrastructure.Repositary
             var query = _context.ServiceItems
                 .Include(s => s.Vendor)
                 .Include(s => s.Category)
-                .Include(s => s.Event)
+                .Include(s => s.Events)
                 .Include(s => s.ServiceImages)
                 .AsQueryable();
 
@@ -98,7 +98,11 @@ namespace infrastructure.Repositary
             {
                 query = query.Where(s => s.CategoryID == searchDto.CategoryID);
             }
-
+            if (searchDto.EventID.HasValue)
+            {
+                // புதிய Code: Events லிஸ்டில் இந்த ID இருக்கிறதா என பார்க்கிறோம்
+                query = query.Where(s => s.Events.Any(e => e.EventID == searchDto.EventID.Value));
+            }
             // 4. Price Range
             if (searchDto.MinPrice.HasValue)
                 query = query.Where(s => s.Price >= searchDto.MinPrice);
@@ -115,6 +119,15 @@ namespace infrastructure.Repositary
             return await _context.ServiceItems
                 .Where(s => s.CategoryID == categoryId)
                 .ToListAsync();
+        }
+
+
+        public async Task<ServiceItem> GetByIdWithDetailsAsync(Guid id)
+        {
+            return await _context.ServiceItems
+                .Include(s => s.Events)        // பழைய Events தேவை
+                .Include(s => s.ServiceImages) // பழைய Images தேவை
+                .FirstOrDefaultAsync(s => s.ServiceItemID == id);
         }
     }
 }

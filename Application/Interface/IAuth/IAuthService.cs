@@ -27,5 +27,7 @@ namespace Application.Interface.IAuth
         Task<ApiResponseDto> VendorVerifyOtpAsync(VerifyOtpDto dto);
         Task<ApiResponseDto> VendorResetPasswordAsync(ResetPasswordDto dto);
         Task<AuthResponseDto> VendorSignInWithGoogleAsync(string idToken);
+        Task<CustomerDto> GetCustomerProfileAsync(Guid customerId);
+        Task<VendorDto> GetVendorProfileAsync(Guid vendorId);
     }
 }

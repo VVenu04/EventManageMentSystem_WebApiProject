@@ -25,14 +25,19 @@ namespace Application.Mapper
                 EventPerDayLimit = service.EventPerDayLimit,
                 TimeLimit = service.TimeLimit,
                 VendorID = service.VendorID,
-                VendorName = service.Vendor?.Name, // Include-ஆல் இது வேலை செய்யும்
-                CategoryID = (Guid)service.CategoryID,
-                CategoryName = service.Category?.CategoryName ?? "Unknown Category", // Null என்றால் "Unknown"
+                VendorName = service.Vendor?.Name,
+                CategoryID = (Guid)(service.CategoryID == null ? Guid.Empty : service.CategoryID),
+                CategoryName = service.Category?.CategoryName ?? "Unknown Category",
 
-                // --- Photos-ஐ Map செய்யவும் ---
+                // --- Events Mapping (New Change) ---
+                EventNames = service.Events?
+                                .Select(e => e.EventName)
+                                .ToList() ?? new List<string>(),
+
+                // --- Photos Mapping ---
                 ImageUrls = service.ServiceImages?
-                                 .Select(img => img.ImageUrl)
-                                 .ToList() ?? new List<string>()
+                                .Select(img => img.ImageUrl)
+                                .ToList() ?? new List<string>()
             };
         }
     }

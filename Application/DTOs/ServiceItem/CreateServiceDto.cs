@@ -20,10 +20,12 @@ namespace Application.DTOs.ServiceItem
 
         // Relations
         public Guid CategoryID { get; set; }
-        public Guid? EventID { get; set; }
+        //public Guid? EventID { get; set; }
+
+        public List<Guid> EventIDs { get; set; } = new List<Guid>();
 
         // --- நீங்கள் கேட்ட 5 Photos ---
         // (Frontend 5 URL-களை List-ஆக அனுப்பும்)
-        public List<string> ImageUrls { get; set; }
+        public List<string> ImageUrls { get; set; } = new List<string>();
     }
 }

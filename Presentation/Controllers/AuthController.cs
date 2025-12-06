@@ -12,14 +12,9 @@ namespace Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController : BaseApiController
+    public class AuthController(IAuthService authService) : BaseApiController
     {
-        private readonly IAuthService _authService;
-
-        public AuthController(IAuthService authService)
-        {
-            _authService = authService;
-        }
+        private readonly IAuthService _authService = authService;
 
         // --- Customer Routes ---
         [HttpPost("customer/register")]

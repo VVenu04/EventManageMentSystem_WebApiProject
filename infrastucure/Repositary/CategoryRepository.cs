@@ -1,7 +1,7 @@
 ﻿using Application.Interface.IRepo;
 using Domain.Entities;
+using infrastructure.GenericRepositary;
 using infrastucure.Data;
-using infrastucure.GenericRepositary;
 using System;
 using System.Collections.Generic;
 using System.Linq;

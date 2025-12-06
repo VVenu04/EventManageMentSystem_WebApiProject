@@ -2,9 +2,9 @@
 using Application.Interface.IRepo;
 using Application.Interface.IService;
 using infrastructure;
+using infrastructure.GenericRepositary;
 using infrastructure.Repositary;
 using infrastucure.Data;
-using infrastucure.GenericRepositary;
 using infrastucure.Repositary;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
