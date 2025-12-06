@@ -37,7 +37,7 @@ namespace infrastucure
             services.AddScoped<IRealTimeNotifier, SignalRNotifier>();
 
             services.AddScoped<ICategoryRepository, CategoryRepository>();
-            var connectionString = configuration.GetConnectionString("Smart_Function");
+            var connectionString = configuration.GetConnectionString("Smart");
 
             services.AddDbContext<ApplicationDbContext>(option => option.UseSqlServer(connectionString));
 
