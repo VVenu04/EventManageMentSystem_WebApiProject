@@ -30,12 +30,11 @@ namespace infrastructure.Repositary
 
         public async Task<ServiceItem?> GetByIdAsync(Guid serviceId)
         {
-            // Service-ஐ எடுக்கும்போது, related data-வையும் (Vendor, Category) எடு
             return await _context.ServiceItems
                 .Include(s => s.Vendor)
                 .Include(s => s.Category)
-                .Include(s => s.Events)
-                .Include(s => s.ServiceImages)
+                .Include(s => s.Events)        // Many-to-Many
+                .Include(s => s.ServiceImages) // One-to-Many
                 .FirstOrDefaultAsync(s => s.ServiceItemID == serviceId);
         }
 
@@ -59,15 +58,47 @@ namespace infrastructure.Repositary
                 .ToListAsync();
         }
 
+        public async Task<ServiceItem?> GetByIdWithDetailsAsync(Guid serviceId)
+        {
+            return await _context.ServiceItems
+                .Include(s => s.Vendor)
+                .Include(s => s.Category)
+                .Include(s => s.Events)
+                .Include(s => s.ServiceImages)
+                .FirstOrDefaultAsync(s => s.ServiceItemID == serviceId);
+        }
+
+        // 🚨 FIX: Just Remove from Context (Do NOT Save here)
+        public void DeleteImages(IEnumerable<ServiceImage> images)
+        {
+            // இது Database-ல் இருந்து Delete Query-ஐ தயார் செய்யும்
+            if (images != null && images.Any())
+            {
+                _context.ServiceImages.RemoveRange(images);
+            }
+        }
+
         public async Task UpdateAsync(ServiceItem service)
         {
-            _context.ServiceItems.Update(service);
+            // EF Core ட்ராக்கிங் மூலம் மாற்றங்களைக் கண்டறிந்து சேமிக்கும்
+            // .Update(service) என்று அழைக்கத் தேவையில்லை
             await _context.SaveChangesAsync();
         }
 
+
         public async Task DeleteAsync(ServiceItem service)
         {
+            // 1. தொடர்புடைய படங்களை முதலில் நீக்கவும் (Optional but safe)
+            // (Cascade Delete இருந்தால் இது தேவையில்லை, ஆனால் Explicit ஆக செய்வது நல்லது)
+            if (service.ServiceImages != null && service.ServiceImages.Any())
+            {
+                _context.ServiceImages.RemoveRange(service.ServiceImages);
+            }
+
+            // 2. Service-ஐ நீக்கவும்
             _context.ServiceItems.Remove(service);
+
+            // 3. Save Changes
             await _context.SaveChangesAsync();
         }
         public async Task<bool> IsServiceInAnyPackageAsync(Guid serviceId)
@@ -122,12 +153,7 @@ namespace infrastructure.Repositary
         }
 
 
-        public async Task<ServiceItem> GetByIdWithDetailsAsync(Guid id)
-        {
-            return await _context.ServiceItems
-                .Include(s => s.Events)        // பழைய Events தேவை
-                .Include(s => s.ServiceImages) // பழைய Images தேவை
-                .FirstOrDefaultAsync(s => s.ServiceItemID == id);
-        }
+       
+
     }
 }
