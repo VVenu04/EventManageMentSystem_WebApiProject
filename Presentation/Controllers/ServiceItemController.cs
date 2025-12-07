@@ -28,24 +28,21 @@ namespace Presentation.Controllers
         [Authorize(Roles = "Vendor")]
         [ProducesResponseType(typeof(ApiResponse<ServiceItemDto>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<ServiceItemDto>> CreateService([FromBody] CreateServiceDto createServiceDto)
+        public async Task<ActionResult<ServiceItemDto>> CreateService([FromForm] CreateServiceDto createServiceDto, [FromForm] List<IFormFile> images)
         {
-            // 2. Use CurrentUserId directly
-            if (CurrentUserId == Guid.Empty)
-            {
-                return Unauthorized(ApiResponse<object>.Failure("Invalid vendor token."));
-            }
+            if (CurrentUserId == Guid.Empty) return Unauthorized(ApiResponse<object>.Failure("Invalid vendor token."));
 
-            if (!ModelState.IsValid)
-            {
-                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-                return BadRequest(ApiResponse<ServiceItemDto>.Failure("Validation failed.", errors));
-            }
+            // Validation
+            if (images == null || images.Count == 0)
+                return BadRequest(ApiResponse<object>.Failure("At least one image is required."));
+
+            if (images.Count > 5)
+                return BadRequest(ApiResponse<object>.Failure("Maximum 5 images allowed."));
 
             try
             {
-                // Pass CurrentUserId to service
-                var newService = await _serviceService.CreateServiceAsync(createServiceDto, CurrentUserId);
+                // Service-க்கு DTO + Images இரண்டையும் அனுப்புகிறோம்
+                var newService = await _serviceService.CreateServiceAsync(createServiceDto, images, CurrentUserId);
 
                 return CreatedAtAction(
                     nameof(GetService),
@@ -55,7 +52,6 @@ namespace Presentation.Controllers
             }
             catch (Exception ex)
             {
-                // Example. "Cannot add more than 5 photos"
                 return BadRequest(ApiResponse<ServiceItemDto>.Failure(ex.Message));
             }
         }

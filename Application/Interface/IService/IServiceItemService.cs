@@ -1,6 +1,7 @@
 ﻿using Application.DTOs.Service;
 using Application.DTOs.ServiceItem;
 using Domain.Entities;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +12,7 @@ namespace Application.Interface.IService
 {
     public interface IServiceItemService
     {
-        Task<ServiceItemDto> CreateServiceAsync(CreateServiceDto dto, Guid vendorId);
-
+        Task<ServiceItemDto> CreateServiceAsync(CreateServiceDto dto, List<IFormFile> images, Guid vendorId);
         // 🚨 'CreateServiceDto'-வை 'UpdateServiceDto'-ஆக மாற்றவும்
         Task UpdateServiceAsync(Guid serviceId, UpdateServiceDto updateServiceDto, Guid vendorId);
         // Vendor-ஆல் ஒரு Service-ஐ delete செய்ய
@@ -29,6 +29,5 @@ namespace Application.Interface.IService
 
         // FIXED: Changed the return type from ServiceItem to ServiceItemDto (28th Nov)
         Task<IEnumerable<ServiceItemDto>> SearchServicesAsync(ServiceSearchDto searchDto);
-
     }
 }
