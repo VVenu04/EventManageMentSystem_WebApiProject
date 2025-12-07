@@ -38,7 +38,15 @@ namespace infrastructure.Repositary
         }
         public async Task UpdateAsync(Package package)
         {
-            _context.Packages.Update(package);
+            // Check if the entity is already being tracked by the context
+            if (_context.Entry(package).State == EntityState.Detached)
+            {
+                _context.Packages.Update(package);
+            }
+
+            // If it is already attached (loaded via GetById), 
+            // we just need to SaveChanges. EF Core already knows it's modified.
+
             await _context.SaveChangesAsync();
         }
 
