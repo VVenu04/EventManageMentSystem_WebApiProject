@@ -345,7 +345,7 @@ namespace Application.Services
             {
                 VendorID = vendor.VendorID,
                 Name = vendor.Name,
-                Email = vendor.Email,
+                ContactEmail = vendor.Email,
                 CompanyName = vendor.CompanyName,
                 PhoneNumber = vendor.PhoneNumber,
                 Location = vendor.Location,

@@ -29,9 +29,10 @@ namespace Application.Services
             _notificationService = notificationService;
         }
 
-        // 1. Create Package (Draft)
+        // 1. Create Package (Optimized: One-Shot Save)
         public async Task<PackageDto> CreatePackageAsync(CreatePackageDto dto, Guid ownerId)
         {
+            // A. Initialize the Package
             var package = new Package
             {
                 PackageID = Guid.NewGuid(),
@@ -39,19 +40,60 @@ namespace Application.Services
                 VendorID = ownerId,
                 Status = "Draft",
                 IsActive = false,
-                TotalPrice = 0
+                TotalPrice = 0,
+                PackageItems = new List<PackageItem>(), // Initialize list
+                PackageRequests = new List<PackageRequest>() // Initialize list
             };
 
-            await _packageRepo.AddAsync(package);
-
+            // B. Add Services to the Object (IN MEMORY - NO DB CALLS YET)
             if (dto.ServiceItemIDs != null && dto.ServiceItemIDs.Any())
             {
-                await AddServicesToPackageAsync(new AddServicesToPackageDto
+                foreach (var serviceId in dto.ServiceItemIDs)
                 {
-                    PackageID = package.PackageID,
-                    ServiceItemIDs = dto.ServiceItemIDs
-                }, ownerId);
+                    var service = await _serviceRepo.GetByIdAsync(serviceId);
+                    if (service == null) continue; // Skip invalid services
+
+                    // 1. Add Item
+                    package.PackageItems.Add(new PackageItem
+                    {
+                        PackageItemID = Guid.NewGuid(),
+                        PackageID = package.PackageID,
+                        ServiceItemID = serviceId,
+                        ItemPrice = service.Price,
+                        VendorID = service.VendorID
+                    });
+
+                    // 2. Update Total Price
+                    package.TotalPrice += service.Price;
+
+                    // 3. Handle Collaboration Request (If needed)
+                    if (service.VendorID != ownerId)
+                    {
+                        // Add to the Package's collection directly
+                        package.PackageRequests.Add(new PackageRequest
+                        {
+                            RequestID = Guid.NewGuid(),
+                            PackageID = package.PackageID,
+                            SenderVendorID = ownerId,
+                            ReceiverVendorID = service.VendorID,
+                            Status = "Pending",
+                            CreatedAt = DateTime.UtcNow
+                        });
+
+                        // Notify (Fire and Forget)
+                        _ = _notificationService.SendNotificationAsync(
+                            service.VendorID,
+                            $"Collaboration Invite: You have a new request for package '{package.Name}'.",
+                            "PackageInvite",
+                            package.PackageID
+                        );
+                    }
+                }
             }
+
+            // C. SAVE EVERYTHING ONCE
+            // This will save the Package, The Items, AND The Requests in one transaction.
+            await _packageRepo.AddAsync(package);
 
             return await GetPackageByIdAsync(package.PackageID);
         }
@@ -59,46 +101,38 @@ namespace Application.Services
         // 2. Add Services (With Collaboration Logic)
         public async Task AddServicesToPackageAsync(AddServicesToPackageDto dto, Guid ownerId)
         {
+            // 1. Get Package (Tracking is ON by default)
             var package = await _packageRepo.GetPackageWithServicesAsync(dto.PackageID);
-            if (package == null) throw new Exception("Package not found.");
 
+            if (package == null) throw new Exception("Package not found.");
             if (package.VendorID != ownerId) throw new Exception("Only the package owner can add services.");
+
+            bool dataChanged = false;
 
             foreach (var serviceId in dto.ServiceItemIDs)
             {
-                // Check duplicate service
+                // Check for duplicates
                 if (package.PackageItems.Any(pi => pi.ServiceItemID == serviceId)) continue;
 
                 var service = await _serviceRepo.GetByIdAsync(serviceId);
-                if (service == null) throw new Exception("Service not found.");
+                if (service == null) throw new Exception($"Service {serviceId} not found.");
 
-                // A. Own Service -> Add Directly
-                if (service.VendorID == ownerId)
+                // 2. Add Item to Memory
+                package.PackageItems.Add(new PackageItem
                 {
-                    package.PackageItems.Add(new PackageItem
-                    {
-                        PackageItemID = Guid.NewGuid(),
-                        PackageID = package.PackageID,
-                        ServiceItemID = serviceId,
-                        ItemPrice = service.Price,
-                        VendorID = service.VendorID // Store Vendor ID
-                    });
-                    package.TotalPrice += service.Price;
-                }
-                // B. Other Vendor Service -> Create Request & Add (Pending)
-                else
-                {
-                    package.PackageItems.Add(new PackageItem
-                    {
-                        PackageItemID = Guid.NewGuid(),
-                        PackageID = package.PackageID,
-                        ServiceItemID = serviceId,
-                        ItemPrice = service.Price,
-                        VendorID = service.VendorID // Store Vendor ID
-                    });
-                    package.TotalPrice += service.Price;
+                    PackageItemID = Guid.NewGuid(),
+                    PackageID = package.PackageID,
+                    ServiceItemID = serviceId,
+                    ItemPrice = service.Price,
+                    VendorID = service.VendorID
+                });
 
-                    // Collaboration Request Check
+                package.TotalPrice += service.Price;
+                dataChanged = true;
+
+                // 3. Handle External Vendor Request
+                if (service.VendorID != ownerId)
+                {
                     var existingRequest = await _requestRepo.GetRequestAsync(package.PackageID, service.VendorID);
 
                     if (existingRequest == null)
@@ -112,18 +146,21 @@ namespace Application.Services
                             Status = "Pending",
                             CreatedAt = DateTime.UtcNow
                         };
-                        await _requestRepo.AddAsync(request);
 
-                        await _notificationService.SendNotificationAsync(
-                            service.VendorID,
-                            $"Collaboration Invite: '{package.Vendor?.Name}' wants to add your service '{service.Name}' to package '{package.Name}'.",
-                            "PackageInvite",
-                            package.PackageID
-                        );
+                        // Add Request to Context directly. 
+                        // Do NOT use _requestRepo.AddAsync here if it calls SaveChanges immediately.
+                        // It is safer to rely on the final package update to save everything.
+                        await _requestRepo.AddAsync(request);
                     }
                 }
             }
-            await _packageRepo.UpdateAsync(package);
+
+            // 4. Final Save
+            if (dataChanged)
+            {
+                // Because 'package' is tracked, this updates Package, Items, and Requests
+                await _packageRepo.UpdateAsync(package);
+            }
         }
 
         // 3. Publish Package (Check Requests)
@@ -133,8 +170,9 @@ namespace Application.Services
             if (package == null) throw new Exception("Package not found.");
             if (package.VendorID != vendorId) throw new Exception("Unauthorized.");
 
-            // Validate pending collaborations
-            var pendingRequests = await _requestRepo.GetPendingRequestsForVendorAsync(packageId); // Need this method in Repo
+            // --- FIX: Use the new method that checks by PackageID ---
+            var pendingRequests = await _requestRepo.GetPendingRequestsByPackageAsync(packageId);
+
             if (pendingRequests.Any())
             {
                 throw new Exception("Cannot publish: Waiting for partner vendors to accept collaboration.");

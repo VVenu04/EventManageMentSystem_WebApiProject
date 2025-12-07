@@ -29,7 +29,7 @@ namespace Application.DTOs
         public string Description { get; set; }
         public string Logo { get; set; } // (Photo upload செய்த பின் வரும் URL)
         public decimal EventPerDayLimit { get; set; }
-        public string Email { get; set; } // (Photo upload செய்த பின் வரும் URL)
+        //public string Email { get; set; } // (Photo upload செய்த பின் வரும் URL)
 
 
 

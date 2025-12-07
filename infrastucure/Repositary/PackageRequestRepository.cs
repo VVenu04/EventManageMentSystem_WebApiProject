@@ -72,5 +72,13 @@ namespace infrastructure.Repositary
                 .OrderByDescending(r => r.CreatedAt)
                 .ToListAsync();
         }
+
+
+        public async Task<IEnumerable<PackageRequest>> GetPendingRequestsByPackageAsync(Guid packageId)
+        {
+            return await _context.PackageRequests
+                .Where(r => r.PackageID == packageId && r.Status == "Pending")
+                .ToListAsync();
+        }
     }
 }
