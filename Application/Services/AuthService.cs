@@ -73,7 +73,7 @@ namespace Application.Services
             var user = await _customerRepo.CustomerGetByGoogleIdAsync(googleId)
                        ?? await _customerRepo.GetByEmailAsync(email);
 
-            if (user == null)
+            if (user  == null)
             {
                 user = new Domain.Entities.Customer
                 {
@@ -83,22 +83,14 @@ namespace Application.Services
                     ProfilePhoto = picture
                 };
                 await _customerRepo.AddAsync(user);
-                await _customerRepo.SaveChangesAsync();
+                
             }
             else
             {
                 // If existing user had no GoogleId, set it
                 if (string.IsNullOrEmpty(user.GoogleId))
                 {
-                    //user.GoogleId = googleId;
-                    //await _customerRepo.SaveChangesAsync();
-                    user =new Domain.Entities.Customer
-                    {
-                        GoogleId = googleId,
-                        Email = email,
-                        Name = name,
-                        ProfilePhoto = picture
-                    };
+                    user.GoogleId = googleId;
                     await _customerRepo.UpdateAsync(user);
                 }
             }
@@ -345,7 +337,7 @@ namespace Application.Services
             {
                 VendorID = vendor.VendorID,
                 Name = vendor.Name,
-                Email = vendor.Email,
+                ContactEmail = vendor.Email,
                 CompanyName = vendor.CompanyName,
                 PhoneNumber = vendor.PhoneNumber,
                 Location = vendor.Location,
@@ -463,15 +455,7 @@ namespace Application.Services
                 // If existing user had no GoogleId, set it
                 if (string.IsNullOrEmpty(user.GoogleId))
                 {
-                    //user.GoogleId = googleId;
-                    //await _vendorRepo.SaveChangesAsync();
-                    user = new Domain.Entities.Vendor
-                    {
-                        GoogleId = googleId,
-                        Email = email,
-                        Name = name,
-                        ProfilePhoto = picture
-                    };
+                    user.GoogleId = googleId;
                     await _vendorRepo.UpdateAsync(user);
                 }
             }

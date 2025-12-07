@@ -30,7 +30,7 @@ namespace infrastucure.Data
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Tracking> Tracking { get; set; }
         public DbSet<PackageRequest> PackageRequests { get; set; }
-
+        public DbSet<ServiceImage> ServiceImages { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -52,6 +52,8 @@ namespace infrastucure.Data
                 .WithMany()
                 .HasForeignKey(r => r.ReceiverVendorID)
                 .OnDelete(DeleteBehavior.Restrict); // <-- இதுவும் தடுக்கும்.
+
+
         }
 
     }

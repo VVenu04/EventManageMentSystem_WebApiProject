@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -26,6 +27,6 @@ namespace Application.DTOs.ServiceItem
 
         // --- நீங்கள் கேட்ட 5 Photos ---
         // (Frontend 5 URL-களை List-ஆக அனுப்பும்)
-        public List<string> ImageUrls { get; set; } = new List<string>();
+        public List<IFormFile> Images { get; set; } = new List<IFormFile>();
     }
 }

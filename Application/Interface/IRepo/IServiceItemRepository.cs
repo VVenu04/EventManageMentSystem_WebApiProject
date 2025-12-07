@@ -14,7 +14,7 @@ namespace Application.Interface.IRepo
         Task<ServiceItem> AddAsync(ServiceItem service);
         Task UpdateAsync(ServiceItem service);
         Task DeleteAsync(ServiceItem service);
-
+        void DeleteImages(IEnumerable<ServiceImage> images);
         Task<ServiceItem> GetByIdAsync(Guid serviceId);
         Task<IEnumerable<ServiceItem>> GetAllAsync();
 

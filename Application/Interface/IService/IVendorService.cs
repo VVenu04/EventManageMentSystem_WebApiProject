@@ -13,6 +13,7 @@ namespace Application.Interface.IService
         Task DeleteVendorAsync(Guid Id);
         Task<VendorDto> GetVendorAsync(Guid vendorId);
         Task<IEnumerable<VendorDto>> GetAllAsync();
-
+        Task<bool> UpdateVendorLogoAsync(Guid vendorId, string logoUrl);
+        Task<bool> UpdateVendorProfilePhotoAsync(Guid vendorId, string photoUrl);
     }
 }

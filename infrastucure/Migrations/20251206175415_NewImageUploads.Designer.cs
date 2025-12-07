@@ -12,8 +12,8 @@ using infrastucure.Data;
 namespace infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251205171846_Danu")]
-    partial class Danu
+    [Migration("20251206175415_NewImageUploads")]
+    partial class NewImageUploads
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

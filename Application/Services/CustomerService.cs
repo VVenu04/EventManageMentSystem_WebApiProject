@@ -59,5 +59,26 @@ namespace Application.Service
             }
             return CustomerMapper.MapToCustomerDto(customer);
         }
+
+        // CustomerService.cs உள்ளே...
+
+        public async Task<bool> UpdateCustomerProfilePhotoAsync(Guid customerId, string photoUrl)
+        {
+            // 1. Customer-ஐ ID வைத்து எடுக்கிறோம் (Repository மூலம்)
+            // குறிப்பு: உங்கள் Repository-ல் condition எப்படி வேலை செய்யும் என்று பார்த்துக்கொள்ளுங்கள் (v => v.CustomerID == customerId)
+            var customer = await _repo.GetByIdAsync(customerId);
+            if (customer == null) return false;
+
+            // 2. Photo URL-ஐ update செய்கிறோம்
+            customer.ProfilePhoto = photoUrl;
+            customer.UpdatedAt = DateTime.UtcNow;
+
+            // 3. Save செய்கிறோம்
+            await _repo.UpdateAsync(customer);
+
+            return true;
+        }
+
+
     }
 }

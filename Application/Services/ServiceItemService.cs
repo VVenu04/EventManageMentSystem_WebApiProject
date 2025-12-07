@@ -4,6 +4,7 @@ using Application.Interface.IRepo;
 using Application.Interface.IService;
 using Application.Mapper;
 using Domain.Entities;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,105 +17,65 @@ namespace Application.Services
         private readonly IServiceItemRepository _serviceRepo;
         private readonly ICategoryRepository _categoryRepo;
         private readonly IEventRepo _eventRepo;
+        private readonly IPhotoService _photoService; 
 
-        public ServiceItemService(IServiceItemRepository serviceRepo, ICategoryRepository categoryRepo, IEventRepo eventRepo)
+        public ServiceItemService(
+            IServiceItemRepository serviceRepo, ICategoryRepository categoryRepo, IEventRepo eventRepo, IPhotoService photoService)
         {
-           _serviceRepo = serviceRepo;
+            _serviceRepo = serviceRepo;
             _categoryRepo = categoryRepo;
             _eventRepo = eventRepo;
+            _photoService = photoService;
         }
 
-        //public async Task<ServiceItemDto> CreateServiceAsync(CreateServiceDto dto, Guid vendorId)
-        //{
-        //    if (dto.ImageUrls == null || !dto.ImageUrls.Any())
-        //        throw new Exception("You must upload at least one photo for the service.");
 
-        //    if (dto.ImageUrls.Count > 5)
-        //        throw new Exception("You cannot add more than 5 photos per service.");
-
-        //    if (await _categoryRepo.GetByIdAsync(dto.CategoryID) == null)
-        //        throw new Exception($"Category with ID {dto.CategoryID} not found.");
-
-        //    if (dto.EventID.HasValue && await _eventRepo.GetByIdAsync(dto.EventID.Value) == null)
-        //        throw new Exception($"Event with ID {dto.EventID.Value} not found.");
-
-        //    var serviceImages = dto.ImageUrls.Select((url, index) => new ServiceImage
-        //    {
-        //        ServiceImageID = Guid.NewGuid(),
-        //        ImageUrl = url,
-        //        IsCover = (index == 0)
-        //    }).ToList();
-
-        //    var service = new ServiceItem
-        //    {
-        //        ServiceItemID = Guid.NewGuid(),
-        //        Name = dto.Name,
-        //        Description = dto.Description,
-        //        Price = dto.Price,
-        //        Location = dto.Location,
-        //        CategoryID = dto.CategoryID,
-        //        EventID = dto.EventID,
-        //        EventPerDayLimit = dto.EventPerDayLimit,
-        //        TimeLimit = dto.TimeLimit,
-        //        VendorID = vendorId,
-        //        Active = true,
-        //        ServiceImages = serviceImages
-        //    };
-
-        //    await _serviceRepo.AddAsync(service);
-
-        //    var fullServiceDetails = await _serviceRepo.GetByIdAsync(service.ServiceItemID);
-
-        //    // இப்போது Map செய்து அனுப்பினால் பெயர்கள் வரும்
-        //    return ServiceMapper.MapToServiceDto(fullServiceDetails);
-        //}
-        public async Task<ServiceItemDto> CreateServiceAsync(CreateServiceDto dto, Guid vendorId)
+        public async Task<ServiceItemDto> CreateServiceAsync(CreateServiceDto dto, List<IFormFile> images, Guid vendorId)
         {
-            // 1. Image Validation
-            if (dto.ImageUrls == null || !dto.ImageUrls.Any())
+            // 1. Image Validation (File Count Check)
+            if (images == null || !images.Any())
                 throw new Exception("You must upload at least one photo for the service.");
 
-            if (dto.ImageUrls.Count > 5)
+            if (images.Count > 5)
                 throw new Exception("You cannot add more than 5 photos per service.");
 
-            // 2. Category Validation
+            // 2. Category & Event Validation (பழைய Code அப்படியே...)
             var category = await _categoryRepo.GetByIdAsync(dto.CategoryID);
-            if (category == null)
-                throw new Exception($"Category with ID {dto.CategoryID} not found.");
-
-            // 3. Events Validation & Fetching (புதிய மாற்றம்)
-            // கொடுக்கப்பட்ட அத்தனை Event ID-களும் Database-ல் இருக்கிறதா என எடுத்து வருகிறோம்.
-            // குறிப்பு: _context.Events அல்லது _eventRepo.GetByIdsAsync போன்ற logic தேவை.
-            // நீங்கள் Repo Pattern பயன்படுத்துவதால், இதைச் செய்ய ஒரு வழி தேவை.
-            // எளிய வழி: _eventRepo-ல் 'GetEventsByIdsAsync' என்று ஒரு method எழுதி அதை அழைக்கலாம். 
-            // அல்லது Loop போட்டு எடுக்கலாம் (சிறிய எண்ணிக்கைக்கு ஓகே).
+            if (category == null) throw new Exception($"Category not found.");
 
             var selectedEvents = new List<Event>();
-            if (dto.EventIDs != null && dto.EventIDs.Any())
+            if (dto.EventIDs != null)
             {
                 foreach (var evtId in dto.EventIDs)
                 {
                     var evt = await _eventRepo.GetByIdAsync(evtId);
-                    if (evt != null)
-                    {
-                        selectedEvents.Add(evt);
-                    }
+                    if (evt != null) selectedEvents.Add(evt);
                 }
-
-                // Optional: ஏதாவது ஒரு Event கூட இல்லை என்றால் Error எறியலாம்
-                if (selectedEvents.Count == 0)
-                    throw new Exception("Invalid Event IDs provided.");
             }
 
-            // 4. Create Service Images List
-            var serviceImages = dto.ImageUrls.Select((url, index) => new ServiceImage
-            {
-                ServiceImageID = Guid.NewGuid(),
-                ImageUrl = url,
-                IsCover = (index == 0)
-            }).ToList();
+            // --- 3. CLOUDINARY UPLOAD LOGIC (இதுதான் முக்கியம்!) ---
+            var serviceImages = new List<ServiceImage>();
 
-            // 5. Create Service Entity
+            // போட்டோ ஒவ்வொன்றாக Cloudinary-ல் ஏற்றுகிறோம்
+            for (int i = 0; i < images.Count; i++)
+            {
+                var file = images[i];
+
+                // IPhotoService-ஐ வைத்து Upload செய்கிறோம் (இதை Constructor-ல் Inject செய்ய வேண்டும்)
+                var uploadResult = await _photoService.AddPhotoAsync(file);
+
+                if (uploadResult.Error != null)
+                    throw new Exception($"Image upload failed: {uploadResult.Error.Message}");
+
+                // Cloudinary தந்த URL-ஐ List-ல் சேர்க்கிறோம்
+                serviceImages.Add(new ServiceImage
+                {
+                    ServiceImageID = Guid.NewGuid(),
+                    ImageUrl = uploadResult.SecureUrl.AbsoluteUri, // Cloudinary URL
+                    IsCover = (i == 0) // முதல் போட்டோ Cover Photo
+                });
+            }
+
+            // 4. Create Service Entity
             var service = new ServiceItem
             {
                 ServiceItemID = Guid.NewGuid(),
@@ -123,107 +84,125 @@ namespace Application.Services
                 Price = dto.Price,
                 Location = dto.Location,
                 CategoryID = dto.CategoryID,
-
-                // EventID = dto.EventID, // <-- இது இனி தேவை இல்லை
-                Events = selectedEvents, // <-- List of Events இங்கே இணைக்கப்படுகிறது
-
+                Events = selectedEvents,
                 EventPerDayLimit = dto.EventPerDayLimit,
                 TimeLimit = dto.TimeLimit,
                 VendorID = vendorId,
                 Active = true,
-                ServiceImages = serviceImages
+                ServiceImages = serviceImages // Cloudinary URLs உள்ள List
             };
 
-            // 6. Save to Database
+            // 5. Save to Database
             await _serviceRepo.AddAsync(service);
 
-            // 7. Fetch Full Details (Includes தேவை)
-            // கவனிக்கவும்: GetByIdAsync செய்யும் போது .Include(s => s.Events) அவசியம்!
+            // 6. Return DTO
             var fullServiceDetails = await _serviceRepo.GetByIdAsync(service.ServiceItemID);
-
             return ServiceMapper.MapToServiceDto(fullServiceDetails);
         }
 
-        public async Task UpdateServiceAsync(Guid serviceId, UpdateServiceDto updateServiceDto, Guid vendorId)
+        public async Task DeleteServiceAsync(Guid serviceId, Guid vendorId)
         {
-            // முக்கியம்: இங்கே Service-ஐ எடுக்கும் போது, அதன் பழைய Events-ஐயும் சேர்த்து (Include) எடுக்க வேண்டும்.
-            // உங்கள் Repository-இல் GetByIdAsync உடன் Include போடும் வசதி இல்லையென்றால், 
-            // தனியாக 'GetServiceWithEventsAsync' என ஒரு method எழுதுவது நல்லது.
-            // எ.கா: var service = await _context.ServiceItems.Include(s => s.Events).Include(s => s.ServiceImages)...
-
-            var service = await _serviceRepo.GetByIdWithDetailsAsync(serviceId); // Include(s => s.Events) அவசியம்!
+            // 1. Get Service with Details (Images, Events)
+            var service = await _serviceRepo.GetByIdAsync(serviceId);
 
             if (service == null) throw new Exception("Service not found");
 
-            if (service.VendorID != vendorId)
-            {
-                throw new Exception("You are not authorized to update this service");
-            }
+            // 2. Verify Ownership
+            if (service.VendorID != vendorId) throw new Exception("Unauthorized to delete this service");
 
-            // --- Validation ---
-            if (updateServiceDto.ImageUrls == null || !updateServiceDto.ImageUrls.Any())
-                throw new Exception("You must have at least one photo for the service.");
+            // 3. Check Dependency (Package)
+            if (await _serviceRepo.IsServiceInAnyPackageAsync(serviceId))
+                throw new Exception($"Cannot delete '{service.Name}' because it is part of one or more Packages.");
 
-            if (updateServiceDto.ImageUrls.Count > 5)
-                throw new Exception("You cannot add more than 5 photos per service.");
+            // 4. Delete
+            await _serviceRepo.DeleteAsync(service);
+        }
 
-            // --- Update Basic Properties ---
-            service.Name = updateServiceDto.Name;
-            service.Description = updateServiceDto.Description;
-            service.Price = updateServiceDto.Price;
-            service.Location = updateServiceDto.Location;
-            service.CategoryID = updateServiceDto.CategoryID;
-            service.EventPerDayLimit = updateServiceDto.EventPerDayLimit;
-            service.TimeLimit = updateServiceDto.TimeLimit;
+        public async Task UpdateServiceAsync(Guid serviceId, UpdateServiceDto dto, Guid vendorId)
+        {
+            // 1. Service-ஐ முழு விவரங்களுடன் எடுக்கவும் (Images & Events)
+            var service = await _serviceRepo.GetByIdWithDetailsAsync(serviceId);
 
-            // --- Update Events (Many-to-Many Logic) ---
-            // 1. பழைய Events இணைப்பை துண்டிக்கவும்
+            if (service == null) throw new Exception("Service not found");
+            if (service.VendorID != vendorId) throw new Exception("Unauthorized");
+
+            // --- A. Update Basic Properties ---
+            service.Name = dto.Name;
+            service.Description = dto.Description;
+            service.Price = dto.Price;
+            service.Location = dto.Location;
+            service.CategoryID = dto.CategoryID;
+            service.EventPerDayLimit = dto.EventPerDayLimit;
+            service.TimeLimit = dto.TimeLimit;
+
+            // --- B. Update Events (Many-to-Many) ---
+            // Events-ஐ Clear செய்துவிட்டு மீண்டும் சேர்ப்பது பாதுகாப்பானது
             service.Events.Clear();
-
-            // 2. புதிய Events-ஐ தேடி சேர்க்கவும்
-            if (updateServiceDto.EventIDs != null && updateServiceDto.EventIDs.Any())
+            if (dto.EventIDs != null && dto.EventIDs.Any())
             {
-                foreach (var evtId in updateServiceDto.EventIDs)
+                foreach (var evtId in dto.EventIDs)
                 {
                     var evt = await _eventRepo.GetByIdAsync(evtId);
-                    if (evt != null)
-                    {
-                        service.Events.Add(evt);
-                    }
+                    if (evt != null) service.Events.Add(evt);
                 }
             }
 
-            // --- Update Images (Existing Logic) ---
-            service.ServiceImages.Clear();
-            foreach (var (url, index) in updateServiceDto.ImageUrls.Select((url, index) => (url, index)))
+            // --- C. Update Images (SMART LOGIC) 🚨 IMPORTANT ---
+
+            // 1. தற்போது DB-ல் உள்ள படங்கள்
+            var existingImages = service.ServiceImages.ToList();
+
+            // 2. Frontend-ல் இருந்து வரும் புதிய லிஸ்ட் (null safety)
+            var incomingUrls = dto.ImageUrls ?? new List<string>();
+
+            // 3. DELETE: DB-ல் இருக்கிறது, ஆனால் புதிய லிஸ்டில் இல்லை -> அதை நீக்கு
+            var imagesToDelete = existingImages
+                .Where(img => !incomingUrls.Contains(img.ImageUrl))
+                .ToList();
+
+            if (imagesToDelete.Any())
+            {
+                // Repository மூலம் நீக்கச் சொல்கிறோம்
+                _serviceRepo.DeleteImages(imagesToDelete);
+            }
+
+            // 4. ADD: புதிய லிஸ்டில் இருக்கிறது, ஆனால் DB-ல் இல்லை -> அதைச் சேர்
+            // (ஏற்கனவே உள்ள படங்களின் URL-ஐ HashSet-ல் எடுப்பது வேகமானது)
+            var existingUrlSet = new HashSet<string>(existingImages.Select(i => i.ImageUrl));
+
+            var imagesToAdd = incomingUrls
+                .Where(url => !existingUrlSet.Contains(url))
+                .ToList();
+
+            foreach (var url in imagesToAdd)
             {
                 service.ServiceImages.Add(new ServiceImage
                 {
                     ServiceImageID = Guid.NewGuid(),
                     ImageUrl = url,
-                    IsCover = (index == 0),
+                    IsCover = false, // பிறகு செட் செய்வோம்
                     ServiceItemID = service.ServiceItemID
                 });
             }
 
-            // --- Save Changes ---
+            // 5. UPDATE COVER PHOTO
+            // லிஸ்டில் உள்ள முதல் படமே எப்போதும் Cover Photo
+            var allCurrentImages = service.ServiceImages.ToList(); // புதுப்பிக்கப்பட்ட லிஸ்ட்
+
+            for (int i = 0; i < incomingUrls.Count; i++)
+            {
+                var url = incomingUrls[i];
+                var imgEntity = allCurrentImages.FirstOrDefault(x => x.ImageUrl == url);
+
+                if (imgEntity != null)
+                {
+                    // முதல் படம் என்றால் True, மற்றவை False
+                    imgEntity.IsCover = (i == 0);
+                }
+            }
+
+            // --- D. Final Save ---
             await _serviceRepo.UpdateAsync(service);
-        }
-
-
-
-
-        public async Task DeleteServiceAsync(Guid serviceId, Guid vendorId)
-        {
-            var service = await _serviceRepo.GetByIdAsync(serviceId);
-            if (service == null) throw new Exception("Service not found");
-
-            if (service.VendorID != vendorId) throw new Exception("Unauthorized");
-
-            if (await _serviceRepo.IsServiceInAnyPackageAsync(serviceId))
-                throw new Exception($"Cannot delete '{service.Name}' because it is part of one or more Packages.");
-
-            await _serviceRepo.DeleteAsync(service);
         }
 
         public async Task<ServiceItemDto> GetServiceByIdAsync(Guid serviceId)

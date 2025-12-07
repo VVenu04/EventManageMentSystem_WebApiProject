@@ -1,21 +1,17 @@
 using Application;
-using Application.Interface.IAuth;
-using Application.Interface.IRepo;
+using Application.Common;
 using Application.Interface.IService;
-using Application.Services;
+using infrastructure.ExternalServices;
 using infrastructure.Hubs;
-using infrastructure.Repositary;
 using infrastucure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Microsoft.Win32;
 using Presentation.Middleware;
 using Presentation.Providers;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
-using Microsoft.OpenApi.Models;
 
 namespace Presentation
 {
@@ -82,7 +78,22 @@ namespace Presentation
         }
     });
             });
-            #endregion
+            #endregion
+
+            #region Photo Upload
+            builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
+            builder.Services.AddScoped<IPhotoService, PhotoService>();
+            #endregion
+
+
+
+
+
+
+
+
+
+
             builder.Services.AddSingleton<SmtpClient>(provider =>
             {
                 var config = provider.GetRequiredService<IConfiguration>();
