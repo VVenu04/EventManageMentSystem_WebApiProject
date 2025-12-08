@@ -30,5 +30,7 @@ namespace Application.Interface.IService
         Task<IEnumerable<PackageDto>> GetAllPackagesAsync();
         Task<IEnumerable<PackageRequestDto>> GetPendingRequestsAsync(Guid vendorId);
         Task<PackageDto> GetPackagePreviewForCollabAsync(Guid packageId, Guid requestingVendorId);
+
+        Task DeletePackageAsync(Guid packageId, Guid vendorId);
     }
 }
