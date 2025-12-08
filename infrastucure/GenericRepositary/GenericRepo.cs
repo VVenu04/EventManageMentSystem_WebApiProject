@@ -8,17 +8,16 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace infrastucure.GenericRepositary
+namespace infrastructure.GenericRepositary
 {
-    public class GenericRepo<T> : IGenericRepo<T> where T : class
+    public class GenericRepo<T>(ApplicationDbContext dbContext) : IGenericRepo<T> where T : class
     {
-        protected readonly ApplicationDbContext _dbContext;
+        protected readonly ApplicationDbContext _dbContext = dbContext;
 
-        public GenericRepo(ApplicationDbContext dbContext)
+        public async Task SaveChangesAsync()
         {
-            _dbContext = dbContext;
+            await _dbContext.SaveChangesAsync();
         }
-
 
         public async Task<T> AddAsync(T entity)
         {

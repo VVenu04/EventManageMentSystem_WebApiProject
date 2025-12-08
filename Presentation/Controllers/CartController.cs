@@ -1,68 +1,96 @@
-﻿using Application.DTOs.Cart;
+﻿using Application.Common; // ApiResponse-க்காக
+using Application.DTOs.Cart;
 using Application.Interface.IService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims; 
+using System;
+using System.Threading.Tasks;
 
 namespace Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
-    public class CartController : ControllerBase
+    [Authorize] 
+    public class CartController : BaseApiController 
     {
-        
-        
-       
-            private readonly ICartService _cartService;
+        private readonly ICartService _cartService;
 
-            public CartController(ICartService cartService)
-            {
-                _cartService = cartService;
-            }
+        public CartController(ICartService cartService)
+        {
+            _cartService = cartService;
+        }
 
-            [HttpPost("add")]
-            public async Task<IActionResult> AddToCart(AddToCartDto dto)
+        [HttpPost("add")]
+        public async Task<IActionResult> AddToCart(AddToCartDto dto)
+        {
+            
+            if (CurrentUserId == Guid.Empty) return Unauthorized(ApiResponse<object>.Failure("User not identified."));
+
+            dto.CustomerID = CurrentUserId;
+
+            try
             {
-                dto.CustomerID = GetCurrentUserId(); // Helper method
                 var cart = await _cartService.AddToCartAsync(dto);
-                return Ok(cart);
+                return Ok(ApiResponse<object>.Success(cart, "Item added to cart successfully."));
             }
-
-            [HttpGet]
-            public async Task<IActionResult> GetMyCart()
+            catch (Exception ex)
             {
-                var userId = GetCurrentUserId();
-                var cart = await _cartService.GetMyCartAsync(userId);
-                return Ok(cart);
+                return BadRequest(ApiResponse<object>.Failure(ex.Message));
             }
+        }
 
-            [HttpDelete("remove/{itemId}")]
-            public async Task<IActionResult> RemoveItem(Guid itemId)
+        [HttpGet]
+        public async Task<IActionResult> GetMyCart()
+        {
+            if (CurrentUserId == Guid.Empty) return Unauthorized(ApiResponse<object>.Failure("User not identified."));
+
+            try
+            {
+                var cart = await _cartService.GetMyCartAsync(CurrentUserId);
+                return Ok(ApiResponse<object>.Success(cart));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ApiResponse<object>.Failure(ex.Message));
+            }
+        }
+
+        [HttpDelete("remove/{itemId}")]
+        public async Task<IActionResult> RemoveItem(Guid itemId)
+        {
+            try
             {
                 await _cartService.RemoveFromCartAsync(itemId);
-                return Ok("Item removed");
+                return Ok(ApiResponse<object?>.Success(null, "Item removed from cart."));
             }
-
-            [HttpPost("checkout")]
-            public async Task<IActionResult> Checkout()
+            catch (Exception ex)
             {
-                var userId = GetCurrentUserId();
-                await _cartService.CheckoutAsync(userId);
-                return Ok("Checkout successful. Proceed to payment.");
+                return BadRequest(ApiResponse<object>.Failure(ex.Message));
             }
-            private Guid GetCurrentUserId()
-            {
-                // Token-இல் உள்ள 'NameId' claim-ஐப் பெறு
-                var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+        }
 
-                if (userIdClaim != null && Guid.TryParse(userIdClaim.Value, out Guid userId))
-                {
-                    return userId;
-                }
-                return Guid.Empty;
+       
+        [HttpPost("checkout")]
+        public async Task<IActionResult> Checkout()
+        {
+            if (CurrentUserId == Guid.Empty) return Unauthorized(ApiResponse<object>.Failure("User not identified."));
+
+            try
+            {
+                // Service-ல் CheckoutAsync மெதட் BookingID-ஐ ரிட்டர்ன் செய்யும்படி மாற்ற வேண்டும்
+                // அல்லது Cart-ஐ Pending-ஆக மாற்றிய பின், அந்த Booking Object-ஐ ரிட்டர்ன் செய்யவும்.
+
+                var bookingId = await _cartService.CheckoutAsync(CurrentUserId); // Service-ஐயும் மாற்ற வேண்டும்
+
+                // 🚨 FIX: Return BookingID so Frontend can go to Payment Page
+                return Ok(ApiResponse<object>.Success(new { bookingId }, "Checkout successful."));
             }
-        
+            catch (Exception ex)
+            {
+                return BadRequest(ApiResponse<object>.Failure(ex.Message));
+            }
+        }
+
     }
 }

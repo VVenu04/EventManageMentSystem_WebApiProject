@@ -13,11 +13,11 @@ namespace Domain.Entities
         public Guid ServiceItemID { get; set; }
 
         [Required]
-        public string Name { get; set; } 
+        public string Name { get; set; }
 
         public Guid VendorID { get; set; }
-        public Guid CategoryID { get; set; }
-        public Guid? EventID { get; set; }
+        public Guid? CategoryID { get; set; }
+        //public Guid? EventID { get; set; }
 
         public string Description { get; set; }
         public decimal Price { get; set; }
@@ -27,12 +27,14 @@ namespace Domain.Entities
         public bool Active { get; set; }
 
         public Vendor Vendor { get; set; }
-        public Event Event { get; set; }
+        //public Event Event { get; set; }
         public Category Category { get; set; }
         //public ICollection<Booking> Bookings { get; set; }
         public ICollection<BookingItem> BookingItems { get; set; }
         public ICollection<PackageItem> PackageItems { get; set; }
         public ICollection<ServiceImage> ServiceImages { get; set; }
+
+        public ICollection<Event> Events { get; set; } = new List<Event>();
 
 
     }

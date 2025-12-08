@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.DTOs.Service
+namespace Application.DTOs.ServiceItem
 {
     public class CreateServiceDto
     {
@@ -20,10 +21,12 @@ namespace Application.DTOs.Service
 
         // Relations
         public Guid CategoryID { get; set; }
-        public Guid? EventID { get; set; }
+        //public Guid? EventID { get; set; }
+
+        public List<Guid> EventIDs { get; set; } = new List<Guid>();
 
         // --- நீங்கள் கேட்ட 5 Photos ---
         // (Frontend 5 URL-களை List-ஆக அனுப்பும்)
-        public List<string> ImageUrls { get; set; }
+        public List<IFormFile> Images { get; set; } = new List<IFormFile>();
     }
 }

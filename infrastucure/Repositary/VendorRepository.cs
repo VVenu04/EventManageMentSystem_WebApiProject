@@ -1,7 +1,8 @@
 ﻿using Application.Interface.IRepo;
 using Domain.Entities;
+using infrastructure.GenericRepositary;
 using infrastucure.Data;
-using infrastucure.GenericRepositary;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,17 @@ namespace infrastructure.Repositary
     {
         public VendorRepository(ApplicationDbContext dbContext) : base(dbContext)
         {
+        }
+        public async Task<Vendor> GetByEmailAsync(string email)
+        {
+            return await _dbContext.Vendors
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
+        }
+
+        public async Task<Vendor> VendorGetByGoogleIdAsync(string googleId)
+        {
+            return await _dbContext.Vendors.FirstOrDefaultAsync(u => u.GoogleId == googleId);
         }
 
         public async Task UpdateAsync(Vendor vendor)

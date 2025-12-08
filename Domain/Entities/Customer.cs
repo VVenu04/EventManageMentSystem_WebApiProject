@@ -17,6 +17,7 @@ namespace Domain.Entities
         public string PasswordHash { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
         public string Location { get; set; }
+        public string GoogleId { get; set; }
         public string ProfilePhoto { get; set; }
 
         public ICollection<Booking> Bookings { get; set; }= new List<Booking>();

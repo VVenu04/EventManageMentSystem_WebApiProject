@@ -26,5 +26,6 @@ namespace Application.DTOs.Service
 
         // --- Photos List ---
         public List<string> ImageUrls { get; set; }
+        public List<string> EventNames { get; set; }
     }
 }

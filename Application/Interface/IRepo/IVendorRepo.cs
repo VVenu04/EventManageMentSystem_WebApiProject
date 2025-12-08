@@ -11,5 +11,7 @@ namespace Application.Interface.IRepo
     public interface IVendorRepo : IGenericRepo<Vendor>
     {
         Task UpdateAsync(Vendor vendor);
+        Task<Vendor> GetByEmailAsync(string email);
+        Task<Vendor> VendorGetByGoogleIdAsync(string googleId);
     }
 }

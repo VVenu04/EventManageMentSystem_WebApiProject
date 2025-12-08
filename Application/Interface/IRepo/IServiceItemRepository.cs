@@ -14,12 +14,14 @@ namespace Application.Interface.IRepo
         Task<ServiceItem> AddAsync(ServiceItem service);
         Task UpdateAsync(ServiceItem service);
         Task DeleteAsync(ServiceItem service);
-
+        void DeleteImages(IEnumerable<ServiceImage> images);
         Task<ServiceItem> GetByIdAsync(Guid serviceId);
         Task<IEnumerable<ServiceItem>> GetAllAsync();
 
         Task<IEnumerable<ServiceItem>> GetByVendorIdAsync(Guid vendorId);
         Task<bool> IsServiceInAnyPackageAsync(Guid serviceId);
         Task<IEnumerable<ServiceItem>> SearchServicesAsync(ServiceSearchDto searchDto);
+        Task<IEnumerable<ServiceItem>> GetByCategoryIdAsync(Guid categoryId);
+        Task<ServiceItem> GetByIdWithDetailsAsync(Guid serviceId);
     }
 }

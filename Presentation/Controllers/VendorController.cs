@@ -11,12 +11,14 @@ namespace Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class VendorController : ControllerBase
+    public class VendorController : BaseApiController
     {
         private readonly IVendorService _vendorService;
-        public VendorController(IVendorService vendorService)
+        private readonly IPhotoService _photoService;
+        public VendorController(IVendorService vendorService, IPhotoService photoService)
         {
             _vendorService = vendorService;
+            _photoService = photoService;
         }
 
         //  AddVendor Method 
@@ -128,5 +130,66 @@ namespace Presentation.Controllers
             // 9. Success Response
             return Ok(ApiResponse<IEnumerable<VendorDto>>.Success(vendors));
         }
+
+
+        // --- 1. Vendor Logo Upload ---
+
+        [HttpPost("UploadLogo/{vendorId}")]
+        public async Task<IActionResult> UploadLogo(Guid vendorId, IFormFile file)
+        {
+            // 1. File இருக்கான்னு செக் பண்றோம்
+            if (file == null || file.Length == 0)
+                return BadRequest(ApiResponse<object>.Failure("No file uploaded."));
+
+            // 2. Vendor இருக்காரான்னு செக் பண்றோம் (Optional but recommended)
+            var existingVendor = await _vendorService.GetVendorAsync(vendorId);
+            if (existingVendor == null)
+                return NotFound(ApiResponse<object>.Failure("Vendor not found."));
+
+            // 3. Cloudinary-ல் Upload பண்றோம் (PhotoService வழியாக)
+            var result = await _photoService.AddPhotoAsync(file);
+
+            if (result.Error != null)
+                return BadRequest(ApiResponse<object>.Failure(result.Error.Message));
+
+            // 4. வந்த URL-ஐ Database-ல் Save பண்றோம்
+            // குறிப்பு: இதற்காக Service Layer-ல் ஒரு method எழுத வேண்டும் (கீழே பாருங்கள்)
+            var updateResult = await _vendorService.UpdateVendorLogoAsync(vendorId, result.SecureUrl.AbsoluteUri);
+
+            if (!updateResult)
+                return StatusCode(500, ApiResponse<object>.Failure("Failed to update logo in database."));
+
+            return Ok(ApiResponse<object>.Success(new { Url = result.SecureUrl.AbsoluteUri }, "Logo uploaded successfully."));
+        }
+
+
+        // --- 2. Vendor Profile Photo Upload ---
+
+        [HttpPost("UploadProfilePhoto/{vendorId}")]
+        public async Task<IActionResult> UploadProfilePhoto(Guid vendorId, IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest(ApiResponse<object>.Failure("No file uploaded."));
+
+            var existingVendor = await _vendorService.GetVendorAsync(vendorId);
+            if (existingVendor == null)
+                return NotFound(ApiResponse<object>.Failure("Vendor not found."));
+
+            var result = await _photoService.AddPhotoAsync(file);
+
+            if (result.Error != null)
+                return BadRequest(ApiResponse<object>.Failure(result.Error.Message));
+
+            // URL-ஐ Database-ல் update செய்கிறோம்
+            var updateResult = await _vendorService.UpdateVendorProfilePhotoAsync(vendorId, result.SecureUrl.AbsoluteUri);
+
+            if (!updateResult)
+                return StatusCode(500, ApiResponse<object>.Failure("Failed to update profile photo."));
+
+            return Ok(ApiResponse<object>.Success(new { Url = result.SecureUrl.AbsoluteUri }, "Profile photo uploaded successfully."));
+        }
+
+
+
     }
 }

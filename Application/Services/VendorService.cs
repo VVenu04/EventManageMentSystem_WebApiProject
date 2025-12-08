@@ -63,5 +63,29 @@ namespace Application.Service
             var vendor = await _vendorRepo.GetByIdAsync(v => v.VendorID == vendorId);
             return VendorMapper.MapToVendorDTO(vendor);
         }
+
+        public async Task<bool> UpdateVendorLogoAsync(Guid vendorId, string logoUrl)
+        {
+            var vendor = await _vendorRepo.GetByIdAsync(v => v.VendorID == vendorId); // அல்லது _context.Vendors.Find(vendorId)
+            if (vendor == null) return false;
+
+            vendor.Logo = logoUrl; // URL-ஐ set பண்றோம்
+            vendor.UpdatedAt = DateTime.UtcNow;
+
+            await _vendorRepo.UpdateAsync(vendor); // Save Changes
+            return true;
+        }
+
+        public async Task<bool> UpdateVendorProfilePhotoAsync(Guid vendorId, string photoUrl)
+        {
+            var vendor = await _vendorRepo.GetByIdAsync(v => v.VendorID == vendorId);
+            if (vendor == null) return false;
+
+            vendor.ProfilePhoto = photoUrl;
+            vendor.UpdatedAt = DateTime.UtcNow;
+
+            await _vendorRepo.UpdateAsync(vendor);
+            return true;
+        }
     }
 }
