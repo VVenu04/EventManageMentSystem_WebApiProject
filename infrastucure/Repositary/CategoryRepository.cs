@@ -1,7 +1,7 @@
 ﻿using Application.Interface.IRepo;
 using Domain.Entities;
+using infrastructure.GenericRepositary;
 using infrastucure.Data;
-using infrastucure.GenericRepositary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,9 +16,9 @@ namespace infrastructure.Repositary
         {
         }
 
-        public Task<Category> GetByIdAsync(Guid id)
+        public async Task<Category> GetByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            return await _dbContext.Categories.FindAsync(id);
         }
 
         public async Task UpdateAsync(Category category)

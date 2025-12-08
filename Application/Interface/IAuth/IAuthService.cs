@@ -1,4 +1,5 @@
-﻿using Application.DTOs.Auth;
+﻿using Application.DTOs;
+using Application.DTOs.Auth;
 using Application.DTOs.Forgot;
 using System;
 using System.Collections.Generic;
@@ -18,8 +19,15 @@ namespace Application.Interface.IAuth
         Task<AuthResponseDto> LoginAdminAsync(LoginDto dto);
         Task<bool> UpdateVendorProfileAsync(Guid vendorId, UpdateVendorProfileDto dto);
         Task<bool> UpdateCustomerProfileAsync(Guid customerId, UpdateCustomerProfileDto dto);
-        Task<ApiResponseDto> ForgotPasswordAsync(ForgotPasswordDto dto);
-        Task<ApiResponseDto> VerifyOtpAsync(VerifyOtpDto dto);
-        Task<ApiResponseDto> ResetPasswordAsync(ResetPasswordDto dto);
+        Task<ApiResponseDto> CustomerForgotPasswordAsync(ForgotPasswordDto dto);
+        Task<ApiResponseDto> CustomerVerifyOtpAsync(VerifyOtpDto dto);
+        Task<ApiResponseDto> CustomerResetPasswordAsync(ResetPasswordDto dto);
+        Task<AuthResponseDto> CustomerSignInWithGoogleAsync(string idToken);
+        Task<ApiResponseDto> VendorForgotPasswordAsync(ForgotPasswordDto dto);
+        Task<ApiResponseDto> VendorVerifyOtpAsync(VerifyOtpDto dto);
+        Task<ApiResponseDto> VendorResetPasswordAsync(ResetPasswordDto dto);
+        Task<AuthResponseDto> VendorSignInWithGoogleAsync(string idToken);
+        Task<CustomerDto> GetCustomerProfileAsync(Guid customerId);
+        Task<VendorDto> GetVendorProfileAsync(Guid vendorId);
     }
 }

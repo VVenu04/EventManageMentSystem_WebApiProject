@@ -16,6 +16,8 @@ namespace Application.DTOs
         public string PhoneNumber { get; set; }
         public string Location { get; set; }
         public string ProfilePhoto { get; set; }
+        public string GoogleId { get; set; } = default!;
+        public decimal WalletBalance { get; set; }
 
     }
 }

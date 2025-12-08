@@ -24,5 +24,15 @@ namespace Application.DTOs
         public string PhoneNumber { get; set; }
 
         public string Password { get; set; }
+        public string CompanyName { get; set; }
+        public string Location { get; set; }
+        public string Description { get; set; }
+        public string Logo { get; set; } // (Photo upload செய்த பின் வரும் URL)
+        public decimal EventPerDayLimit { get; set; }
+        //public string Email { get; set; } // (Photo upload செய்த பின் வரும் URL)
+
+
+
+
     }
 }

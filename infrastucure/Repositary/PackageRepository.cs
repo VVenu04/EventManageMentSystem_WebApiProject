@@ -38,18 +38,52 @@ namespace infrastructure.Repositary
         }
         public async Task UpdateAsync(Package package)
         {
-            _context.Packages.Update(package);
+            // Check if the entity is already being tracked by the context
+            if (_context.Entry(package).State == EntityState.Detached)
+            {
+                _context.Packages.Update(package);
+            }
+
+            // If it is already attached (loaded via GetById), 
+            // we just need to SaveChanges. EF Core already knows it's modified.
+
             await _context.SaveChangesAsync();
         }
 
         public async Task<Package?> GetPackageWithServicesAsync(Guid packageId)
         {
             return await _context.Packages
-                .Include(p => p.Vendor)
+        .Include(p => p.Vendor) // Package Owner
+        .Include(p => p.PackageItems)
+            .ThenInclude(pi => pi.Service)
+                .ThenInclude(s => s.ServiceImages)
+        // ADDED
+        .Include(p => p.PackageItems)
+            .ThenInclude(pi => pi.Service)
+                .ThenInclude(s => s.Vendor) // Load the Service Provider (Vendor) details
+        .FirstOrDefaultAsync(p => p.PackageID == packageId);
+        }
+        public async Task<IEnumerable<Package>> GetAllAsync()
+        {
+            return await _context.Packages
+                .Include(p => p.Vendor) // Owner Name காட்ட
                 .Include(p => p.PackageItems)
-                    .ThenInclude(pi => pi.Service) 
-                        .ThenInclude(s => s.ServiceImages) 
-                .FirstOrDefaultAsync(p => p.PackageID == packageId);
+                    .ThenInclude(pi => pi.Service) // Service Details காட்ட
+                        .ThenInclude(s => s.Vendor) // Service Provider Name காட்ட
+                .ToListAsync();
+        }
+
+
+        public async Task DeleteAsync(Guid packageId)
+        {
+            var package = await _context.Packages.FindAsync(packageId);
+            if (package != null)
+            {
+                _context.Packages.Remove(package);
+                // Cascade delete will usually handle Items/Requests if DB is configured correctly,
+                // otherwise EF Core handles it if entities are loaded.
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

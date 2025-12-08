@@ -30,12 +30,11 @@ namespace infrastructure.Repositary
 
         public async Task<ServiceItem?> GetByIdAsync(Guid serviceId)
         {
-            // Service-ஐ எடுக்கும்போது, related data-வையும் (Vendor, Category) எடு
             return await _context.ServiceItems
                 .Include(s => s.Vendor)
                 .Include(s => s.Category)
-                .Include(s => s.Event)
-                .Include(s => s.ServiceImages)
+                .Include(s => s.Events)        // Many-to-Many
+                .Include(s => s.ServiceImages) // One-to-Many
                 .FirstOrDefaultAsync(s => s.ServiceItemID == serviceId);
         }
 
@@ -44,7 +43,7 @@ namespace infrastructure.Repositary
             return await _context.ServiceItems
                 .Include(s => s.Vendor)
                 .Include(s => s.Category)
-                .Include(s => s.Event)
+                .Include(s => s.Events)
                 .Include(s => s.ServiceImages)
                 .ToListAsync();
         }
@@ -52,22 +51,57 @@ namespace infrastructure.Repositary
         public async Task<IEnumerable<ServiceItem>> GetByVendorIdAsync(Guid vendorId)
         {
             return await _context.ServiceItems
-                .Include(s => s.Category)
-                .Include(s => s.Event)
-                .Where(s => s.VendorID == vendorId)
-                .Include(s => s.ServiceImages)
+                .Include(s => s.Category)      // Category பெயர் தெரிய வேண்டும்
+                .Include(s => s.Events)        // Events தெரிய வேண்டும்
+                .Include(s => s.ServiceImages) // படங்கள் தெரிய வேண்டும்
+                                               // .Include(s => s.Vendor)     // தேவைப்பட்டால் சேர்க்கவும்
+
+                .Where(s => s.VendorID == vendorId) // 🚨 Vendor Filter
+                .OrderByDescending(s => s.ServiceItemID) // புதியது முதலில் வர
                 .ToListAsync();
+        }
+
+        public async Task<ServiceItem?> GetByIdWithDetailsAsync(Guid serviceId)
+        {
+            return await _context.ServiceItems
+                .Include(s => s.Vendor)
+                .Include(s => s.Category)
+                .Include(s => s.Events)
+                .Include(s => s.ServiceImages)
+                .FirstOrDefaultAsync(s => s.ServiceItemID == serviceId);
+        }
+
+        // 🚨 FIX: Just Remove from Context (Do NOT Save here)
+        public void DeleteImages(IEnumerable<ServiceImage> images)
+        {
+            // இது Database-ல் இருந்து Delete Query-ஐ தயார் செய்யும்
+            if (images != null && images.Any())
+            {
+                _context.ServiceImages.RemoveRange(images);
+            }
         }
 
         public async Task UpdateAsync(ServiceItem service)
         {
-            _context.ServiceItems.Update(service);
+            // EF Core ட்ராக்கிங் மூலம் மாற்றங்களைக் கண்டறிந்து சேமிக்கும்
+            // .Update(service) என்று அழைக்கத் தேவையில்லை
             await _context.SaveChangesAsync();
         }
 
+
         public async Task DeleteAsync(ServiceItem service)
         {
+            // 1. தொடர்புடைய படங்களை முதலில் நீக்கவும் (Optional but safe)
+            // (Cascade Delete இருந்தால் இது தேவையில்லை, ஆனால் Explicit ஆக செய்வது நல்லது)
+            if (service.ServiceImages != null && service.ServiceImages.Any())
+            {
+                _context.ServiceImages.RemoveRange(service.ServiceImages);
+            }
+
+            // 2. Service-ஐ நீக்கவும்
             _context.ServiceItems.Remove(service);
+
+            // 3. Save Changes
             await _context.SaveChangesAsync();
         }
         public async Task<bool> IsServiceInAnyPackageAsync(Guid serviceId)
@@ -76,82 +110,53 @@ namespace infrastructure.Repositary
         }
         public async Task<IEnumerable<ServiceItem>> SearchServicesAsync(ServiceSearchDto searchDto)
         {
-            // 1. Query-ஐ உருவாக்கு (Includes உடன்)
-            var query = _context.ServiceItems // (அல்லது ServiceItems)
+            // 1. Query-ஐத் தொடங்குகிறோம் (இன்னும் Database-க்கு போகவில்லை)
+            var query = _context.ServiceItems
                 .Include(s => s.Vendor)
-                .Include(s=>s.Event)
                 .Include(s => s.Category)
-                .Include(s => s.BookingItems!) // Availability Check-க்கு இது கட்டாயம்
-                    .ThenInclude(bi => bi.Booking) // Booking Date-ஐப் பார்க்க இது கட்டாயம்
-                .Where(s => s.Active == true)
+                .Include(s => s.Events)
+                .Include(s => s.ServiceImages)
                 .AsQueryable();
 
-            // 2. Text Search (Null Check சேர்க்கப்பட்டுள்ளது)
+            // 2. SearchTerm இருந்தால் Filter செய்
             if (!string.IsNullOrEmpty(searchDto.SearchTerm))
             {
                 string term = searchDto.SearchTerm.ToLower();
-                query = query.Where(s =>
-                    s.Name.ToLower().Contains(term) ||
-                    s.Description.ToLower().Contains(term) ||
-                    // 🚨 FIX: Vendor null-ஆ என்று பார்க்க வேண்டும்
-                    (s.Vendor != null && s.Vendor.Name.ToLower().Contains(term))
-                );
+                query = query.Where(s => s.Name.ToLower().Contains(term) ||
+                                         s.Description.ToLower().Contains(term) ||
+                                         s.Location.ToLower().Contains(term));
+            }
+
+            // 3. CategoryID இருந்தால் Filter செய்
+            if (searchDto.CategoryID.HasValue)
+            {
+                query = query.Where(s => s.CategoryID == searchDto.CategoryID);
             }
             if (searchDto.EventID.HasValue)
             {
-                // பயனர் கேட்ட EventID உள்ள Services-ஐ மட்டும் காட்டு
-                // (அல்லது EventID null ஆக இருந்தால், அது எல்லா Event-க்கும் பொதுவானது என்று அர்த்தம்)
-                query = query.Where(s => s.EventID == searchDto.EventID.Value || s.EventID == null);
+                // புதிய Code: Events லிஸ்டில் இந்த ID இருக்கிறதா என பார்க்கிறோம்
+                query = query.Where(s => s.Events.Any(e => e.EventID == searchDto.EventID.Value));
             }
-
-            // 3. Filter by Category
-            if (searchDto.CategoryID.HasValue)
-            {
-                query = query.Where(s => s.CategoryID == searchDto.CategoryID.Value);
-            }
-
-            // 4. Filter by Price
+            // 4. Price Range
             if (searchDto.MinPrice.HasValue)
-            {
-                query = query.Where(s => s.Price >= searchDto.MinPrice.Value);
-            }
+                query = query.Where(s => s.Price >= searchDto.MinPrice);
+
             if (searchDto.MaxPrice.HasValue)
-            {
-                query = query.Where(s => s.Price <= searchDto.MaxPrice.Value);
-            }
+                query = query.Where(s => s.Price <= searchDto.MaxPrice);
 
-            // 5. Filter by Location
-            if (!string.IsNullOrEmpty(searchDto.Location))
-            {
-                query = query.Where(s => s.Location.ToLower().Contains(searchDto.Location.ToLower()));
-            }
-
-            // 6. 🚨 Filter by Availability (முக்கியமான Null Check திருத்தம்)
-            if (searchDto.EventDate.HasValue)
-            {
-                var searchDate = searchDto.EventDate.Value.Date;
-
-                query = query.Where(s =>
-                    // Limit 0 என்றால் Unlimited
-                    s.EventPerDayLimit == 0 ||
-
-                    // 🚨 FIX: BookingItems null-ஆ என்று பார்க்க வேண்டும்
-                    (s.BookingItems != null &&
-                     s.BookingItems.Count(bi =>
-                        // 🚨 FIX: bi.Booking null-ஆ என்று பார்க்க வேண்டும்
-                        bi.Booking != null &&
-                        bi.Booking.EventDate.Date == searchDate &&
-                        bi.Booking.BookingStatus != "Cancelled"
-                     ) < s.EventPerDayLimit)
-                );
-            }
-
+            // 5. முடிவுகளை எடு (Execute Query)
             return await query.ToListAsync();
         }
 
-        Task<IEnumerable<ServiceItem>> IServiceItemRepository.SearchServicesAsync(ServiceSearchDto searchDto)
+        public async Task<IEnumerable<ServiceItem>> GetByCategoryIdAsync(Guid categoryId)
         {
-            throw new NotImplementedException();
+            return await _context.ServiceItems
+                .Where(s => s.CategoryID == categoryId)
+                .ToListAsync();
         }
+
+
+       
+
     }
 }

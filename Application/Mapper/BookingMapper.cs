@@ -1,14 +1,14 @@
 ﻿using Application.DTOs.Booking;
-using Domain.Entities; // <-- 1. பிழையைச் சரிசெய்ய, இந்த 'using' வரி மிக முக்கியம்
+using Domain.Entities; // Entity-களைப் பயன்படுத்த இது அவசியம்
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Application.Mapper // (உங்கள் folder பெயர் 'Mappers' எனில்)
+namespace Application.Mapper
 {
     public static class BookingMapper
     {
-        // GetBookingByIdAsync-ஆல் call செய்யப்படும்
+        // GetBookingByIdAsync-ஆல் பயன்படுத்தப்படும்
         public static BookingConfirmationDto MapToConfirmationDto(Booking booking)
         {
             if (booking == null) return null;
@@ -21,11 +21,13 @@ namespace Application.Mapper // (உங்கள் folder பெயர் 'Mapp
                 EventDate = booking.EventDate,
                 TotalPrice = booking.TotalPrice,
                 BookingStatus = booking.BookingStatus,
-                // 'using Domain.Entities;' இருப்பதால், 'item' இப்போது 'BookingItem' எனச் சரியாகப் புரியும்
+
+                // இப்போது 'BookingItems' ஒரு லிஸ்ட் ஆக இருப்பதால் பிழை வராது
                 BookedItems = booking.BookingItems.Select(item => new BookingItemDto
                 {
                     BookingItemID = item.BookingItemID,
-                    ServiceName = item.Service?.Name, // <-- பிழை (Error) இருந்த இடம்
+                    // item.Service என்பது ServiceItem entity-ஐக் குறிக்கும்
+                    ServiceName = item.Service?.Name,
                     ItemPrice = item.ItemPrice,
                     VendorName = item.Service?.Vendor?.Name,
                     TrackingStatus = item.TrackingStatus
@@ -33,7 +35,7 @@ namespace Application.Mapper // (உங்கள் folder பெயர் 'Mapp
             };
         }
 
-        // CreateBookingAsync-ஆல் call செய்யப்படும்
+        // CreateBookingAsync-ஆல் பயன்படுத்தப்படும்
         public static BookingConfirmationDto MapToConfirmationDto(Booking booking, Customer customer, List<ServiceItem> servicesInCart)
         {
             return new BookingConfirmationDto
@@ -46,13 +48,15 @@ namespace Application.Mapper // (உங்கள் folder பெயர் 'Mapp
                 BookingStatus = booking.BookingStatus,
                 BookedItems = booking.BookingItems.Select(item =>
                 {
+                    // ServiceID-ஐ வைத்து லிஸ்டில் தேடுகிறோம்
                     var serviceInCart = servicesInCart.First(s => s.ServiceItemID == item.ServiceItemID);
+
                     return new BookingItemDto
                     {
                         BookingItemID = item.BookingItemID,
                         ServiceName = serviceInCart.Name,
                         ItemPrice = item.ItemPrice,
-                        VendorName = serviceInCart.Vendor.Name,
+                        VendorName = serviceInCart.Vendor?.Name,
                         TrackingStatus = item.TrackingStatus
                     };
                 }).ToList()

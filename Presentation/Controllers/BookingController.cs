@@ -1,15 +1,19 @@
-﻿using Application.DTOs.Booking;
+﻿using Application.Common; 
+using Application.DTOs.Booking;
 using Application.Interface.IService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 
 namespace Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BookingController : ControllerBase
+    public class BookingController : BaseApiController
     {
         private readonly IBookingService _bookingService;
 
@@ -18,73 +22,137 @@ namespace Presentation.Controllers
             _bookingService = bookingService;
         }
 
-        // POST: api/booking
+        // POST: Create Booking 
         [HttpPost]
-        [Authorize(Roles = "Customer")] // Customer மட்டும் தான் Book செய்ய முடியும்
+        [Authorize(Roles = "Customer")]
+        [ProducesResponseType(typeof(ApiResponse<BookingConfirmationDto>), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<BookingConfirmationDto>> CreateBooking(CreateBookingDto createBookingDto)
         {
-            var customerId = GetCurrentCustomerId();
-            if (customerId == Guid.Empty)
+
+            // 1. Auth Check
+            if (CurrentUserId == Guid.Empty)
             {
-                return Unauthorized("Invalid customer token");
+                return Unauthorized(ApiResponse<object>.Failure("Invalid customer token."));
+            }
+
+            // 2. Validation Check
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                return BadRequest(ApiResponse<BookingConfirmationDto>.Failure("Validation failed.", errors));
             }
 
             try
             {
-                var newBooking = await _bookingService.CreateBookingAsync(createBookingDto, customerId);
-                return Ok(newBooking);
-                // அல்லது CreatedAtAction("GetBooking", new { id = newBooking.BookingID }, newBooking);
+                var newBooking = await _bookingService.CreateBookingAsync(createBookingDto, CurrentUserId);
+
+                // 3. Success Response
+                return CreatedAtAction(
+                    nameof(GetBooking),
+                    new { id = newBooking.BookingID },
+                    ApiResponse<BookingConfirmationDto>.Success(newBooking, "Booking created successfully.")
+                );
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message); // e.g., "Service not found"
+                // Example "Service not found", "Date already booked", "Expired date"
+                return BadRequest(ApiResponse<object>.Failure(ex.Message));
             }
         }
 
-        // GET: api/booking/{id}
+        // GET: Get Booking
         [HttpGet("{id}")]
-        [Authorize(Roles = "Customer,Vendor,Admin")] // எல்லோரும் பார்க்கலாம் (Owner-ஆ என check செய்ய வேண்டும்)
+        [Authorize(Roles = "Customer,Vendor,Admin")]
+        [ProducesResponseType(typeof(ApiResponse<BookingConfirmationDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<BookingConfirmationDto>> GetBooking(Guid id)
         {
-            var booking = await _bookingService.GetBookingByIdAsync(id);
-            if (booking == null)
-            {
-                return NotFound();
-            }
-
-            // (Security Check: இந்த Booking, login செய்த Customer-க்குச் சொந்தமானதா என check செய்ய வேண்டும்)
-
-            return Ok(booking);
-        }
-
-
-        // --- Helper Method ---
-        private Guid GetCurrentCustomerId()
-        {
-            // Token-இல் உள்ள 'NameId' claim-ஐப் பெறு
-            var customerIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-            if (customerIdClaim != null && Guid.TryParse(customerIdClaim.Value, out Guid customerId))
-            {
-                return customerId;
-            }
-            return Guid.Empty;
-        }
-
-        [HttpPut("{id}/cancel")]
-        [Authorize(Roles = "Customer")]
-        public async Task<IActionResult> CancelBooking(Guid id)
-        {
-            var customerId = GetCurrentCustomerId(); // Helper method
+            if (id == Guid.Empty) return BadRequest(ApiResponse<object>.Failure("Invalid Booking ID."));
 
             try
             {
-                await _bookingService.CancelBookingAsync(id, customerId);
-                return Ok(new { message = "Booking cancelled and payment refunded successfully." });
+                var booking = await _bookingService.GetBookingByIdAsync(id);
+
+                if (booking == null)
+                {
+                    return NotFound(ApiResponse<object>.Failure("Booking not found."));
+                }
+
+                return Ok(ApiResponse<BookingConfirmationDto>.Success(booking));
             }
             catch (Exception ex)
             {
-                return BadRequest(new { message = ex.Message });
+                return StatusCode(500, ApiResponse<object>.Failure(ex.Message));
             }
         }
+
+        //  PUT: Cancel Booking 
+        [HttpPut("{id}/cancel")]
+        [Authorize(Roles = "Customer")]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> CancelBooking(Guid id)
+        {
+            if (CurrentUserId == Guid.Empty) return Unauthorized(ApiResponse<object>.Failure("Invalid Token"));
+
+            if (id == Guid.Empty) return BadRequest(ApiResponse<object>.Failure("Invalid Booking ID."));
+
+            try
+            {
+                await _bookingService.CancelBookingAsync(id, CurrentUserId);
+
+                // Success Response (No data needed, just message)
+                return Ok(ApiResponse<object>.Success(null, "Booking cancelled and payment refunded successfully."));
+            }
+            catch (Exception ex)
+            {
+                // Example, "Cancellation period expired" or "Unauthorized to cancel"
+                return BadRequest(ApiResponse<object>.Failure(ex.Message));
+            }
+        }
+
+        [HttpGet("vendor/{vendorId}")]
+        // [Authorize(Roles = "Admin,Vendor")] // தேவைப்பட்டால் சேர்க்கவும்
+        [ProducesResponseType(typeof(ApiResponse<IEnumerable<BookingConfirmationDto>>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetBookingsByVendor(Guid vendorId)
+        {
+            try
+            {
+                if (vendorId == Guid.Empty)
+                    return BadRequest(ApiResponse<object>.Failure("Invalid Vendor ID"));
+
+                var bookings = await _bookingService.GetBookingsByVendorAsync(vendorId);
+
+                // Empty List வந்தால் கூட Success அனுப்பலாம் (Frontend-ல் கையாள்வதற்கு)
+                return Ok(ApiResponse<IEnumerable<BookingConfirmationDto>>.Success(bookings ?? new List<BookingConfirmationDto>()));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ApiResponse<object>.Failure(ex.Message));
+            }
+        }
+        [HttpGet("my-bookings")]
+        [Authorize(Roles = "Customer")]
+        [ProducesResponseType(typeof(ApiResponse<IEnumerable<BookingConfirmationDto>>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetMyBookings()
+        {
+            if (CurrentUserId == Guid.Empty) return Unauthorized(ApiResponse<object>.Failure("Invalid Token"));
+
+            try
+            {
+                // Service-ல் இந்த மெதட் தேவை (கீழே பார்க்கவும்)
+                var bookings = await _bookingService.GetBookingsByCustomerAsync(CurrentUserId);
+
+                return Ok(ApiResponse<IEnumerable<BookingConfirmationDto>>.Success(bookings ?? new List<BookingConfirmationDto>()));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ApiResponse<object>.Failure(ex.Message));
+            }
+        }
+
+
     }
 }

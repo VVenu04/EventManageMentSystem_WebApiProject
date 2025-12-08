@@ -13,5 +13,6 @@ namespace Application.Interface.IService
         Task DeleteCustomerAsync(Guid Id);
         Task<CustomerDto> GetCustomerAsync(Guid customerId);
         Task<IEnumerable<CustomerDto>> GetAllAsync();
+        Task<bool> UpdateCustomerProfilePhotoAsync(Guid customerId, string photoUrl);
     }
 }

@@ -2,9 +2,9 @@
 using Application.Interface.IRepo;
 using Application.Interface.IService;
 using infrastructure;
+using infrastructure.GenericRepositary;
 using infrastructure.Repositary;
 using infrastucure.Data;
-using infrastucure.GenericRepositary;
 using infrastucure.Repositary;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -37,7 +37,7 @@ namespace infrastucure
             services.AddScoped<IRealTimeNotifier, SignalRNotifier>();
 
             services.AddScoped<ICategoryRepository, CategoryRepository>();
-            var connectionString = configuration.GetConnectionString("Smart_Function");
+            var connectionString = configuration.GetConnectionString("Smart");
 
             services.AddDbContext<ApplicationDbContext>(option => option.UseSqlServer(connectionString));
 

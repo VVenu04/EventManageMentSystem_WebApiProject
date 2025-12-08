@@ -30,5 +30,32 @@ namespace infrastucure.Data
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Tracking> Tracking { get; set; }
         public DbSet<PackageRequest> PackageRequests { get; set; }
+        public DbSet<ServiceImage> ServiceImages { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // ... (ஏற்கனவே உள்ள ServiceItem விதிகள்) ...
+
+            // 🚨 FIX: PackageRequest - Vendor Relationships (Disable Cascade Delete)
+
+            // 1. Sender Vendor
+            modelBuilder.Entity<PackageRequest>()
+                .HasOne(r => r.SenderVendor)
+                .WithMany()
+                .HasForeignKey(r => r.SenderVendorID)
+                .OnDelete(DeleteBehavior.Restrict); // <-- Vendor அழிந்தால் Request அழியாது, தடுக்கும்.
+
+            // 2. Receiver Vendor
+            modelBuilder.Entity<PackageRequest>()
+                .HasOne(r => r.ReceiverVendor)
+                .WithMany()
+                .HasForeignKey(r => r.ReceiverVendorID)
+                .OnDelete(DeleteBehavior.Restrict); // <-- இதுவும் தடுக்கும்.
+
+
+        }
+
     }
+
 }

@@ -11,12 +11,14 @@ namespace Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CustomerController : ControllerBase
+    public class CustomerController : BaseApiController
     {
         private readonly ICustomerService _customerService;
-        public CustomerController(ICustomerService customerService)
+        private readonly IPhotoService _photoService;
+        public CustomerController(ICustomerService customerService, IPhotoService photoService)
         {
             _customerService = customerService;
+            _photoService = photoService;
         }
 
         // AddCustomer Method 
@@ -125,5 +127,37 @@ namespace Presentation.Controllers
 
             return Ok(ApiResponse<IEnumerable<CustomerDto>>.Success(customers));
         }
+
+
+
+        [HttpPost("UploadProfilePhoto/{customerId}")]
+        public async Task<IActionResult> UploadProfilePhoto(Guid customerId, IFormFile file)
+        {
+            // File இருக்கான்னு செக் பண்றோம்
+            if (file == null || file.Length == 0)
+                return BadRequest(ApiResponse<object>.Failure("No file uploaded."));
+
+            // Customer இருக்காரான்னு செக் பண்றோம்
+            var existingCustomer = await _customerService.GetCustomerAsync(customerId); // அல்லது உங்கள் Get Method
+            if (existingCustomer == null)
+                return NotFound(ApiResponse<object>.Failure("Customer not found."));
+
+            // Cloudinary-ல் Upload பண்றோம்
+            var result = await _photoService.AddPhotoAsync(file);
+
+            if (result.Error != null)
+                return BadRequest(ApiResponse<object>.Failure(result.Error.Message));
+
+            // Database-ல் URL-ஐ update பண்றோம்
+            var updateResult = await _customerService.UpdateCustomerProfilePhotoAsync(customerId, result.SecureUrl.AbsoluteUri);
+
+            if (!updateResult)
+                return StatusCode(500, ApiResponse<object>.Failure("Failed to update profile photo in database."));
+
+            return Ok(ApiResponse<object>.Success(new { Url = result.SecureUrl.AbsoluteUri }, "Profile photo uploaded successfully."));
+        }
+
+
+
     }
 }

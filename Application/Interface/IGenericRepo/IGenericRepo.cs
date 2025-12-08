@@ -13,5 +13,6 @@ namespace Application.Interface.IGenericRepo
         Task DeleteAsync(T entity);
         Task<IEnumerable<T>> GetAllAsync();
         Task<T> GetByIdAsync(Expression<Func<T, bool>> condition);
+        Task SaveChangesAsync();
     }
 }

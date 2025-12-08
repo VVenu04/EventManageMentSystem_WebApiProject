@@ -12,8 +12,8 @@ using infrastucure.Data;
 namespace infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251121064412_Addeddescriptiontovenderr")]
-    partial class Addeddescriptiontovenderr
+    [Migration("20251206175415_NewImageUploads")]
+    partial class NewImageUploads
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -47,15 +47,12 @@ namespace infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AdminEmail")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("AdminName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordHash")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("AdminID");
@@ -70,8 +67,10 @@ namespace infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("BookingStatus")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("CustomerID")
                         .HasColumnType("uniqueidentifier");
@@ -80,7 +79,6 @@ namespace infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Location")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TotalPrice")
@@ -112,7 +110,6 @@ namespace infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("TrackingStatus")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("VendorID")
@@ -138,7 +135,6 @@ namespace infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CategoryName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("CategoryID");
@@ -152,27 +148,38 @@ namespace infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Email")
-                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GoogleId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Location")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordHash")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PasswordResetOtp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("PasswordResetOtpExpiry")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("PhoneNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProfilePhoto")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<decimal>("WalletBalance")
                         .HasColumnType("decimal(18,2)");
@@ -189,7 +196,6 @@ namespace infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("EventName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("EventID");
@@ -207,7 +213,6 @@ namespace infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Data")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("VendorID")
@@ -228,9 +233,23 @@ namespace infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Message")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("RelatedEntityID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserID")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("NotificationID");
 
@@ -250,11 +269,9 @@ namespace infrastructure.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TotalPrice")
@@ -278,10 +295,16 @@ namespace infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<decimal>("ItemPrice")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<Guid>("PackageID")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("ServiceItemID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("VendorID")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("PackageItemID");
@@ -312,12 +335,15 @@ namespace infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Status")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("RequestID");
 
                     b.HasIndex("PackageID");
+
+                    b.HasIndex("ReceiverVendorID");
+
+                    b.HasIndex("SenderVendorID");
 
                     b.ToTable("PackageRequests");
                 });
@@ -344,11 +370,9 @@ namespace infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Status")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StripePaymentIntentId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("VendorEarnings")
@@ -369,7 +393,6 @@ namespace infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ImageUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsCover")
@@ -394,21 +417,16 @@ namespace infrastructure.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
 
-                    b.Property<Guid>("CategoryID")
+                    b.Property<Guid?>("CategoryID")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("EventID")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("EventPerDayLimit")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Location")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -428,8 +446,6 @@ namespace infrastructure.Migrations
 
                     b.HasIndex("CategoryID");
 
-                    b.HasIndex("EventID");
-
                     b.HasIndex("VendorID");
 
                     b.ToTable("ServiceItems");
@@ -445,7 +461,6 @@ namespace infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Status")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("TrackID");
@@ -462,14 +477,15 @@ namespace infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CompanyName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("EventID")
@@ -478,6 +494,9 @@ namespace infrastructure.Migrations
                     b.Property<int>("EventPerDayLimit")
                         .HasColumnType("int");
 
+                    b.Property<string>("GoogleId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Location")
                         .HasColumnType("nvarchar(max)");
 
@@ -485,14 +504,21 @@ namespace infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordHash")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PasswordResetOtp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("PasswordResetOtpExpiry")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProfilePhoto")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RegisterNumber")
@@ -501,11 +527,29 @@ namespace infrastructure.Migrations
                     b.Property<int>("TimeLimit")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("VendorID");
 
                     b.HasIndex("EventID");
 
                     b.ToTable("Vendors");
+                });
+
+            modelBuilder.Entity("EventServiceItem", b =>
+                {
+                    b.Property<Guid>("EventsEventID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ServicesServiceItemID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("EventsEventID", "ServicesServiceItemID");
+
+                    b.HasIndex("ServicesServiceItemID");
+
+                    b.ToTable("EventServiceItem");
                 });
 
             modelBuilder.Entity("CategoryEvent", b =>
@@ -624,7 +668,23 @@ namespace infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Domain.Entities.Vendor", "ReceiverVendor")
+                        .WithMany()
+                        .HasForeignKey("ReceiverVendorID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Vendor", "SenderVendor")
+                        .WithMany()
+                        .HasForeignKey("SenderVendorID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Package");
+
+                    b.Navigation("ReceiverVendor");
+
+                    b.Navigation("SenderVendor");
                 });
 
             modelBuilder.Entity("Domain.Entities.Payment", b =>
@@ -653,13 +713,7 @@ namespace infrastructure.Migrations
                 {
                     b.HasOne("Domain.Entities.Category", "Category")
                         .WithMany("Services")
-                        .HasForeignKey("CategoryID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.Event", "Event")
-                        .WithMany("Services")
-                        .HasForeignKey("EventID");
+                        .HasForeignKey("CategoryID");
 
                     b.HasOne("Domain.Entities.Vendor", "Vendor")
                         .WithMany("Services")
@@ -668,8 +722,6 @@ namespace infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
-
-                    b.Navigation("Event");
 
                     b.Navigation("Vendor");
                 });
@@ -690,6 +742,21 @@ namespace infrastructure.Migrations
                     b.HasOne("Domain.Entities.Event", null)
                         .WithMany("Vendors")
                         .HasForeignKey("EventID");
+                });
+
+            modelBuilder.Entity("EventServiceItem", b =>
+                {
+                    b.HasOne("Domain.Entities.Event", null)
+                        .WithMany()
+                        .HasForeignKey("EventsEventID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.ServiceItem", null)
+                        .WithMany()
+                        .HasForeignKey("ServicesServiceItemID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Domain.Entities.Booking", b =>
@@ -714,8 +781,6 @@ namespace infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.Event", b =>
                 {
                     b.Navigation("Packages");
-
-                    b.Navigation("Services");
 
                     b.Navigation("Vendors");
                 });

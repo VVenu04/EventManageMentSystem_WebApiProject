@@ -13,7 +13,8 @@ namespace Application.Interface.IService
 
         Task<BookingConfirmationDto> GetBookingByIdAsync(Guid bookingId);
 
-        
+        Task<IEnumerable<BookingConfirmationDto>> GetBookingsByVendorAsync(Guid vendorId);
         Task CancelBookingAsync(Guid bookingId, Guid customerId);
+        Task<IEnumerable<BookingConfirmationDto>> GetBookingsByCustomerAsync(Guid customerId);
     }
 }
