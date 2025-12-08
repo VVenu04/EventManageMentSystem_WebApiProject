@@ -1,6 +1,7 @@
 ﻿using Application.Common;
 using Application.DTOs;
 using Application.Interface.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -100,6 +101,8 @@ namespace Presentation.Controllers
         [ProducesErrorResponseType(typeof(ApiResponse<IEnumerable<CategoryDto>>))]
         [ProducesResponseType(typeof(ApiResponse<IEnumerable<CategoryDto>>), StatusCodes.Status200OK)]
         [HttpGet("AllCategory")]
+        [AllowAnonymous]
+
         public async Task<IActionResult> GetAllAsync()
         {
             var categories = await _categoryService.GetAllAsync();
