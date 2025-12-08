@@ -3,6 +3,7 @@ using Application.Interface.IRepo;
 using Application.Interface.IService;
 using Application.Mapper;
 using Domain.Entities;
+using Stripe;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace Application.Services
         private readonly IServiceItemRepository _serviceRepo;
         private readonly IAuthRepository _authRepo;
         private readonly IPackageRepository _packageRepo;
-        
+        private readonly IEmailService _emailService;
         private readonly IPaymentService _paymentService;
         private readonly INotificationService _notificationService;
         public BookingService(IBookingRepository bookingRepo,
@@ -25,6 +26,7 @@ namespace Application.Services
                               IAuthRepository authRepo,
                               IPackageRepository packageRepo,
                               IPaymentService paymentService,
+                              IEmailService emailService,
                               INotificationService notificationService) 
         {
             _bookingRepo = bookingRepo;
@@ -33,6 +35,7 @@ namespace Application.Services
             _packageRepo = packageRepo;
             _paymentService = paymentService;
             _notificationService = notificationService;
+            _emailService = emailService;
         }
 
         public async Task<BookingConfirmationDto> CreateBookingAsync(CreateBookingDto createBookingDto, Guid customerId)
@@ -61,7 +64,7 @@ namespace Application.Services
                 ItemPrice = service.Price, 
                 TrackingStatus = "Confirmed"
             }).ToList();
-
+           
             var booking = new Booking
             {
                 BookingID = Guid.NewGuid(),
@@ -96,8 +99,13 @@ namespace Application.Services
                 "BookingConfirmation",
                 booking.BookingID
             );
+           if( booking.BookingStatus == "Confirmed")
+            {
+                var vendor = await _authRepo.GetVendorByIdAsync(vendorsToBook.Values.First().VendorID);
+                var user = await _authRepo.GetCustomerByIdAsync(customerId);
+                await _emailService.SendBookingEmailAsync(user.Email, user.Name, vendor.CompanyName);
+            }
 
-            
 
 
             // 7. Return Confirmation DTO (Mapper-ஐப் பயன்படுத்தி)
@@ -106,7 +114,7 @@ namespace Application.Services
 
         public async Task<IEnumerable<BookingConfirmationDto>> GetBookingsByCustomerAsync(Guid customerId)
         {
-            // Repo-வில் இந்த மெதட் இருக்க வேண்டும்
+             //Repo-வில் இந்த மெதட் இருக்க வேண்டும்
             var bookings = await _bookingRepo.GetBookingsByCustomerAsync(customerId);
             return bookings.Select(b => BookingMapper.MapToConfirmationDto(b)).ToList();
         }

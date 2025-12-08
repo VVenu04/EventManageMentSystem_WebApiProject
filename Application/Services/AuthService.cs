@@ -164,7 +164,7 @@ namespace Application.Services
 
                 // Save OTP and expiry time (10 minutes validity)
                 user.PasswordResetOtp = otp;
-                user.PasswordResetOtpExpiry = DateTime.UtcNow.AddMinutes(10);
+                user.PasswordResetOtpExpiry = DateTime.UtcNow.AddMinutes(1);
 
                 await _customerRepo.UpdateAsync(user);
 

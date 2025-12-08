@@ -102,25 +102,69 @@ namespace Application.Services
 
         public async Task DeleteServiceAsync(Guid serviceId, Guid vendorId)
         {
-            // 1. Get Service with Details (Images, Events)
-            var service = await _serviceRepo.GetByIdAsync(serviceId);
+            // 1. Service-ஐ Images உடன் சேர்த்து எடுக்கிறோம்
+            var service = await _serviceRepo.GetByIdWithDetailsAsync(serviceId);
 
             if (service == null) throw new Exception("Service not found");
 
-            // 2. Verify Ownership
-            if (service.VendorID != vendorId) throw new Exception("Unauthorized to delete this service");
+            // 2. Authorization Check
+            if (service.VendorID != vendorId)
+                throw new Exception("Unauthorized: You can only delete your own services.");
 
-            // 3. Check Dependency (Package)
-            if (await _serviceRepo.IsServiceInAnyPackageAsync(serviceId))
-                throw new Exception($"Cannot delete '{service.Name}' because it is part of one or more Packages.");
+            // 3. Package Check
+            bool isUsedInPackage = await _serviceRepo.IsServiceInAnyPackageAsync(serviceId);
+            if (isUsedInPackage)
+                throw new Exception($"Cannot delete '{service.Name}' because it is part of an active Package.");
 
-            // 4. Delete
+            // 4. Cloudinary Cleanup (Updated Logic)
+            if (service.ServiceImages != null && service.ServiceImages.Any())
+            {
+                foreach (var img in service.ServiceImages)
+                {
+                    // URL-ல் இருந்து Public ID-ஐ எடுக்கிறோம்
+                    string publicId = GetPublicIdFromUrl(img.ImageUrl);
+
+                    if (!string.IsNullOrEmpty(publicId))
+                    {
+                        // Comment-ஐ எடுத்துவிட்டு, Public ID-ஐ அனுப்புகிறோம்
+                        await _photoService.DeletePhotoAsync(publicId);
+                    }
+                }
+            }
+
+            // 5. Database Delete
             await _serviceRepo.DeleteAsync(service);
         }
 
-        public async Task UpdateServiceAsync(Guid serviceId, UpdateServiceDto dto, Guid vendorId)
+        // --- Helper Method (இதை Class-க்கு கீழே தனியாக போடவும்) ---
+        private string GetPublicIdFromUrl(string url)
         {
-            // 1. Service-ஐ முழு விவரங்களுடன் எடுக்கவும் (Images & Events)
+            if (string.IsNullOrEmpty(url)) return null;
+
+            try
+            {
+                // 1. URL-ஐ URI Format-க்கு மாற்றுகிறோம்
+                var uri = new Uri(url);
+
+                // 2. கடைசி பகுதி (Filename) மட்டும் எடுக்கிறோம் (எ.கா: image.jpg)
+                string fileName = System.IO.Path.GetFileNameWithoutExtension(uri.LocalPath);
+
+                // குறிப்பு: நீங்கள் Folder வைத்து Upload செய்திருந்தால், Folder பெயரையும் எடுக்க வேண்டி வரும்.
+                // இப்போதைக்கு Folder இல்லாமல் செய்தால் இதுவே போதும்.
+
+                return fileName;
+            }
+            catch
+            {
+                return null; // URL சரியில்லை என்றால் null அனுப்பும்
+            }
+        }
+
+
+
+        public async Task UpdateServiceAsync(Guid serviceId, UpdateServiceDto dto, List<IFormFile> newImages, Guid vendorId)
+        {
+            // 1. Service-ஐ படங்கள் மற்றும் Events உடன் எடுக்கிறோம்
             var service = await _serviceRepo.GetByIdWithDetailsAsync(serviceId);
 
             if (service == null) throw new Exception("Service not found");
@@ -135,8 +179,8 @@ namespace Application.Services
             service.EventPerDayLimit = dto.EventPerDayLimit;
             service.TimeLimit = dto.TimeLimit;
 
-            // --- B. Update Events (Many-to-Many) ---
-            // Events-ஐ Clear செய்துவிட்டு மீண்டும் சேர்ப்பது பாதுகாப்பானது
+
+            // --- B. Update Events (Clear & Add) ---
             service.Events.Clear();
             if (dto.EventIDs != null && dto.EventIDs.Any())
             {
@@ -147,63 +191,77 @@ namespace Application.Services
                 }
             }
 
-            // --- C. Update Images (SMART LOGIC) 🚨 IMPORTANT ---
+            // --- C. Update Images (The Smart Logic) ---
 
-            // 1. தற்போது DB-ல் உள்ள படங்கள்
-            var existingImages = service.ServiceImages.ToList();
+            // 1. Frontend-ல் மிச்சம் இருக்கும் பழைய படங்கள் (Kept URLs)
+            // குறிப்பு: Frontend-ல் ஒரு படத்தை Delete பண்ணினால், அந்த URL இந்த லிஸ்டில் வராது.
+            var keptUrls = dto.ImageUrls ?? new List<string>();
 
-            // 2. Frontend-ல் இருந்து வரும் புதிய லிஸ்ட் (null safety)
-            var incomingUrls = dto.ImageUrls ?? new List<string>();
+            // 2. DB-ல் உள்ள மொத்த படங்கள்
+            var dbImages = service.ServiceImages.ToList();
 
-            // 3. DELETE: DB-ல் இருக்கிறது, ஆனால் புதிய லிஸ்டில் இல்லை -> அதை நீக்கு
-            var imagesToDelete = existingImages
-                .Where(img => !incomingUrls.Contains(img.ImageUrl))
+            // 3. DELETE LOGIC: DB-ல் இருக்கு, ஆனால் keptUrls-ல் இல்லை என்றால் -> DELETE
+            var imagesToDelete = dbImages
+                .Where(img => !keptUrls.Contains(img.ImageUrl))
                 .ToList();
 
-            if (imagesToDelete.Any())
+            foreach (var img in imagesToDelete)
             {
-                // Repository மூலம் நீக்கச் சொல்கிறோம்
-                _serviceRepo.DeleteImages(imagesToDelete);
-            }
-
-            // 4. ADD: புதிய லிஸ்டில் இருக்கிறது, ஆனால் DB-ல் இல்லை -> அதைச் சேர்
-            // (ஏற்கனவே உள்ள படங்களின் URL-ஐ HashSet-ல் எடுப்பது வேகமானது)
-            var existingUrlSet = new HashSet<string>(existingImages.Select(i => i.ImageUrl));
-
-            var imagesToAdd = incomingUrls
-                .Where(url => !existingUrlSet.Contains(url))
-                .ToList();
-
-            foreach (var url in imagesToAdd)
-            {
-                service.ServiceImages.Add(new ServiceImage
+                // Cloudinary-ல் இருந்து நீக்குகிறோம் (Public ID வைத்து)
+                string publicId = GetPublicIdFromUrl(img.ImageUrl);
+                if (!string.IsNullOrEmpty(publicId))
                 {
-                    ServiceImageID = Guid.NewGuid(),
-                    ImageUrl = url,
-                    IsCover = false, // பிறகு செட் செய்வோம்
-                    ServiceItemID = service.ServiceItemID
-                });
-            }
-
-            // 5. UPDATE COVER PHOTO
-            // லிஸ்டில் உள்ள முதல் படமே எப்போதும் Cover Photo
-            var allCurrentImages = service.ServiceImages.ToList(); // புதுப்பிக்கப்பட்ட லிஸ்ட்
-
-            for (int i = 0; i < incomingUrls.Count; i++)
-            {
-                var url = incomingUrls[i];
-                var imgEntity = allCurrentImages.FirstOrDefault(x => x.ImageUrl == url);
-
-                if (imgEntity != null)
-                {
-                    // முதல் படம் என்றால் True, மற்றவை False
-                    imgEntity.IsCover = (i == 0);
+                    await _photoService.DeletePhotoAsync(publicId);
                 }
+
+                // DB-ல் இருந்து நீக்குகிறோம்
+                // குறிப்பு: EF Core தானாகவே இதை Track செய்யும், நாம் Collection-ல் இருந்து Remove செய்தாலே போதும்.
+                service.ServiceImages.Remove(img);
+            }
+
+            // 4. ADD LOGIC: புதிய Files-ஐ Upload செய்கிறோம்
+            if (newImages != null && newImages.Count > 0)
+            {
+                // மொத்த படங்கள் 5-க்கு மேல் போகிறதா என்று செக் பண்ணலாம்
+                if ((service.ServiceImages.Count + newImages.Count) > 5)
+                    throw new Exception("Total photos cannot exceed 5.");
+
+                foreach (var file in newImages)
+                {
+                    var uploadResult = await _photoService.AddPhotoAsync(file);
+                    if (uploadResult.Error == null)
+                    {
+                        service.ServiceImages.Add(new ServiceImage
+                        {
+                            ServiceImageID = Guid.NewGuid(),
+                            ImageUrl = uploadResult.SecureUrl.AbsoluteUri,
+                            IsCover = false,
+                            ServiceItemID = service.ServiceItemID
+                        });
+                    }
+                }
+            }
+
+            // 5. UPDATE COVER PHOTO (Optional)
+            // லிஸ்டில் உள்ள முதல் படமே Cover Photo
+            var allImages = service.ServiceImages.ToList();
+            for (int i = 0; i < allImages.Count; i++)
+            {
+                allImages[i].IsCover = (i == 0);
             }
 
             // --- D. Final Save ---
             await _serviceRepo.UpdateAsync(service);
         }
+
+
+
+
+
+
+
+
+
 
         public async Task<ServiceItemDto> GetServiceByIdAsync(Guid serviceId)
         {
@@ -225,7 +283,6 @@ namespace Application.Services
 
         public async Task<IEnumerable<ServiceItemDto>> SearchServicesAsync(ServiceSearchDto searchDto)
         {
-            // 🚨 இங்கே 'throw new NotImplementedException()' இருக்கக்கூடாது.
 
             var services = await _serviceRepo.SearchServicesAsync(searchDto);
 
