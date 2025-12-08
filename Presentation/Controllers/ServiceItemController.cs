@@ -74,19 +74,24 @@ namespace Presentation.Controllers
             return Ok(ApiResponse<ServiceItemDto>.Success(service));
         }
 
-        //  GET: Get Services By Vendor (Public)
         [HttpGet("vendor/{vendorId}")]
         [AllowAnonymous]
         [ProducesResponseType(typeof(ApiResponse<IEnumerable<ServiceItemDto>>), StatusCodes.Status200OK)]
-        // குறிப்பு: Return Type-ஐ 'IEnumerable' என்று மாற்றியுள்ளேன் (List வருவதால்)
         public async Task<ActionResult<IEnumerable<ServiceItemDto>>> GetServicesByVendor(Guid vendorId)
         {
             if (vendorId == Guid.Empty) return BadRequest(ApiResponse<object>.Failure("Invalid Vendor ID."));
 
-            var services = await _serviceService.GetServicesByVendorAsync(vendorId);
+            try
+            {
+                var services = await _serviceService.GetServicesByVendorAsync(vendorId);
 
-            // Return empty list instead of 404 if vendor has no services
-            return Ok(ApiResponse<IEnumerable<ServiceItemDto>>.Success(services ?? new List<ServiceItemDto>()));
+                // 🚨 Success Response with Data (or Empty List)
+                return Ok(ApiResponse<IEnumerable<ServiceItemDto>>.Success(services ?? new List<ServiceItemDto>()));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ApiResponse<object>.Failure(ex.Message));
+            }
         }
 
         //  GET: Search Services (Public) 

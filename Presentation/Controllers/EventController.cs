@@ -1,6 +1,7 @@
 ﻿using Application.Common;
 using Application.DTOs;
 using Application.Interface.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System; 
@@ -113,6 +114,7 @@ namespace Presentation.Controllers
         [ProducesErrorResponseType(typeof(ApiResponse<IEnumerable<EventDto>>))]
         [ProducesResponseType(typeof(ApiResponse<IEnumerable<EventDto>>), StatusCodes.Status200OK)]
         [HttpGet("AllEvent")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAllAsync()
         {
             var events = await _eventService.GetAllAsync();

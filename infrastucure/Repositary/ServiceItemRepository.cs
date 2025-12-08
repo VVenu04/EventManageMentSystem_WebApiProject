@@ -51,10 +51,13 @@ namespace infrastructure.Repositary
         public async Task<IEnumerable<ServiceItem>> GetByVendorIdAsync(Guid vendorId)
         {
             return await _context.ServiceItems
-                .Include(s => s.Category)
-                .Include(s => s.Events)
-                .Where(s => s.VendorID == vendorId)
-                .Include(s => s.ServiceImages)
+                .Include(s => s.Category)      // Category பெயர் தெரிய வேண்டும்
+                .Include(s => s.Events)        // Events தெரிய வேண்டும்
+                .Include(s => s.ServiceImages) // படங்கள் தெரிய வேண்டும்
+                                               // .Include(s => s.Vendor)     // தேவைப்பட்டால் சேர்க்கவும்
+
+                .Where(s => s.VendorID == vendorId) // 🚨 Vendor Filter
+                .OrderByDescending(s => s.ServiceItemID) // புதியது முதலில் வர
                 .ToListAsync();
         }
 
