@@ -17,19 +17,22 @@ namespace Application.Services
         private readonly IServiceItemRepository _serviceRepo;
         private readonly IPackageRequestRepository _requestRepo;
         private readonly INotificationService _notificationService;
+        private readonly IBookingRepository _bookingRepo;
 
         public PackageService(IPackageRepository packageRepo,
                               IServiceItemRepository serviceRepo,
                               IPackageRequestRepository requestRepo,
-                              INotificationService notificationService)
+                              INotificationService notificationService,
+                              IBookingRepository bookingRepo)
         {
             _packageRepo = packageRepo;
             _serviceRepo = serviceRepo;
             _requestRepo = requestRepo;
             _notificationService = notificationService;
+            _bookingRepo = bookingRepo;
         }
 
-        // 1. Create Package (Optimized: One-Shot Save)
+        // 1. Create Package (FIXED: Threading Issue Resolved)
         public async Task<PackageDto> CreatePackageAsync(CreatePackageDto dto, Guid ownerId)
         {
             // A. Initialize the Package
@@ -41,17 +44,21 @@ namespace Application.Services
                 Status = "Draft",
                 IsActive = false,
                 TotalPrice = 0,
-                PackageItems = new List<PackageItem>(), // Initialize list
-                PackageRequests = new List<PackageRequest>() // Initialize list
+                PackageItems = new List<PackageItem>(),
+                PackageRequests = new List<PackageRequest>()
             };
 
-            // B. Add Services to the Object (IN MEMORY - NO DB CALLS YET)
+            // 
+            // <--- CHANGE 1: Create a list to hold vendors we need to notify later
+            var vendorsToNotify = new List<Guid>();
+
+            // B. Add Services to the Object
             if (dto.ServiceItemIDs != null && dto.ServiceItemIDs.Any())
             {
                 foreach (var serviceId in dto.ServiceItemIDs)
                 {
                     var service = await _serviceRepo.GetByIdAsync(serviceId);
-                    if (service == null) continue; // Skip invalid services
+                    if (service == null) continue;
 
                     // 1. Add Item
                     package.PackageItems.Add(new PackageItem
@@ -66,7 +73,7 @@ namespace Application.Services
                     // 2. Update Total Price
                     package.TotalPrice += service.Price;
 
-                    // 3. Handle Collaboration Request (If needed)
+                    // 3. Handle Collaboration Request
                     if (service.VendorID != ownerId)
                     {
                         // Add to the Package's collection directly
@@ -80,20 +87,30 @@ namespace Application.Services
                             CreatedAt = DateTime.UtcNow
                         });
 
-                        // Notify (Fire and Forget)
-                        _ = _notificationService.SendNotificationAsync(
-                            service.VendorID,
-                            $"Collaboration Invite: You have a new request for package '{package.Name}'.",
-                            "PackageInvite",
-                            package.PackageID
-                        );
+                        // <--- CHANGE 2: Do NOT send notification here. Just add to the list.
+                        // This prevents the "Second operation started on this context" error.
+                        if (!vendorsToNotify.Contains(service.VendorID))
+                        {
+                            vendorsToNotify.Add(service.VendorID);
+                        }
                     }
                 }
             }
 
-            // C. SAVE EVERYTHING ONCE
-            // This will save the Package, The Items, AND The Requests in one transaction.
+            // C. SAVE EVERYTHING ONCE (Synchronously await this)
             await _packageRepo.AddAsync(package);
+
+            // <--- CHANGE 3: Send Notifications NOW (After DB is free)
+            foreach (var vendorId in vendorsToNotify)
+            {
+                // We await this to ensure it runs safely
+                await _notificationService.SendNotificationAsync(
+                    vendorId,
+                    $"Collaboration Invite: You have a new request for package '{package.Name}'.",
+                    "PackageInvite",
+                    package.PackageID
+                );
+            }
 
             return await GetPackageByIdAsync(package.PackageID);
         }
@@ -101,13 +118,16 @@ namespace Application.Services
         // 2. Add Services (With Collaboration Logic)
         public async Task AddServicesToPackageAsync(AddServicesToPackageDto dto, Guid ownerId)
         {
-            // 1. Get Package (Tracking is ON by default)
+            // 1. Get Package
             var package = await _packageRepo.GetPackageWithServicesAsync(dto.PackageID);
 
             if (package == null) throw new Exception("Package not found.");
             if (package.VendorID != ownerId) throw new Exception("Only the package owner can add services.");
 
             bool dataChanged = false;
+
+            // <--- CHANGE 4: Apply same logic here (List instead of immediate send)
+            var vendorsToNotify = new List<Guid>();
 
             foreach (var serviceId in dto.ServiceItemIDs)
             {
@@ -147,10 +167,13 @@ namespace Application.Services
                             CreatedAt = DateTime.UtcNow
                         };
 
-                        // Add Request to Context directly. 
-                        // Do NOT use _requestRepo.AddAsync here if it calls SaveChanges immediately.
-                        // It is safer to rely on the final package update to save everything.
                         await _requestRepo.AddAsync(request);
+
+                        // Add to list to notify later
+                        if (!vendorsToNotify.Contains(service.VendorID))
+                        {
+                            vendorsToNotify.Add(service.VendorID);
+                        }
                     }
                 }
             }
@@ -158,19 +181,30 @@ namespace Application.Services
             // 4. Final Save
             if (dataChanged)
             {
-                // Because 'package' is tracked, this updates Package, Items, and Requests
                 await _packageRepo.UpdateAsync(package);
+            }
+
+            // <--- CHANGE 5: Send Notifications after update is complete
+            foreach (var vendorId in vendorsToNotify)
+            {
+                await _notificationService.SendNotificationAsync(
+                    vendorId,
+                    $"Collaboration Invite: You have a new request for package '{package.Name}'.",
+                    "PackageInvite",
+                    package.PackageID
+                );
             }
         }
 
-        // 3. Publish Package (Check Requests)
+        // 3. Publish Package (Updated with Notification Logic)
         public async Task PublishPackageAsync(Guid packageId, Guid vendorId)
         {
+            // 1. Get Package with Items
             var package = await _packageRepo.GetPackageWithServicesAsync(packageId);
             if (package == null) throw new Exception("Package not found.");
             if (package.VendorID != vendorId) throw new Exception("Unauthorized.");
 
-            // --- FIX: Use the new method that checks by PackageID ---
+            // 2. Ensure all requests are accepted
             var pendingRequests = await _requestRepo.GetPendingRequestsByPackageAsync(packageId);
 
             if (pendingRequests.Any())
@@ -178,9 +212,32 @@ namespace Application.Services
                 throw new Exception("Cannot publish: Waiting for partner vendors to accept collaboration.");
             }
 
+            // 3. Update Status
             package.Status = "Published";
             package.IsActive = true;
             await _packageRepo.UpdateAsync(package);
+
+            if (package.PackageItems != null && package.PackageItems.Any())
+            {
+                // Find all unique vendors involved in this package, excluding the owner 
+                var collaborators = package.PackageItems
+                    .Select(item => item.VendorID) // Ensure PackageItem has VendorID populated
+                    .Distinct()
+                    .Where(vid => vid != vendorId) // Don't notify the person publishing it
+                    .ToList();
+
+                foreach (var collaboratorId in collaborators)
+                {
+                    string message = $"Great news! The package '{package.Name}' (which includes your service) has been PUBLISHED by {package.Vendor?.Name ?? "the owner"}.";
+
+                    await _notificationService.SendNotificationAsync(
+                        collaboratorId,       // Receiver 
+                        message,              // Message
+                        "PackagePublished",   // Notification Type
+                        packageId             // Related Entity ID
+                    );
+                }
+            }
         }
 
         // 4. Invite Vendor (Explicit)
@@ -286,10 +343,7 @@ namespace Application.Services
 
             foreach (var req in requests)
             {
-                // Sender Info (Navigation Property இல்லையென்றால் தனியாக எடுக்கவும்)
                 var sender = req.SenderVendor;
-                // அல்லது: var sender = await _vendorRepo.GetByIdAsync(req.SenderVendorID);
-
                 requestDtos.Add(new PackageRequestDto
                 {
                     RequestID = req.RequestID,
@@ -305,22 +359,66 @@ namespace Application.Services
 
             return requestDtos;
         }
+
         public async Task<PackageDto> GetPackagePreviewForCollabAsync(Guid packageId, Guid requestingVendorId)
         {
-            // 1. அந்த பேக்கேஜுக்கான Request இந்த வெண்டருக்கு வந்துள்ளதா எனச் சரிபார்
             var request = await _requestRepo.GetRequestAsync(packageId, requestingVendorId);
 
-            // Request இல்லை என்றால் பார்க்க அனுமதி இல்லை
             if (request == null)
             {
                 throw new Exception("Access Denied: You do not have an invitation for this package.");
             }
 
-            // 2. பேக்கேஜ் விபரங்களை எடு
             var package = await _packageRepo.GetPackageWithServicesAsync(packageId);
-
-            // 3. DTO-ாக மாற்றி அனுப்பு (ஏற்கனவே உள்ள Helper-ஐப் பயன்படுத்தலாம்)
             return MapToPackageDto(package);
         }
-    }
+
+
+        // NEW METHOD: Delete Package
+        // ==============================================
+        public async Task DeletePackageAsync(Guid packageId, Guid vendorId)
+        {
+            // 1. Get Package details (needed to find collaborators)
+            var package = await _packageRepo.GetPackageWithServicesAsync(packageId);
+
+            if (package == null) throw new Exception("Package not found.");
+
+            // 2. Verify Ownership
+            if (package.VendorID != vendorId)
+                throw new Exception("Unauthorized: You can only delete your own packages.");
+
+            // 3. CHECK BOOKINGS (Crucial Step)
+            bool hasBookings = await _bookingRepo.IsPackageBookedAsync(packageId);
+            if (hasBookings)
+            {
+                throw new Exception("Cannot delete: This package has existing bookings. You can only deactivate it.");
+            }
+
+            // 4. Collect Collaborators to Notify (Before deleting)
+            var vendorsToNotify = new List<Guid>();
+            if (package.PackageItems != null)
+            {
+                vendorsToNotify = package.PackageItems
+                    .Select(pi => pi.VendorID)
+                    .Distinct()
+                    .Where(id => id != vendorId) // Exclude owner
+                    .ToList();
+            }
+
+            // 5. Delete from DB
+            await _packageRepo.DeleteAsync(packageId);
+
+            // 6. Notify Collaborators
+            foreach (var collabId in vendorsToNotify)
+            {
+                await _notificationService.SendNotificationAsync(
+                    collabId,
+                    $"The package '{package.Name}' has been deleted by the owner.",
+                    "PackageDeleted",
+                    Guid.Empty // No related ID because it's deleted
+                );
+            }
+        }
+    
+}
 }

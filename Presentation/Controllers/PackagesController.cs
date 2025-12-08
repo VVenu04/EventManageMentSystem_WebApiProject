@@ -240,5 +240,25 @@ namespace Presentation.Controllers
                 return BadRequest(ApiResponse<object>.Failure(ex.Message));
             }
         }
+
+
+        // DELETE: api/Packages/{id}
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Vendor")]
+        public async Task<IActionResult> DeletePackage(Guid id)
+        {
+            if (CurrentUserId == Guid.Empty) return Unauthorized(ApiResponse<object>.Failure("Invalid Token."));
+
+            try
+            {
+                await _packageService.DeletePackageAsync(id, CurrentUserId);
+                return Ok(ApiResponse<object>.Success(null, "Package deleted successfully and collaborators notified."));
+            }
+            catch (Exception ex)
+            {
+                // This will catch the "Cannot delete: This package has existing bookings" error
+                return BadRequest(ApiResponse<object>.Failure(ex.Message));
+            }
+        }
     }
 }

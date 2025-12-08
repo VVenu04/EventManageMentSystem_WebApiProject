@@ -20,5 +20,7 @@ namespace Application.Interface.IRepo
         Task AddItemToCartAsync(BookingItem item);
         Task RemoveItemFromCartAsync(Guid itemId);
         Task<IEnumerable<Booking>> GetBookingsByCustomerAsync(Guid customerId);
+
+        Task<bool> IsPackageBookedAsync(Guid packageId);
     }
 }
