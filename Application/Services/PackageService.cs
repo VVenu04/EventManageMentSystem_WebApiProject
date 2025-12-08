@@ -317,6 +317,27 @@ namespace Application.Services
         {
             if (package == null) return null;
 
+            // 1. Create the Image List
+            var collectedImages = new List<string>();
+
+            if (package.PackageItems != null)
+            {
+                foreach (var item in package.PackageItems)
+                {
+                    // Check if the service has any images
+                    if (item.Service != null &&
+                        item.Service.ServiceImages != null &&
+                        item.Service.ServiceImages.Any())
+                    {
+                        // Take the FIRST image from this service
+                        var firstImage = item.Service.ServiceImages.First().ImageUrl;
+
+                        // Add to our collection
+                        collectedImages.Add(firstImage);
+                    }
+                }
+            }
+
             return new PackageDto
             {
                 PackageID = package.PackageID,
@@ -325,6 +346,10 @@ namespace Application.Services
                 Active = package.IsActive,
                 VendorID = package.VendorID,
                 VendorName = package.Vendor?.Name ?? "Unknown Vendor",
+
+                //  Assign the collected images here
+                PackageImages = collectedImages,
+
                 ServicesInPackage = package.PackageItems.Select(item => new SimpleServiceDto
                 {
                     ServiceItemID = item.ServiceItemID ?? Guid.Empty,
