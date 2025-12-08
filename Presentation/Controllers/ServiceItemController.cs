@@ -123,7 +123,7 @@ namespace Presentation.Controllers
         [HttpPut("{id}")]
         [Authorize(Roles = "Vendor")]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> UpdateService(Guid id, [FromForm] UpdateServiceDto updateServiceDto, [FromForm] List<IFormFile> newImages)
+        public async Task<IActionResult> UpdateService(Guid id, [FromBody] UpdateServiceDto updateServiceDto)
         {
             if (CurrentUserId == Guid.Empty) return Unauthorized(ApiResponse<object>.Failure("Invalid Token"));
 
@@ -131,9 +131,7 @@ namespace Presentation.Controllers
 
             try
             {
-                // Service-க்கு Data + New Files அனுப்புகிறோம்
-                await _serviceService.UpdateServiceAsync(id, updateServiceDto, newImages, CurrentUserId);
-
+                await _serviceService.UpdateServiceAsync(id, updateServiceDto, CurrentUserId);
                 return Ok(ApiResponse<object>.Success(null, "Service updated successfully."));
             }
             catch (Exception ex)
