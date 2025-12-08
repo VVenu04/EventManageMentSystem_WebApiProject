@@ -36,7 +36,112 @@ namespace Application.Services
 
             await _smtpClient.SendMailAsync(mailMessage);
         }
+        public async Task SendBookingEmailAsync(string toEmail, string customername , string category  )
+        {
+            var senderEmail = _configuration["EmailSettings:SenderEmail"];
+            var senderName = _configuration["EmailSettings:SenderName"];
+               var mailMessage = new MailMessage
+            {
+                From = new MailAddress(senderEmail, senderName),
+                Subject = "Password Reset OTP - Action Required",
+                Body = GetBookingEmailTemplate(category , customername),
+                IsBodyHtml = true
+            };
+            mailMessage.To.Add(toEmail);
 
+            await _smtpClient.SendMailAsync(mailMessage);
+        }
+        private string GetBookingEmailTemplate(string category, string customername )
+        {
+            return $@"<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <style>
+        body {{
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }}
+        .container {{
+            max-width: 650px;
+            margin: 30px auto;
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }}
+        .header {{
+            background: linear-gradient(135deg, #1e88e5 0%, #3949ab 100%);
+            padding: 30px;
+            text-align: center;
+            color: #fff;
+        }}
+        .header h1 {{
+            margin: 0;
+            font-size: 26px;
+            font-weight: 700;
+        }}
+        .content {{
+            padding: 30px;
+        }}
+        .greeting {{
+            font-size: 18px;
+            font-weight: 600;
+        }}
+        .details {{
+            margin-top: 25px;
+            background: #f9fafb;
+            padding: 18px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }}
+        .details p {{
+            margin: 8px 0;
+            font-size: 15px;
+        }}
+        .footer {{
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            font-size: 12px;
+            color: #777;
+            border-top: 1px solid #eaeaea;
+        }}
+    </style>
+</head>
+<body>
+    <div class='container'>
+        <div class='header'>
+            <h1>✔ Booking Confirmation</h1>
+        </div>
+
+        <div class='content'>
+            <p class='greeting'>Hello <strong>{customername}</strong>,</p>
+
+            <p>Thank you for your booking! Your reservation has been successfully confirmed.</p>
+
+            <div class='details'>
+                <p><strong>Booking Category:</strong> {category}</p>
+                <p><strong>Status:</strong> Confirmed</p>
+            </div>
+
+            <p style='margin-top:20px; color:#555;'>
+                If you have any questions or need support, feel free to contact us anytime.
+            </p>
+        </div>
+
+        <div class='footer'>
+            <p>This is an automated confirmation email. Please do not reply.</p>
+            <p>&copy; {DateTime.Now.Year} Your Company Name</p>
+        </div>
+    </div>
+</body>
+</html>";
+        }
         private string GetOtpEmailTemplate(string otp, string userName)
         {
             return $@"

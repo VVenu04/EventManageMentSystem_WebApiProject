@@ -9,5 +9,6 @@ namespace Application.Interface.IService
     public interface IEmailService
     {
         Task SendOtpEmailAsync(string toEmail, string otp, string userName);
+        Task SendBookingEmailAsync(string toEmail, string customername, string category);
     }
 }
