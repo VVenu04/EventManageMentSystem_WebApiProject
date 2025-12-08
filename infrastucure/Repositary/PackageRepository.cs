@@ -53,11 +53,15 @@ namespace infrastructure.Repositary
         public async Task<Package?> GetPackageWithServicesAsync(Guid packageId)
         {
             return await _context.Packages
-                .Include(p => p.Vendor)
-                .Include(p => p.PackageItems)
-                    .ThenInclude(pi => pi.Service) 
-                        .ThenInclude(s => s.ServiceImages) 
-                .FirstOrDefaultAsync(p => p.PackageID == packageId);
+        .Include(p => p.Vendor) // Package Owner
+        .Include(p => p.PackageItems)
+            .ThenInclude(pi => pi.Service)
+                .ThenInclude(s => s.ServiceImages)
+        // ADDED
+        .Include(p => p.PackageItems)
+            .ThenInclude(pi => pi.Service)
+                .ThenInclude(s => s.Vendor) // Load the Service Provider (Vendor) details
+        .FirstOrDefaultAsync(p => p.PackageID == packageId);
         }
         public async Task<IEnumerable<Package>> GetAllAsync()
         {
@@ -67,6 +71,19 @@ namespace infrastructure.Repositary
                     .ThenInclude(pi => pi.Service) // Service Details காட்ட
                         .ThenInclude(s => s.Vendor) // Service Provider Name காட்ட
                 .ToListAsync();
+        }
+
+
+        public async Task DeleteAsync(Guid packageId)
+        {
+            var package = await _context.Packages.FindAsync(packageId);
+            if (package != null)
+            {
+                _context.Packages.Remove(package);
+                // Cascade delete will usually handle Items/Requests if DB is configured correctly,
+                // otherwise EF Core handles it if entities are loaded.
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

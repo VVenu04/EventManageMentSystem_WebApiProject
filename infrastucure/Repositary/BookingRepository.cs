@@ -45,26 +45,27 @@ namespace infrastructure.Repositary
                         .ThenInclude(service => service!.Vendor) 
                 .FirstOrDefaultAsync(b => b.BookingID == bookingId);
         }
+        // 1. UPDATE: Added check for Cancelled Status
+      
         public async Task<bool> IsServiceBookedOnDateAsync(Guid serviceId, DateTime eventDate)
         {
             return await _context.BookingItems
-
                 .Where(item => item.ServiceItemID == serviceId)
-
-                .AnyAsync(item => item.Booking!.EventDate.Date == eventDate.Date);
+                // Filter out Cancelled bookings here
+                .AnyAsync(item => item.Booking!.EventDate.Date == eventDate.Date
+                                  && item.Booking.BookingStatus != "Cancelled");
         }
+
+       
+        // 2. UPDATE: Added check for Cancelled Status
+      
         public async Task<int> GetBookingCountForServiceOnDateAsync(Guid serviceId, DateTime eventDate)
         {
-            // BookingItems table-ஐத் தேடு
             return await _context.BookingItems
-
-                // 1. அந்த ServiceID-ஐக் கொண்ட Item-ஆ?
                 .Where(item => item.ServiceItemID == serviceId)
-
-                // 2. அந்த Item-உடைய Parent Booking அதே தேதியிலா உள்ளது?
-                .Where(item => item.Booking!.EventDate.Date == eventDate.Date)
-
-                // 3. அவற்றின் எண்ணிக்கையைக் கொடு
+                // Filter out Cancelled bookings here as well
+                .Where(item => item.Booking!.EventDate.Date == eventDate.Date
+                               && item.Booking.BookingStatus != "Cancelled")
                 .CountAsync();
         }
         public async Task UpdateAsync(Booking booking)
@@ -116,6 +117,17 @@ namespace infrastructure.Repositary
                 .Where(b => b.BookingItems.Any(bi => bi.VendorID == vendorId))
                 .OrderByDescending(b => b.CreatedAt) // புதியது முதலில்
                 .ToListAsync();
+        }
+
+
+        public async Task<bool> IsPackageBookedAsync(Guid packageId)
+        {
+            // Check if any BookingItem refers to this PackageID 
+            // AND the booking is not Cancelled (If it was cancelled, we might allow deletion, 
+            // but usually, we keep history. Let's start strict: If it appears in DB, don't delete).
+
+            return await _context.BookingItems
+                .AnyAsync(bi => bi.PackageID == packageId);
         }
     }
 }
