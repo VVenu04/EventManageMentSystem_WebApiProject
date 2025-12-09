@@ -16,5 +16,6 @@ namespace Application.Interface.IRepo
 
         // Payment Status-ஐ (Refunded என) மாற்ற
         Task UpdateAsync(Payment payment);
+        Task<IEnumerable<Payment>> GetAllPaymentsWithDetailsAsync();
     }
 }

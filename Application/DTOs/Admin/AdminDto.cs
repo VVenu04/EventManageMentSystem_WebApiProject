@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.DTOs
+namespace Application.DTOs.Admin
 {
     public class AdminDto
     {
@@ -22,9 +22,6 @@ namespace Application.DTOs
         [Required]
         public string AdminPassword { get; set; }
 
-        public static implicit operator AdminDto(Admin v)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }

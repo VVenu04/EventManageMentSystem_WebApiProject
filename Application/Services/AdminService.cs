@@ -1,7 +1,9 @@
-﻿using Application.DTOs;
+﻿using Application.DTOs.Admin;
+using Application.DTOs.AI;
 using Application.Interface.IRepo;
 using Application.Interface.IService;
 using Application.Mapper;
+using Google.GenAI.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,9 +16,11 @@ namespace Application.Services
     {
 
         private readonly IAdminRepo _adminRepository;
-        public AdminService(IAdminRepo adminRepository)
+        private readonly IPaymentRepository _paymentRepo;
+        public AdminService(IAdminRepo adminRepository, IPaymentRepository paymentRepo)
         {
             _adminRepository = adminRepository;
+            _paymentRepo = paymentRepo;
         }
         public async Task<AdminDto> AddAdminAsync(AdminDto adminDTO)
         {
@@ -62,6 +66,28 @@ namespace Application.Services
         {
             var Admins = await _adminRepository.GetAllAsync();
             return AdminMapper.MapToAdminDTOList(Admins);
+        }
+        public async Task<AdminDashboardDto> GetDashboardStatsAsync()
+        {
+            return await _adminRepository.GetDashboardStatsAsync();
+        }
+        public async Task<IEnumerable<TransactionDto>> GetAllTransactionsAsync()
+        {
+            var payments = await _paymentRepo.GetAllPaymentsWithDetailsAsync();
+
+            return payments.Select(p => new TransactionDto
+            {
+                PaymentID = p.PaymentID,
+                TransactionID = p.StripePaymentIntentId,
+                BookingID = p.BookingID,
+                CustomerName = p.Booking?.Customer?.Name ?? "Unknown",
+                CustomerEmail = p.Booking?.Customer?.Email ?? "N/A",
+                TotalAmount = p.AmountPaid,
+                AdminCommission = p.AdminCommission,
+                VendorEarnings = p.VendorEarnings,
+                Status = p.Status,
+                PaymentDate = p.PaymentDate
+            }).ToList();
         }
     }
     
