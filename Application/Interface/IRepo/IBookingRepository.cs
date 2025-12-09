@@ -22,5 +22,8 @@ namespace Application.Interface.IRepo
         Task<IEnumerable<Booking>> GetBookingsByCustomerAsync(Guid customerId);
 
         Task<bool> IsPackageBookedAsync(Guid packageId);
+
+        Task<BookingItem?> GetBookingItemByIdAsync(Guid bookingItemId);
+        Task UpdateBookingItemAsync(BookingItem item);
     }
 }

@@ -7,6 +7,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Net;
+using System.Net.Mail;
+using Microsoft.Extensions.Configuration; // To read appsettings
 
 
 namespace Application.Services
@@ -17,15 +20,26 @@ namespace Application.Services
         private readonly IServiceItemRepository _serviceRepo;
         private readonly IAuthRepository _authRepo;
         private readonly IPackageRepository _packageRepo;
-        
+        private readonly IConfiguration _configuration;
+
         private readonly IPaymentService _paymentService;
         private readonly INotificationService _notificationService;
+        // 1. Valid Status List (Vendor can only choose these)
+        private readonly List<string> _validStatuses = new List<string>
+        {
+            "Preparing",
+            "OnTheWay",
+            "Arrived",
+            "ServiceStarted",
+            "JobDone" // This triggers the OTP
+        };
         public BookingService(IBookingRepository bookingRepo,
                               IServiceItemRepository serviceRepo,
                               IAuthRepository authRepo,
                               IPackageRepository packageRepo,
                               IPaymentService paymentService,
-                              INotificationService notificationService) 
+                              INotificationService notificationService,
+                              IConfiguration configuration) 
         {
             _bookingRepo = bookingRepo;
             _serviceRepo = serviceRepo;
@@ -33,6 +47,7 @@ namespace Application.Services
             _packageRepo = packageRepo;
             _paymentService = paymentService;
             _notificationService = notificationService;
+            _configuration = configuration;
         }
 
         public async Task<BookingConfirmationDto> CreateBookingAsync(CreateBookingDto createBookingDto, Guid customerId)
@@ -59,7 +74,9 @@ namespace Application.Services
                 ServiceItemID = service.ServiceItemID,
                 VendorID = service.VendorID,
                 ItemPrice = service.Price, 
-                TrackingStatus = "Confirmed"
+                TrackingStatus = "Confirmed",
+                // It should be null initially
+                CompletionOtp = null
             }).ToList();
 
             var booking = new Booking
@@ -271,6 +288,162 @@ namespace Application.Services
                     bookingId
                 );
             }
+        }
+
+
+
+        // UPDATED TRACKING METHOD
+        
+        public async Task UpdateTrackingStatusAsync(UpdateTrackingDto dto, Guid vendorId)
+        {
+            // 1. Validate Status Input (Selectable Logic)
+            // NEW (Robust - Case Insensitive):
+            // Checks if the input exists in the list, ignoring Upper/Lower case differences
+            if (!_validStatuses.Any(s => s.Equals(dto.Status, StringComparison.OrdinalIgnoreCase)))
+            {
+                throw new Exception($"Invalid Status. Allowed values: {string.Join(", ", _validStatuses)}");
+            }
+
+            var item = await _bookingRepo.GetBookingItemByIdAsync(dto.BookingItemID);
+            if (item == null) throw new Exception("Item not found.");
+
+            // NEW LOGIC STARTS HERE
+            if (dto.Status == "JobDone")
+            {
+                // 1. Generate NEW OTP
+                string newOtp = new Random().Next(1000, 9999).ToString();
+
+                // 2. Save OTP & EXPIRY to Database
+                item.TrackingStatus = "JobDone";
+                item.CompletionOtp = newOtp;
+
+                // ADD THIS LINE (Sets 10 minute limit):
+                item.OtpExpiry = DateTime.UtcNow.AddMinutes(10);
+
+                await _bookingRepo.UpdateBookingItemAsync(item);
+
+                // 3. Send Email using Gmail SMTP (The "Free" solution)
+                try
+                {
+                    // Ensure Customer Email exists
+                    var customerEmail = item.Booking?.Customer?.Email; // Ensure your Repo includes Customer data
+                    if (!string.IsNullOrEmpty(customerEmail))
+                    {
+                        SendGmailOtp(customerEmail, newOtp, item.Service?.Name ?? "Service");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Log error but don't stop the process
+                    Console.WriteLine("Email failed: " + ex.Message);
+                }
+            }
+            else
+            {
+                // 3. Normal Status Updates (Preparing, OnTheWay, etc.)
+                item.TrackingStatus = dto.Status;
+                await _bookingRepo.UpdateBookingItemAsync(item);
+
+                // Normal Notification
+                string displayMsg = GetDisplayMessage(dto.Status, item.Service?.Name);
+
+                await _notificationService.SendNotificationAsync(
+                    item.Booking.CustomerID,
+                    displayMsg,
+                    "TrackingUpdate",
+                    item.BookingID
+                );
+            }
+        }
+
+        // Helper for nice messages
+        private string GetDisplayMessage(string status, string serviceName)
+        {
+            return status switch
+            {
+                "Preparing" => $"Vendor is preparing your service: {serviceName}.",
+                "OnTheWay" => $"Vendor is on the way for: {serviceName}.",
+                "Arrived" => $"Vendor has arrived at the location.",
+                "ServiceStarted" => $"The service '{serviceName}' has started.",
+                _ => $"Status updated to {status}."
+            };
+        }
+
+
+        private void SendGmailOtp(string toEmail, string otp, string serviceName)
+        {
+            // 1. READ FROM YOUR JSON (Matching the exact names you just showed me)
+            var fromEmail = _configuration["EmailSettings:SenderEmail"];    // Was "FromEmail"
+            var appPassword = _configuration["EmailSettings:SenderPassword"]; // Was "AppPassword"
+            var host = _configuration["EmailSettings:SmtpHost"];
+            var port = int.Parse(_configuration["EmailSettings:SmtpPort"]);
+
+            var client = new SmtpClient(host, port)
+            {
+                EnableSsl = true,
+                Credentials = new NetworkCredential(fromEmail, appPassword)
+            };
+
+            var mailMessage = new MailMessage(fromEmail, toEmail,
+                $"Job Completion Code: {serviceName}",
+                $@"
+        <div style='font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ddd; border-radius: 5px;'>
+            <h2 style='color: #2c3e50;'>Job Completion Request</h2>
+            <p>The vendor has completed the service: <strong>{serviceName}</strong>.</p>
+            <p>To confirm this job is done, please give them this code:</p>
+            <h1 style='color: #27ae60; letter-spacing: 5px;'>{otp}</h1>
+            <p style='font-size: 12px; color: #888;'>If you did not request this, please ignore this email.</p>
+        </div>
+        ");
+
+            mailMessage.IsBodyHtml = true;
+            client.Send(mailMessage);
+        }
+        // COMPLETE JOB (OTP Verification)
+
+        public async Task<bool> CompleteServiceAsync(CompleteJobDto dto, Guid vendorId)
+        {
+            var item = await _bookingRepo.GetBookingItemByIdAsync(dto.BookingItemID);
+
+            if (item == null) throw new Exception("Item not found.");
+            if (item.VendorID != vendorId) throw new Exception("Unauthorized.");
+
+            // 1. Check if status is correct (Must be 'JobDone' before completing)
+            if (item.TrackingStatus != "JobDone")
+            {
+                throw new Exception("You must mark the job as 'Job Done' before entering the OTP.");
+            }
+
+            // 2. Validate OTP
+            if (item.CompletionOtp != dto.Otp)
+            {
+                throw new Exception("Invalid OTP! Ask the customer for the correct code.");
+            }
+
+            //  ADD THIS CHECK (Expiry Logic):
+            if (item.OtpExpiry < DateTime.UtcNow)
+            {
+                throw new Exception("OTP has Expired! Please request the job completion again to get a new code.");
+            }
+
+
+            // 3. Success! Mark as Completed
+            item.TrackingStatus = "Completed";
+            item.ServiceDate = DateTime.UtcNow;
+
+            // TODO: Trigger Payment Release (e.g., _paymentService.ReleaseFunds...)
+
+            await _bookingRepo.UpdateBookingItemAsync(item);
+
+            // 4. Final Notification
+            await _notificationService.SendNotificationAsync(
+                item.Booking.CustomerID,
+                "Service Completed Successfully! Receipt sent to email.",
+                "ServiceCompleted",
+                item.BookingID
+            );
+
+            return true;
         }
     }
 }

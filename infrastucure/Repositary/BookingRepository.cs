@@ -119,7 +119,22 @@ namespace infrastructure.Repositary
                 .ToListAsync();
         }
 
+        //  <--- NEW: Implementation for Tracking Logic
+        public async Task<BookingItem?> GetBookingItemByIdAsync(Guid bookingItemId)
+        {
+            return await _context.BookingItems
+                .Include(bi => bi.Booking)              // Loads Booking
+                    .ThenInclude(b => b.Customer)       // 🟢 ADD THIS: Loads Customer (so we get the Email)
+                .Include(bi => bi.Service)
+                .FirstOrDefaultAsync(bi => bi.BookingItemID == bookingItemId);
+        }
 
+        //  <--- NEW: Implementation to save tracking status
+        public async Task UpdateBookingItemAsync(BookingItem item)
+        {
+            _context.BookingItems.Update(item);
+            await _context.SaveChangesAsync();
+        }
         public async Task<bool> IsPackageBookedAsync(Guid packageId)
         {
             // Check if any BookingItem refers to this PackageID 
