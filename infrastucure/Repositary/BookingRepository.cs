@@ -124,7 +124,7 @@ namespace infrastructure.Repositary
         {
             return await _context.BookingItems
                 .Include(bi => bi.Booking)              // Loads Booking
-                    .ThenInclude(b => b.Customer)       // 🟢 ADD THIS: Loads Customer (so we get the Email)
+                    .ThenInclude(b => b.Customer)       // ADD THIS: Loads Customer (so we get the Email)
                 .Include(bi => bi.Service)
                 .FirstOrDefaultAsync(bi => bi.BookingItemID == bookingItemId);
         }

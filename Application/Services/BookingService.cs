@@ -435,6 +435,20 @@ namespace Application.Services
 
             await _bookingRepo.UpdateBookingItemAsync(item);
 
+            // 1. Send the Real Email
+            try
+            {
+                var customerEmail = item.Booking?.Customer?.Email;
+                if (!string.IsNullOrEmpty(customerEmail))
+                {
+                    SendReceiptEmail(customerEmail, item.Service?.Name ?? "Service", item.ItemPrice);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Receipt email failed: " + ex.Message);
+            }
+
             // 4. Final Notification
             await _notificationService.SendNotificationAsync(
                 item.Booking.CustomerID,
@@ -445,5 +459,37 @@ namespace Application.Services
 
             return true;
         }
+
+        private void SendReceiptEmail(string toEmail, string serviceName, decimal price)
+        {
+            // READ CONFIG
+            var fromEmail = _configuration["EmailSettings:SenderEmail"];
+            var appPassword = _configuration["EmailSettings:SenderPassword"];
+            var host = _configuration["EmailSettings:SmtpHost"];
+            var port = int.Parse(_configuration["EmailSettings:SmtpPort"]);
+
+            var client = new SmtpClient(host, port)
+            {
+                EnableSsl = true,
+                Credentials = new NetworkCredential(fromEmail, appPassword)
+            };
+
+            var mailMessage = new MailMessage(fromEmail, toEmail,
+                $"Receipt: {serviceName} Completed",
+                $@"
+        <div style='font-family: Arial; padding: 20px; border: 1px solid #ddd;'>
+            <h2 style='color: #27ae60;'>Service Completed</h2>
+            <p>Your service <strong>{serviceName}</strong> has been successfully finished.</p>
+            <hr>
+            <p><strong>Amount Paid:</strong> ${price}</p>
+            <p><strong>Status:</strong> Completed ✅</p>
+            <p>Thank you for using Smart Function!</p>
+        </div>
+        ");
+
+            mailMessage.IsBodyHtml = true;
+            client.Send(mailMessage);
+        }
+
     }
 }
