@@ -1,4 +1,4 @@
-﻿using Application.DTOs;
+﻿using Application.DTOs.Admin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +13,6 @@ namespace Application.Interface.IService
         Task DeleteAdminAsync(Guid? Id);
         Task<AdminDto> GetAdminAsync(Guid adminId);
         Task<IEnumerable<AdminDto>> GetAllAsync();
+        Task<AdminDashboardDto> GetDashboardStatsAsync();
     }
 }
