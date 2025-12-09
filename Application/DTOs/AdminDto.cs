@@ -13,13 +13,18 @@ namespace Application.DTOs
     {
         public Guid AdminID { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Full Name is required.")]
+        [StringLength(100)]
+        [Display(Name = "Full Name")]
         public string AdminName { get; set; }
 
+        [Required(ErrorMessage = "Email is required.")]
         [CustomEmail]
         public string AdminEmail { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Password is required.")]
+        [DataType(DataType.Password)]
+        [CustomPassword]
         public string AdminPassword { get; set; }
 
         public static implicit operator AdminDto(Admin v)

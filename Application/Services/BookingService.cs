@@ -51,6 +51,7 @@ namespace Application.Services
                 throw new Exception("Data was expired. Cannot book on a past date.");
             }
 
+
             var (servicesToBook, vendorsToBook, totalPrice) =
                 await GetServicesFromDtoAsync(createBookingDto);
 
@@ -75,6 +76,7 @@ namespace Application.Services
                 BookingStatus = "Confirmed",
                 BookingItems = bookingItemsList
             };
+             // if (!ModelState.IsValid)
 
             // 5. Save to Database
             await _bookingRepo.AddAsync(booking);

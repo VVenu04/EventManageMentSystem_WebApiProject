@@ -19,5 +19,8 @@ namespace Application.Interface.IRepo
         Task UpdateAsync(Package package);
 
         Task DeleteAsync(Guid packageId);
+        Task DeletevendorAsync(Guid id, Guid packageid);
+
+
     }
 }

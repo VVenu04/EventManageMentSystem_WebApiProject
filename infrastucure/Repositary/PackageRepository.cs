@@ -1,4 +1,5 @@
-﻿using Application.Interface.IRepo;
+﻿using Application.DTOs.Package;
+using Application.Interface.IRepo;
 using Domain.Entities;
 using infrastucure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -72,6 +73,19 @@ namespace infrastructure.Repositary
                         .ThenInclude(s => s.Vendor) // Service Provider Name காட்ட
                 .ToListAsync();
         }
+        public async Task DeletevendorAsync(Guid id , Guid packageid)
+        {
+            var record = await _context.Packages
+                .FirstOrDefaultAsync(x => x.PackageID == packageid
+                           && x.VendorID == id);
+            if (record != null)
+            {
+                 _context.Packages.Remove(record);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+
 
 
         public async Task DeleteAsync(Guid packageId)

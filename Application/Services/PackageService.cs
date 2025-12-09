@@ -114,7 +114,22 @@ namespace Application.Services
 
             return await GetPackageByIdAsync(package.PackageID);
         }
+        public async Task LeaveFromPackage(LeavePackageDto dto)
+        {
+            var package = await GetPackageByIdAsync(dto.PackageID);
+            if (package == null) throw new Exception("Package not found.");
+            var leaver = await _packageRepo.GetPackagesByVendorAsync(package.VendorID);
+             foreach(var item in leaver)
+            {
+               if( dto.VendorIDToLeave == item.VendorID)
+                {
+                    // oru sikal package table la eruth vendor ah remove pana function seija(repo la seijonum antha function) many to many issue eruku 
+                    await _packageRepo.DeletevendorAsync(dto.PackageID, dto.VendorIDToLeave);
+                }  
+                
+            }
 
+        }
         // 2. Add Services (With Collaboration Logic)
         public async Task AddServicesToPackageAsync(AddServicesToPackageDto dto, Guid ownerId)
         {

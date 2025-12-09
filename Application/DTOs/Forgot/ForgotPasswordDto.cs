@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Application.Attribute;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace Application.DTOs.Forgot
     public class ForgotPasswordDto
     {
         [Required(ErrorMessage = "Email is required")]
-        [EmailAddress(ErrorMessage = "Invalid email address")]
+        [CustomEmail]
         public string Email { get; set; }
     }
 }

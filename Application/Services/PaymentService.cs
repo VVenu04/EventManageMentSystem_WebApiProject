@@ -55,7 +55,7 @@ namespace Application.Services
             return intent.ClientSecret;
         }
 
-        // 2. Payment-ஐ உறுதி செய்து, பணத்தைப் பிரித்தல் (Core Logic)
+        // 2. Payment-ஐ உறுதி செய்து, பணத்தைப் பிரித்தல் (Core Logic) 
         public async Task<bool> ConfirmPaymentAndDistributeFundsAsync(string paymentIntentId)
         {
             // A. Stripe-ல் Payment நிலையைச் சரிபார்
