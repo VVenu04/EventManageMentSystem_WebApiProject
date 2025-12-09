@@ -1,7 +1,8 @@
-﻿using Application.DTOs;
+﻿using Application.DTOs.Admin;
 using Application.Interface.IRepo;
 using Application.Interface.IService;
 using Application.Mapper;
+using Google.GenAI.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,6 +63,10 @@ namespace Application.Services
         {
             var Admins = await _adminRepository.GetAllAsync();
             return AdminMapper.MapToAdminDTOList(Admins);
+        }
+        public async Task<AdminDashboardDto> GetDashboardStatsAsync()
+        {
+            return await _adminRepository.GetDashboardStatsAsync();
         }
     }
     

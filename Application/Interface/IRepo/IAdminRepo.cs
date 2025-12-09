@@ -1,4 +1,5 @@
-﻿using Application.Interface.IGenericRepo;
+﻿using Application.DTOs.Admin;
+using Application.Interface.IGenericRepo;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -11,5 +12,6 @@ namespace Application.Interface.IRepo
     public interface IAdminRepo : IGenericRepo<Admin>
     {
         Task UpdateAsync(Admin admin);
+        Task<AdminDashboardDto> GetDashboardStatsAsync();
     }
 }
