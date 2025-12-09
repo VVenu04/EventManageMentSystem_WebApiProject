@@ -18,6 +18,9 @@ namespace Application.DTOs.Package
         public Guid VendorID { get; set; }
         public string VendorName { get; set; }
 
+        //  NEW: List to hold the collection of images
+        public List<string> PackageImages { get; set; }
+
         // ஒரு Package-க்குள் என்னென்ன Services உள்ளன
         public List<SimpleServiceDto> ServicesInPackage { get; set; }
     }
