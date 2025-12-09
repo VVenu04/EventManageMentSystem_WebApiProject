@@ -154,5 +154,42 @@ namespace Presentation.Controllers
         }
 
 
+
+        // PUT: api/Booking/track-status
+        [HttpPut("track-status")]
+        [Authorize(Roles = "Vendor")]
+        public async Task<IActionResult> UpdateTracking([FromBody] UpdateTrackingDto dto)
+        {
+            try
+            {
+                await _bookingService.UpdateTrackingStatusAsync(dto, CurrentUserId);
+                return Ok(ApiResponse<object>.Success(null, "Status updated successfully."));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ApiResponse<object>.Failure(ex.Message));
+            }
+        }
+
+        // POST: api/Booking/complete-job
+        [HttpPost("complete-job")]
+        [Authorize(Roles = "Vendor")]
+        public async Task<IActionResult> CompleteJob([FromBody] CompleteJobDto dto)
+        {
+            try
+            {
+                var success = await _bookingService.CompleteServiceAsync(dto, CurrentUserId);
+                return Ok(ApiResponse<object>.Success(null, "Job completed and verified successfully!"));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ApiResponse<object>.Failure(ex.Message));
+            }
+        }
     }
+
+
 }
+
+
+

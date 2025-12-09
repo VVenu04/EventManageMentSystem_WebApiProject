@@ -34,6 +34,7 @@ namespace infrastructure.Repositary
                 .Include(p => p.PackageItems)
                 .ThenInclude(pi => pi.Service)
                //.Where(p => p.IsActive == true) // Active
+               .ThenInclude(s => s.ServiceImages)
                 .ToListAsync();
         }
         public async Task UpdateAsync(Package package)
@@ -66,11 +67,15 @@ namespace infrastructure.Repositary
         public async Task<IEnumerable<Package>> GetAllAsync()
         {
             return await _context.Packages
-                .Include(p => p.Vendor) // Owner Name காட்ட
-                .Include(p => p.PackageItems)
-                    .ThenInclude(pi => pi.Service) // Service Details காட்ட
-                        .ThenInclude(s => s.Vendor) // Service Provider Name காட்ட
-                .ToListAsync();
+                            .Include(p => p.Vendor)
+                            .Include(p => p.PackageItems)
+                                .ThenInclude(pi => pi.Service)
+                                    //  CRITICAL FIX: Include Images here too!
+                                    .ThenInclude(s => s.ServiceImages)
+                            .Include(p => p.PackageItems)
+                                .ThenInclude(pi => pi.Service)
+                                    .ThenInclude(s => s.Vendor)
+                            .ToListAsync();
         }
 
 
