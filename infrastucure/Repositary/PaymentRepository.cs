@@ -54,5 +54,13 @@ namespace infrastructure.Repositary
                 .OrderByDescending(p => p.PaymentDate) // புதியது முதலில்
                 .ToListAsync();
         }
+        public async Task<IEnumerable<Payment>> GetByCustomerIdAsync(Guid customerId)
+        {
+            return await _context.Payments
+                .Include(p => p.Booking) // Booking மூலம் Customer-ஐப் பிடிக்கிறோம்
+                .Where(p => p.Booking.CustomerID == customerId)
+                .OrderByDescending(p => p.PaymentDate) // புதியது முதலில்
+                .ToListAsync();
+        }
     }
 }

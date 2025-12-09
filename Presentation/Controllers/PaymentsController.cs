@@ -70,5 +70,15 @@ namespace Presentation.Controllers
                 return BadRequest(ApiResponse<object>.Failure(ex.Message));
             }
         }
+        [HttpGet("wallet-history")]
+        [Authorize(Roles = "Customer")]
+        public async Task<ActionResult<IEnumerable<WalletTransactionDto>>> GetWalletHistory()
+        {
+            if (CurrentUserId == Guid.Empty) return Unauthorized();
+
+            var history = await _paymentService.GetCustomerWalletHistoryAsync(CurrentUserId);
+            return Ok(ApiResponse<IEnumerable<WalletTransactionDto>>.Success(history));
+        }
+
     }
 }

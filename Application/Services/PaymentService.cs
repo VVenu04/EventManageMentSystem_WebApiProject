@@ -187,5 +187,57 @@ namespace Application.Services
                 throw new Exception($"Stripe Refund Failed: {ex.Message}");
             }
         }
+        public async Task<IEnumerable<WalletTransactionDto>> GetCustomerWalletHistoryAsync(Guid customerId)
+        {
+            var payments = await _paymentRepo.GetByCustomerIdAsync(customerId);
+            var history = new List<WalletTransactionDto>();
+
+            foreach (var p in payments)
+            {
+                // 1. Payment Made (Debit)
+                if (p.Status == "Succeeded")
+                {
+                    history.Add(new WalletTransactionDto
+                    {
+                        Id = p.PaymentID,
+                        Description = $"Payment for Booking #{p.BookingID.ToString().Substring(0, 6)}",
+                        Amount = p.AmountPaid,
+                        Type = "debit", // Red Color
+                        Date = p.PaymentDate,
+                        Status = "Paid"
+                    });
+                }
+
+                // 2. Cashback Received (Credit) - (Optional Logic if you track separately)
+                if (p.CustomerCashback > 0)
+                {
+                    history.Add(new WalletTransactionDto
+                    {
+                        Id = Guid.NewGuid(), // Virtual ID
+                        Description = "Cashback Reward",
+                        Amount = p.CustomerCashback,
+                        Type = "credit", // Green Color
+                        Date = p.PaymentDate,
+                        Status = "Added"
+                    });
+                }
+
+                // 3. Refunds (Credit)
+                if (p.Status == "Refunded")
+                {
+                    history.Add(new WalletTransactionDto
+                    {
+                        Id = p.PaymentID,
+                        Description = $"Refund for Booking #{p.BookingID.ToString().Substring(0, 6)}",
+                        Amount = p.AmountPaid, // Full or partial
+                        Type = "credit",
+                        Date = p.PaymentDate, // Or UpdateDate
+                        Status = "Refunded"
+                    });
+                }
+            }
+
+            return history.OrderByDescending(h => h.Date);
+        }
     }
 }
