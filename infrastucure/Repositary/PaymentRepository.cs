@@ -46,5 +46,13 @@ namespace infrastructure.Repositary
             _context.Payments.Update(payment);
             await _context.SaveChangesAsync();
         }
+        public async Task<IEnumerable<Payment>> GetAllPaymentsWithDetailsAsync()
+        {
+            return await _context.Payments
+                .Include(p => p.Booking)
+                .ThenInclude(b => b.Customer) // Customer விவரம் தேவை
+                .OrderByDescending(p => p.PaymentDate) // புதியது முதலில்
+                .ToListAsync();
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Application.Common;
 using Application.DTOs.Admin;
+using Application.DTOs.AI;
 using Application.Interface.IService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -129,6 +130,13 @@ namespace Presentation.Controllers
             }
 
             return Ok(ApiResponse<IEnumerable<AdminDto>>.Success(admins));
+        }
+        [HttpGet("transactions")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<ApiResponse<IEnumerable<TransactionDto>>>> GetAllTransactions()
+        {
+            var transactions = await _adminService.GetAllTransactionsAsync();
+            return Ok(ApiResponse<IEnumerable<TransactionDto>>.Success(transactions));
         }
     }
 }

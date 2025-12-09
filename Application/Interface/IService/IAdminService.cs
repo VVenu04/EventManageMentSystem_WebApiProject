@@ -1,4 +1,5 @@
 ﻿using Application.DTOs.Admin;
+using Application.DTOs.AI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +15,6 @@ namespace Application.Interface.IService
         Task<AdminDto> GetAdminAsync(Guid adminId);
         Task<IEnumerable<AdminDto>> GetAllAsync();
         Task<AdminDashboardDto> GetDashboardStatsAsync();
+        Task<IEnumerable<TransactionDto>> GetAllTransactionsAsync();
     }
 }
