@@ -1,6 +1,5 @@
 ﻿using Application.Common;
 using Application.DTOs.Admin;
-using Application.DTOs.AI;
 using Application.Interface.IService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -138,5 +137,55 @@ namespace Presentation.Controllers
             var transactions = await _adminService.GetAllTransactionsAsync();
             return Ok(ApiResponse<IEnumerable<TransactionDto>>.Success(transactions));
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //site settings
+
+
+            // ... Constructor ...
+
+            // 1. GET SETTINGS (Public - for Footer)
+            [HttpGet("settings")]
+            [AllowAnonymous]
+            public async Task<IActionResult> GetSettings()
+            {
+                var settings = await _adminService.GetSystemSettingsAsync();
+                return Ok(ApiResponse<SystemSettingsDto>.Success(settings));
+            }
+
+            // 2. UPDATE SETTINGS (Admin Only)
+            [HttpPut("settings")]
+            [Authorize(Roles = "Admin")]
+            public async Task<IActionResult> UpdateSettings([FromBody] SystemSettingsDto dto)
+            {
+                var updated = await _adminService.UpdateSystemSettingsAsync(dto);
+                return Ok(ApiResponse<SystemSettingsDto>.Success(updated, "Settings updated successfully."));
+            }
+
+            // 3. CHANGE PASSWORD
+            [HttpPost("change-password")]
+            [Authorize]
+            public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto dto)
+            {
+                var result = await _adminService.ChangePasswordAsync(CurrentUserId, dto);
+                if (!result) return BadRequest(ApiResponse<object>.Failure("Incorrect current password."));
+
+                return Ok(ApiResponse<object>.Success(null, "Password changed successfully."));
+            }
+        }
+
     }
-}

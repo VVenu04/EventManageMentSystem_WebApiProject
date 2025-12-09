@@ -13,5 +13,9 @@ namespace Application.Interface.IRepo
     {
         Task UpdateAsync(Admin admin);
         Task<AdminDashboardDto> GetDashboardStatsAsync();
+        Task<SystemSettings> GetSystemSettingsAsync();
+        Task UpdateSystemSettingsAsync(SystemSettings settings);
+        Task<Admin> GetAdminByIdAsync(Guid adminId);
+        Task UpdateAdminAsync(Admin admin);
     }
 }

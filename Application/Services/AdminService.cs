@@ -1,5 +1,4 @@
 ﻿using Application.DTOs.Admin;
-using Application.DTOs.AI;
 using Application.Interface.IRepo;
 using Application.Interface.IService;
 using Application.Mapper;
@@ -71,8 +70,68 @@ namespace Application.Services
         {
             return await _adminRepository.GetDashboardStatsAsync();
         }
+
+        public async Task<SystemSettingsDto> GetSystemSettingsAsync()
+        {
+            var settings = await _adminRepository.GetSystemSettingsAsync();
+            return new SystemSettingsDto
+            {
+                SiteName = settings.SiteName,
+                SupportEmail = settings.SupportEmail,
+                SupportPhone = settings.SupportPhone,
+                OfficeAddress = settings.OfficeAddress,
+                ServiceCommission = settings.ServiceCommission,
+                PackageCommission = settings.PackageCommission,
+                CustomerCashback = settings.CustomerCashback,
+                MaintenanceMode = settings.MaintenanceMode
+            };
+        }
+
+        public async Task<SystemSettingsDto> UpdateSystemSettingsAsync(SystemSettingsDto dto)
+        {
+            var settings = await _adminRepository.GetSystemSettingsAsync();
+
+            // Map DTO to Entity
+            settings.SiteName = dto.SiteName;
+            settings.SupportEmail = dto.SupportEmail;
+            settings.SupportPhone = dto.SupportPhone;
+            settings.OfficeAddress = dto.OfficeAddress;
+            settings.ServiceCommission = dto.ServiceCommission;
+            settings.PackageCommission = dto.PackageCommission;
+            settings.CustomerCashback = dto.CustomerCashback;
+            settings.MaintenanceMode = dto.MaintenanceMode;
+
+            await _adminRepository.UpdateSystemSettingsAsync(settings);
+            return dto;
+        }
+
+        // 🚨 FIX: Implementing Change Password Method (விடுபட்ட மெதட்)
+        public async Task<bool> ChangePasswordAsync(Guid userId, ChangePasswordDto dto)
+        {
+            if (dto.NewPassword != dto.ConfirmPassword)
+                throw new Exception("Passwords do not match.");
+
+            var admin = await _adminRepository.GetAdminByIdAsync(userId);
+            if (admin == null) throw new Exception("Admin not found");
+
+            // பழைய பாஸ்வேர்ட் சரியா எனப் பார்க்கவும்
+            // (In Real App: Use Hashing here)
+            if (admin.PasswordHash != dto.CurrentPassword)
+                throw new Exception("Incorrect current password.");
+
+            // புதிய பாஸ்வேர்டை செட் செய்யவும்
+            admin.PasswordHash = dto.NewPassword;
+
+            // 🚨 Update & Save
+            await _adminRepository.UpdateAdminAsync(admin);
+
+            return true;
+        }
+
+        // 🚨 FIX: Implementing Transactions List (Optional but recommended for dashboard)
         public async Task<IEnumerable<TransactionDto>> GetAllTransactionsAsync()
         {
+            // Ensure IPaymentRepository has GetAllPaymentsWithDetailsAsync
             var payments = await _paymentRepo.GetAllPaymentsWithDetailsAsync();
 
             return payments.Select(p => new TransactionDto
@@ -89,6 +148,28 @@ namespace Application.Services
                 PaymentDate = p.PaymentDate
             }).ToList();
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // site settings 
+       
     }
     
 }

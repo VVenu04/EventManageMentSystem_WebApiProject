@@ -1,5 +1,4 @@
 ﻿using Application.DTOs.Admin;
-using Application.DTOs.AI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,5 +15,13 @@ namespace Application.Interface.IService
         Task<IEnumerable<AdminDto>> GetAllAsync();
         Task<AdminDashboardDto> GetDashboardStatsAsync();
         Task<IEnumerable<TransactionDto>> GetAllTransactionsAsync();
+        Task<SystemSettingsDto> GetSystemSettingsAsync();
+        
+        // 🚨 FIX: இந்த மெதட் விடுபட்டிருந்தது, இதைச் சேர்க்கவும்
+        Task<SystemSettingsDto> UpdateSystemSettingsAsync(SystemSettingsDto dto);
+
+        // Change Password
+        Task<bool> ChangePasswordAsync(Guid userId, ChangePasswordDto dto);
+        
     }
 }

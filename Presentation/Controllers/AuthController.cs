@@ -3,6 +3,7 @@ using Application.DTOs.Auth;
 using Application.DTOs.Forgot;
 using Application.DTOs.Google;
 using Application.Interface.IAuth;
+using Application.Interface.IRepo;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -12,9 +13,11 @@ namespace Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController(IAuthService authService) : BaseApiController
+    public class AuthController(IAuthService authService,IAdminRepo adminRepo) : BaseApiController
     {
         private readonly IAuthService _authService = authService;
+        private readonly IAdminRepo _adminRepository= adminRepo;
+
 
         // --- Customer Routes ---
         [HttpPost("customer/register")]
@@ -125,6 +128,11 @@ namespace Presentation.Controllers
             var result = await _authService.LoginAdminAsync(dto);
             if (!result.IsSuccess) return Unauthorized(result.Message);
             return Ok(result);
+            var settings = await _adminRepository.GetSystemSettingsAsync();
+            if (settings.MaintenanceMode && dto.Role != "Admin")
+            {
+                return StatusCode(503, ApiResponse<object>.Failure("System is under maintenance. Please try again later."));
+            }
         }
 
         // --- Profile Update Routes
