@@ -29,5 +29,6 @@ namespace Application.Interface.IService
 
         // FIXED: Changed the return type from ServiceItem to ServiceItemDto (28th Nov)
         Task<IEnumerable<ServiceItemDto>> SearchServicesAsync(ServiceSearchDto searchDto);
+        Task<bool> ToggleStatusAsync(Guid serviceId);
     }
 }

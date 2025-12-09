@@ -31,6 +31,7 @@ namespace Application
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IAIService, AIService>();
             services.AddScoped<INotificationService, NotificationService>();
+            services.AddScoped<ICartService, CartService>();
 
             //services.AddScoped<IVendorService, VendorService>();
             //services.AddScoped<IUserService, UserService>();

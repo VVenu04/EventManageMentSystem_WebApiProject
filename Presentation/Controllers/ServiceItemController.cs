@@ -159,7 +159,21 @@ namespace Presentation.Controllers
                 return BadRequest(ApiResponse<object>.Failure(ex.Message));
             }
         }
+        [HttpPatch("{id}/status")]
+        [Authorize(Roles = "Admin, Vendor")] // அட்மின் மற்றும் வெண்டர் இருவருக்கும் அனுமதி
+        public async Task<IActionResult> ToggleServiceStatus(Guid id)
+        {
+            try
+            {
+                var result = await _serviceService.ToggleStatusAsync(id);
+                return Ok(ApiResponse<bool>.Success(result, "Service status updated successfully."));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ApiResponse<object>.Failure(ex.Message));
+            }
+        }
 
-        
+
     }
 }

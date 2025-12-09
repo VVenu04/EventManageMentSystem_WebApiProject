@@ -274,5 +274,16 @@ namespace Application.Services
             // Map Entity to DTO
             return services.Select(ServiceMapper.MapToServiceDto);
         }
+        public async Task<bool> ToggleStatusAsync(Guid serviceId)
+        {
+            var service = await _serviceRepo.GetByIdAsync(serviceId);
+            if (service == null) throw new Exception("Service not found");
+
+            // Toggle the status
+            service.Active = !service.Active;
+
+            await _serviceRepo.UpdateAsync(service);
+            return service.Active;
+        }
     }
 }

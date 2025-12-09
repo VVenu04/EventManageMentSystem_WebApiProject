@@ -1,11 +1,12 @@
 ﻿using Application.Common;
+using Application.DTOs.Admin;
+using Application.Interface.IService;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Application.DTOs;
-using Application.Interface.IService;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.Controllers
 {
@@ -18,8 +19,15 @@ namespace Presentation.Controllers
         {
             _adminService = adminServic;
         }
+        [HttpGet("overview")]
+        [Authorize(Roles = "Admin")] // Admin Only
+        public async Task<ActionResult<ApiResponse<AdminDashboardDto>>> GetDashboardOverview()
+        {
+            var stats = await _adminService.GetDashboardStatsAsync();
+            return Ok(ApiResponse<AdminDashboardDto>.Success(stats));
+        }
 
- 
+
         [ProducesErrorResponseType(typeof(ApiResponse<AdminDto>))]
         [ProducesResponseType(typeof(ApiResponse<AdminDto>), StatusCodes.Status201Created)] 
         [HttpPost("AddAdmin")]
