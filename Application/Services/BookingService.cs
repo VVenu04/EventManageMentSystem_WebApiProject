@@ -141,8 +141,7 @@ namespace Application.Services
         public async Task<BookingConfirmationDto> GetBookingByIdAsync(Guid bookingId)
         {
             var booking = await _bookingRepo.GetByIdAsync(bookingId);
-            if (booking == null) 
-            {
+            if (booking == null) {
                 throw new Exception($"Booking with ID {bookingId} not found.");
 
 
@@ -317,10 +316,14 @@ namespace Application.Services
             // Checks if the input exists in the list, ignoring Upper/Lower case differences
 
             var g = await _paymentRepository.GetByBookingIdAsync(dto.BookingItemID);
-            if (g.Status == "Pending" || g.Status == "Failed")
+
+            var st = g.Status;
+
+            if (st == "Pending" || st == "Failed")
             {
-                throw new Exception("Pay panala da  vennai free ah seija porijo");
+                throw new Exception("Pay panala da vennai free ah seija porijo");
             }
+
             if (!_validStatuses.Any(s => s.Equals(dto.Status, StringComparison.OrdinalIgnoreCase)))
             {
                 throw new Exception($"Invalid Status. Allowed values: {string.Join(", ", _validStatuses)}");

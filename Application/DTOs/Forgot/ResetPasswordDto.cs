@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Application.Attribute;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace Application.DTOs.Forgot
     {
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Invalid email address")]
+        [CustomEmail]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "OTP is required")]
@@ -19,7 +21,7 @@ namespace Application.DTOs.Forgot
         public string Otp { get; set; }
 
         [Required(ErrorMessage = "New password is required")]
-        [MinLength(6, ErrorMessage = "Password must be at least 6 characters")]
+        [CustomPassword]
         public string NewPassword { get; set; }
 
         [Required(ErrorMessage = "Confirm password is required")]
