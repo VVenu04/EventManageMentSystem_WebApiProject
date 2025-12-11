@@ -34,6 +34,7 @@ namespace Application.Services
         private readonly IAuthRepository _authRepo;
         private readonly ITokenService _tokenService;
         private readonly IConfiguration _config;
+       
 
         public AuthService(IConfiguration config, IVendorRepo vendorRepo, IAuthRepository authRepo, ITokenService tokenService, ICustomerRepo customerRepo , IEmailService emailService)
         {
@@ -48,6 +49,7 @@ namespace Application.Services
         // --- CUSTOMER ---
         public async Task<AuthResponseDto> CustomerSignInWithGoogleAsync(string idToken)
         {
+
             // 1) Validate Google ID token
             var settings = new GoogleJsonWebSignature.ValidationSettings()
             {
@@ -70,11 +72,19 @@ namespace Application.Services
             var name = payload.Name ?? payload.Email!;
             var picture = payload.Picture;
 
-            var user = await _customerRepo.CustomerGetByGoogleIdAsync(googleId)
+          
+            var user = await _customerRepo.CustomerGetByGoogleIdAsync(googleId) 
                        ?? await _customerRepo.GetByEmailAsync(email);
+
+
+          
 
             if (user  == null)
             {
+                if (await _authRepo.CustomerEmailExistsAsync(email) || await _authRepo.VendorEmailExistsAsync(email) )
+                {
+                    return new AuthResponseDto { IsSuccess = false, Message = "Email already exists" };
+                }
                 user = new Domain.Entities.Customer
                 {
                     GoogleId = googleId,
@@ -87,12 +97,15 @@ namespace Application.Services
             }
             else
             {
-                // If existing user had no GoogleId, set it
-                if (string.IsNullOrEmpty(user.GoogleId))
-                {
-                    user.GoogleId = googleId;
-                    await _customerRepo.UpdateAsync(user);
-                }
+                            
+                    if (string.IsNullOrEmpty(user.GoogleId))
+                    {
+                        user.GoogleId = googleId;
+                        await _customerRepo.UpdateAsync(user);
+                    }
+                
+                
+              
             }
 
             return CreateAuthResponse(user.CustomerID, user.Name, user.Email, "Customer", "Login Successful");
@@ -102,7 +115,7 @@ namespace Application.Services
         public async Task<AuthResponseDto> RegisterCustomerAsync(RegisterCustomerDto dto)
         {
 
-            if (await _authRepo.CustomerEmailExistsAsync(dto.Email))
+            if (await _authRepo.CustomerEmailExistsAsync(dto.Email) || await _authRepo.VendorEmailExistsAsync(dto.Email))
             {
                 return new AuthResponseDto { IsSuccess = false, Message = "Email already exists" };
             }
@@ -309,7 +322,7 @@ namespace Application.Services
         // --- VENDOR ---
         public async Task<AuthResponseDto> RegisterVendorAsync(RegisterVendorDto dto)
         {
-            if (await _authRepo.VendorEmailExistsAsync(dto.Email))
+            if (await _authRepo.CustomerEmailExistsAsync(dto.Email) || await _authRepo.VendorEmailExistsAsync(dto.Email))
             {
                 return new AuthResponseDto { IsSuccess = false, Message = "Email already exists" };
             }
@@ -434,12 +447,17 @@ namespace Application.Services
             var email = payload.Email!;
             var name = payload.Name ?? payload.Email!;
             var picture = payload.Picture;
-
-            var user =  
-                        await _vendorRepo.GetByEmailAsync(email);
+           
+            var user = await _vendorRepo.VendorGetByGoogleIdAsync(googleId)  
+                       ??  await _vendorRepo.GetByEmailAsync(email);
+          
 
             if (user == null)
             {
+                if (await _authRepo.CustomerEmailExistsAsync(email) || await _authRepo.VendorEmailExistsAsync(email))
+                {
+                    return new AuthResponseDto { IsSuccess = false, Message = "Email already exists" };
+                }
                 user = new Domain.Entities.Vendor
                 {
                     GoogleId = googleId,
@@ -452,12 +470,13 @@ namespace Application.Services
             }
             else
             {
-                // If existing user had no GoogleId, set it
                 if (string.IsNullOrEmpty(user.GoogleId))
                 {
                     user.GoogleId = googleId;
                     await _vendorRepo.UpdateAsync(user);
                 }
+                // If existing user had no GoogleId, set it
+
             }
 
             return CreateAuthResponse(user.VendorID, user.Name, user.Email, "Vendor", "Login Successful");

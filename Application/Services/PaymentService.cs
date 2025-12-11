@@ -66,7 +66,7 @@ namespace Application.Services
 
             // B. ஏற்கனவே பதிவு செய்யப்பட்டதா எனச் சோதி (Duplicate Check)
             var existingPayment = await _paymentRepo.GetByPaymentIntentIdAsync(paymentIntentId);
-            if (existingPayment != null) return true; // ஏற்கனவே முடிந்துவிட்டது
+            if (existingPayment != null) return true; //ஏற்கனவே முடிந்துவிட்டது
 
             // C. Booking-ஐ எடு
             if (!intent.Metadata.ContainsKey("BookingID")) return false;
@@ -74,65 +74,145 @@ namespace Application.Services
 
             var booking = await _bookingRepo.GetByIdAsync(bookingId);
             if (booking == null) return false;
+           // var huhu = new    PaymentRequestDto();
+          
+             
 
             // --- BUSINESS LOGIC: 10% vs 5% Calculation ---
-
-            decimal totalAmount = booking.TotalPrice;
-            decimal adminShare = 0;
-            decimal vendorShare = 0;
-            decimal customerCashback = 0;
-
-            // Package Booking-ஆ எனச் சோதி (PackageID உள்ளதா?)
-            bool isPackageBooking = booking.BookingItems.Any(bi => bi.PackageID != null);
-
-            if (isPackageBooking)
+            var h =     booking.CustomerID;
+           var cust = await _authRepo.GetCustomerByIdAsync(h);
+            if (cust == null) return false;
+            if(booking.TotalPrice >= cust.WalletBalance)
             {
-                // --- PACKAGE LOGIC ---
-                // Admin: 5%, Customer: 5% (Cashback), Vendor: 90%
-                adminShare = totalAmount * 0.05m;
-                customerCashback = totalAmount * 0.05m;
-                vendorShare = totalAmount * 0.90m;
-            }
-            else
-            {
-                // --- SINGLE SERVICE LOGIC ---
-                // Admin: 10%, Vendor: 90%
-                adminShare = totalAmount * 0.10m;
-                vendorShare = totalAmount * 0.90m;
-                customerCashback = 0;
-            }
+                decimal balance = booking.TotalPrice - cust.WalletBalance;
 
-            // --- D. Save Payment Record (Using Repository) ---
-            var payment = new Payment
-            {
-                PaymentID = Guid.NewGuid(),
-                BookingID = bookingId,
-                StripePaymentIntentId = paymentIntentId,
-                AmountPaid = totalAmount,
-                Status = "Succeeded",
-                PaymentDate = DateTime.UtcNow,
+                decimal totalAmount = balance;
+                decimal adminShare = 0;
+                decimal vendorShare = 0;
+                decimal customerCashback = 0;
 
-                // Shares
-                AdminCommission = adminShare,
-                VendorEarnings = vendorShare,
-                CustomerCashback = customerCashback
-            };
+                // Package Booking-ஆ எனச் சோதி (PackageID உள்ளதா?)
+                bool isPackageBooking = booking.BookingItems.Any(bi => bi.PackageID != null);
 
-            await _paymentRepo.AddAsync(payment);
-
-            // --- E. Update Customer Wallet (Cashback இருந்தால்) ---
-            if (customerCashback > 0)
-            {
-                var customer = await _authRepo.GetCustomerByIdAsync(booking.CustomerID);
-                if (customer != null)
+                if (isPackageBooking)
                 {
-                    customer.WalletBalance += customerCashback;
-                    await _authRepo.UpdateCustomerAsync(customer); // (Repo-வில் இந்த method தேவை)
+                    // --- PACKAGE LOGIC ---
+                    // Admin: 5%, Customer: 5% (Cashback), Vendor: 90%
+                    adminShare = totalAmount * 0.05m;
+                    customerCashback = totalAmount * 0.05m;
+                    vendorShare = totalAmount * 0.90m;
                 }
+                else
+                {
+                    // --- SINGLE SERVICE LOGIC ---
+                    // Admin: 10%, Vendor: 90%
+                    adminShare = totalAmount * 0.10m;
+                    vendorShare = totalAmount * 0.90m;
+                    customerCashback = 0;
+                }
+
+                // --- D. Save Payment Record (Using Repository) ---
+
+                var payment = new Payment
+                {
+                    PaymentID = Guid.NewGuid(),
+                    BookingID = bookingId,
+                    StripePaymentIntentId = paymentIntentId,
+                    AmountPaid = totalAmount,
+                    Status = "Succeeded",
+                    PaymentDate = DateTime.UtcNow,
+
+                    // Shares
+                    AdminCommission = adminShare,
+                    VendorEarnings = vendorShare,
+                    CustomerCashback = customerCashback
+                };
+
+                await _paymentRepo.AddAsync(payment);
+
+                if (customerCashback > 0)
+                {
+                    var customer = await _authRepo.GetCustomerByIdAsync(booking.CustomerID);
+                    if (customer != null)
+                    {
+                        customer.WalletBalance += customerCashback;
+                        await _authRepo.UpdateCustomerAsync(customer); // (Repo-வில் இந்த method தேவை)
+                    }
+                }
+
+            }
+            else 
+            {
+                decimal balance = cust.WalletBalance - booking.TotalPrice;
+                decimal totalAmount = balance;
+                decimal adminShare = 0;
+                decimal vendorShare = 0;
+                decimal customerCashback = 0;
+               // decimal vendorEarnings = await _
+
+                // Package Booking-ஆ எனச் சோதி (PackageID உள்ளதா?)
+                bool isPackageBooking = booking.BookingItems.Any(bi => bi.PackageID != null);
+
+                if (isPackageBooking)
+                {
+                    // --- PACKAGE LOGIC ---
+                    // Admin: 5%, Customer: 5% (Cashback), Vendor: 90%
+                    adminShare = totalAmount * 0.05m;
+                    customerCashback = totalAmount * 0.05m;
+                    vendorShare = totalAmount * 0.90m;
+                }
+                else
+                {
+                    // --- SINGLE SERVICE LOGIC ---
+                    // Admin: 10%, Vendor: 90%
+                    adminShare = totalAmount * 0.10m;
+                    vendorShare = totalAmount * 0.90m;
+                    customerCashback = 0;
+                }
+
+                // --- D. Save Payment Record (Using Repository) ---
+
+                var payment = new Payment
+                {
+                    PaymentID = Guid.NewGuid(),
+                    BookingID = bookingId,
+                    StripePaymentIntentId = paymentIntentId,
+                    AmountPaid = totalAmount,
+                    Status = "Succeeded",
+                    PaymentDate = DateTime.UtcNow,
+
+                    // Shares
+                    AdminCommission = adminShare,
+                    VendorEarnings = vendorShare,
+                    CustomerCashback = customerCashback,
+                   // VendorEarnings = vendorEarnings
+                };
+
+                await _paymentRepo.AddAsync(payment);
+
+                if (customerCashback > 0)
+                {
+                    var customer = await _authRepo.GetCustomerByIdAsync(booking.CustomerID);
+                    if (customer != null)
+                    {
+                        customer.WalletBalance += customerCashback;
+                        await _authRepo.UpdateCustomerAsync(customer); // (Repo-வில் இந்த method தேவை)
+                    }
+                }
+                //if (vendorShare > 0)
+                //{
+                //    var vendor = await _authRepo.GetVendorByIdAsync(booking.);
+                //}
+
+
             }
 
-            // --- F. Update Booking Status ---
-            booking.BookingStatus = "Paid";
+
+                // --- E. Update Customer Wallet (Cashback இருந்தால்) ---
+
+
+                // --- F. Update Booking Status ---
+                booking.BookingStatus = "Paid";
             await _bookingRepo.UpdateAsync(booking); // (Repo-வில் இந்த method தேவை)
 
             return true;

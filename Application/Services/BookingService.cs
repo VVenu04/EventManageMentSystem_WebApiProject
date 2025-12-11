@@ -24,6 +24,7 @@ namespace Application.Services
 
         private readonly IPaymentService _paymentService;
         private readonly INotificationService _notificationService;
+        private readonly IPaymentRepository _paymentRepository;
         // 1. Valid Status List (Vendor can only choose these)
         private readonly List<string> _validStatuses = new List<string>
         {
@@ -39,7 +40,8 @@ namespace Application.Services
                               IPackageRepository packageRepo,
                               IPaymentService paymentService,
                               INotificationService notificationService,
-                              IConfiguration configuration) 
+                              IConfiguration configuration,
+                              IPaymentRepository paymentRepository) 
         {
             _bookingRepo = bookingRepo;
             _serviceRepo = serviceRepo;
@@ -48,6 +50,7 @@ namespace Application.Services
             _paymentService = paymentService;
             _notificationService = notificationService;
             _configuration = configuration;
+            _paymentRepository = paymentRepository;
         }
 
         public async Task<BookingConfirmationDto> CreateBookingAsync(CreateBookingDto createBookingDto, Guid customerId)
@@ -138,7 +141,8 @@ namespace Application.Services
         public async Task<BookingConfirmationDto> GetBookingByIdAsync(Guid bookingId)
         {
             var booking = await _bookingRepo.GetByIdAsync(bookingId);
-            if (booking == null) {
+            if (booking == null) 
+            {
                 throw new Exception($"Booking with ID {bookingId} not found.");
 
 
@@ -153,7 +157,14 @@ namespace Application.Services
             var servicesInCart = new List<ServiceItem>();
             var vendorsInCart = new Dictionary<Guid, Vendor>();
             decimal totalPrice = 0;
+            //if (dto.ServiceIDs != null && !dto.PackageID.HasValue)
+            //{
+            //}
 
+            if(dto.PackageID != null && dto.ServiceIDs.Count > 0)
+            {
+                throw new Exception("Cannot book both");
+            }
             if (dto.PackageID.HasValue) // --- Package Booking Logic ---
             {
                 var package = await _packageRepo.GetPackageWithServicesAsync(dto.PackageID.Value);
@@ -207,9 +218,12 @@ namespace Application.Services
         }
 
         // --- Helper Method 2: Business Logic-ஐச் சோதித்தல் ---
-        private async Task ValidateBookingLogicAsync(List<ServiceItem> services, Dictionary<Guid, Vendor> vendors, DateTime eventDate)
+        private async Task ValidateBookingLogicAsync(List<ServiceItem> services, Dictionary<Guid, Vendor> vendors, DateTime eventDate )
         {
             // Loop 1: Services-ஐ Validate செய்
+
+
+            
             foreach (var service in services)
             {
                 if (!service.Active)
@@ -234,6 +248,8 @@ namespace Application.Services
                         throw new Exception($"Sorry, the service '{service.Name}' has reached its booking limit ({(int)service.EventPerDayLimit}) for this date.");
                     }
                 }
+                 
+
             }
 
           
@@ -299,6 +315,12 @@ namespace Application.Services
             // 1. Validate Status Input (Selectable Logic)
             // NEW (Robust - Case Insensitive):
             // Checks if the input exists in the list, ignoring Upper/Lower case differences
+
+            var g = await _paymentRepository.GetByBookingIdAsync(dto.BookingItemID);
+            if (g.Status == "Pending" || g.Status == "Failed")
+            {
+                throw new Exception("Pay panala da  vennai free ah seija porijo");
+            }
             if (!_validStatuses.Any(s => s.Equals(dto.Status, StringComparison.OrdinalIgnoreCase)))
             {
                 throw new Exception($"Invalid Status. Allowed values: {string.Join(", ", _validStatuses)}");
@@ -306,7 +328,7 @@ namespace Application.Services
 
             var item = await _bookingRepo.GetBookingItemByIdAsync(dto.BookingItemID);
             if (item == null) throw new Exception("Item not found.");
-
+     
             // NEW LOGIC STARTS HERE
             if (dto.Status == "JobDone")
             {
