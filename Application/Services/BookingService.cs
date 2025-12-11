@@ -87,6 +87,8 @@ namespace Application.Services
                 BookingID = Guid.NewGuid(),
                 CustomerID = customerId,
                 EventDate = createBookingDto.EventDate,
+                EventTime = createBookingDto.EventTime,
+                Discription = createBookingDto.Description,
                 Location = createBookingDto.Location, 
                 TotalPrice = totalPrice, 
                 BookingStatus = "Confirmed",

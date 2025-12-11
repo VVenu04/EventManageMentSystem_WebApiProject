@@ -12,5 +12,7 @@ namespace Application.DTOs.Booking
         public string Location { get; set; }
         public List<Guid> ServiceIDs { get; set; }
         public Guid? PackageID { get; set; }
+        public DateTime EventTime { get; set; }
+        public string Description { get; set; }
     }
 }
