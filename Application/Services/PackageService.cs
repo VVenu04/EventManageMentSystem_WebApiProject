@@ -40,6 +40,7 @@ namespace Application.Services
             {
                 PackageID = Guid.NewGuid(),
                 Name = dto.Name,
+                Description = dto.Description,
                 VendorID = ownerId,
                 Status = "Draft",
                 IsActive = false,
@@ -204,12 +205,19 @@ namespace Application.Services
             if (package == null) throw new Exception("Package not found.");
             if (package.VendorID != vendorId) throw new Exception("Unauthorized.");
 
-            // 2. Ensure all requests are accepted
-            var pendingRequests = await _requestRepo.GetPendingRequestsByPackageAsync(packageId);
+            // 2. FETCH ALL REQUESTS (Pending, Accepted, Rejected)
+            var allRequests = await _requestRepo.GetAllRequestsByPackageAsync(packageId);
 
-            if (pendingRequests.Any())
+            // CHECK 1: Are there any PENDING requests?
+            if (allRequests.Any(r => r.Status == "Pending"))
             {
-                throw new Exception("Cannot publish: Waiting for partner vendors to accept collaboration.");
+                throw new Exception("Cannot publish: Waiting for partner vendors to respond.");
+            }
+
+            // CHECK 2: Are there any REJECTED requests? (🚨 THIS FIXES YOUR ISSUE)
+            if (allRequests.Any(r => r.Status == "Rejected"))
+            {
+                throw new Exception("Cannot publish: One or more partners have REJECTED your collaboration request. Please remove their services or create a new package.");
             }
 
             // 3. Update Status
@@ -217,25 +225,28 @@ namespace Application.Services
             package.IsActive = true;
             await _packageRepo.UpdateAsync(package);
 
+            // 4. Notify Collaborators
             if (package.PackageItems != null && package.PackageItems.Any())
             {
-                // Find all unique vendors involved in this package, excluding the owner 
                 var collaborators = package.PackageItems
-                    .Select(item => item.VendorID) // Ensure PackageItem has VendorID populated
+                    .Select(item => item.VendorID)
                     .Distinct()
-                    .Where(vid => vid != vendorId) // Don't notify the person publishing it
+                    .Where(vid => vid != vendorId)
                     .ToList();
 
                 foreach (var collaboratorId in collaborators)
                 {
-                    string message = $"Great news! The package '{package.Name}' (which includes your service) has been PUBLISHED by {package.Vendor?.Name ?? "the owner"}.";
-
-                    await _notificationService.SendNotificationAsync(
-                        collaboratorId,       // Receiver 
-                        message,              // Message
-                        "PackagePublished",   // Notification Type
-                        packageId             // Related Entity ID
-                    );
+                    // Only notify those who actually Accepted (Double safety)
+                    var request = allRequests.FirstOrDefault(r => r.ReceiverVendorID == collaboratorId);
+                    if (request != null && request.Status == "Accepted")
+                    {
+                        await _notificationService.SendNotificationAsync(
+                            collaboratorId,
+                            $"The package '{package.Name}' has been PUBLISHED!",
+                            "PackagePublished",
+                            packageId
+                        );
+                    }
                 }
             }
         }
@@ -342,6 +353,7 @@ namespace Application.Services
             {
                 PackageID = package.PackageID,
                 Name = package.Name,
+                Description = package.Description,
                 TotalPrice = package.TotalPrice,
                 Active = package.IsActive,
                 VendorID = package.VendorID,

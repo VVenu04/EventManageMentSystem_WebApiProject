@@ -80,5 +80,13 @@ namespace infrastructure.Repositary
                 .Where(r => r.PackageID == packageId && r.Status == "Pending")
                 .ToListAsync();
         }
+
+
+        public async Task<IEnumerable<PackageRequest>> GetAllRequestsByPackageAsync(Guid packageId)
+        {
+            return await _context.PackageRequests
+                .Where(r => r.PackageID == packageId)
+                .ToListAsync();
+        }
     }
 }
