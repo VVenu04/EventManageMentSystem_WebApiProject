@@ -12,6 +12,7 @@ namespace Application.DTOs.Package
     {
         public Guid PackageID { get; set; }
         public string Name { get; set; }
+        public string Description { get; set; }
         public decimal TotalPrice { get; set; } // (Package-இன் தள்ளுபடி விலை)
         public bool Active { get; set; }
 
