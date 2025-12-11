@@ -11,7 +11,6 @@ namespace Domain.Entities
     {
         [Key]
         public Guid VendorID { get; set; }
-
         public string Name { get; set; }
         public string Email { get; set; }
         public string PasswordHash { get; set; }
@@ -29,11 +28,9 @@ namespace Domain.Entities
         public string Logo { get; set; }
         public string Description { get; set; }
         public string? PasswordResetOtp { get; set; }
-
         public DateTime? PasswordResetOtpExpiry { get; set; }
-
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
         public DateTime? UpdatedAt { get; set; }
+      
     }
 }

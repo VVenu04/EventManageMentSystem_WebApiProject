@@ -14,7 +14,7 @@ namespace Application.DTOs.Payment
         public decimal AmountPaid { get; set; }
         public string Status { get; set; }
         public DateTime PaymentDate { get; set; }
-
         public decimal CustomerCashback { get; set; }
+       
     }
 }

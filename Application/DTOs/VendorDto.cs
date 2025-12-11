@@ -20,9 +20,10 @@ namespace Application.DTOs
         [CustomEmail]
         [Required]
         public string ContactEmail { get; set; }
-        [Required]
-        public string PhoneNumber { get; set; }
 
+        [Phone(ErrorMessage = "Invalid Phone Number.")]
+        public string PhoneNumber { get; set; }
+        [CustomPassword]
         public string Password { get; set; }
         public string CompanyName { get; set; }
         public string Location { get; set; }
