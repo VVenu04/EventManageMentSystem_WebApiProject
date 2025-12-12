@@ -44,6 +44,8 @@ namespace Application.Services
                     BookingStatus = BookingStatus.Cart, // "Cart" நிலை
                     EventDate = dto.EventDate,
                     Location = dto.Location,
+                    EventTime=dto.EventTime,
+                    Discription=dto.Description,
                     CreatedAt = DateTime.UtcNow,
                     BookingItems = new List<BookingItem>()
                 };
