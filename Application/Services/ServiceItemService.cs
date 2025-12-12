@@ -18,19 +18,27 @@ namespace Application.Services
         private readonly ICategoryRepository _categoryRepo;
         private readonly IEventRepo _eventRepo;
         private readonly IPhotoService _photoService; 
+        private readonly IAuthRepository _authRepo;
 
         public ServiceItemService(
-            IServiceItemRepository serviceRepo, ICategoryRepository categoryRepo, IEventRepo eventRepo, IPhotoService photoService)
+            IServiceItemRepository serviceRepo, ICategoryRepository categoryRepo, IEventRepo eventRepo, IPhotoService photoService,IAuthRepository authRepository)
         {
             _serviceRepo = serviceRepo;
             _categoryRepo = categoryRepo;
             _eventRepo = eventRepo;
             _photoService = photoService;
+            _authRepo = authRepository;
         }
 
 
         public async Task<ServiceItemDto> CreateServiceAsync(CreateServiceDto dto, List<IFormFile> images, Guid vendorId)
         {
+            var vendor = await _authRepo.GetVendorByIdAsync(vendorId);
+            var verify = vendor.IsVerified;
+            if (verify == false)
+            {
+                throw new Exception("Your account is not verified. You cannot create a service.");
+            }
             // 1. Image Validation (File Count Check)
             if (images == null || !images.Any())
                 throw new Exception("You must upload at least one photo for the service.");

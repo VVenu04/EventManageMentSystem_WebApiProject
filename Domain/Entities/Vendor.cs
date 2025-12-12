@@ -32,6 +32,9 @@ namespace Domain.Entities
         public DateTime? PasswordResetOtpExpiry { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
-      
+        public bool IsVerified { get; set; }
+        public string VerificationToken { get; set; }
+        public DateTime? TokenExpires { get; set; }
+
     }
 }

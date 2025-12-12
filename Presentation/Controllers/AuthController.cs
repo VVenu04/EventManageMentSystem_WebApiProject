@@ -276,10 +276,20 @@ namespace Presentation.Controllers
             if (result.Success) return Ok(result);
             return BadRequest(result);
         }
-        [HttpGet("verify")]
+        [HttpGet("verify/customer")]
         public async Task<IActionResult> Verify(string token)
         {
-            var success = await _authService.VerifyEmailAsync(token);
+            var success = await _authService.VerifyEmailCustomerAsync(token);
+
+            if (!success)
+                return BadRequest("Invalid or expired token");
+
+            return Ok("Email verified successfully");
+        }
+        [HttpGet("verify/vendor")]
+        public async Task<IActionResult> VerifyVendor(string token)
+        {
+            var success = await _authService.VerifyEmailVendorAsync(token);
 
             if (!success)
                 return BadRequest("Invalid or expired token");

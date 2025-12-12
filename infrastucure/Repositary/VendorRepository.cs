@@ -23,7 +23,10 @@ namespace infrastructure.Repositary
                 .AsNoTracking()
                 .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
         }
-
+        public async Task<Vendor> GetByVerificationTokenAsync(string token)
+        {
+            return await _dbContext.Vendors.FirstOrDefaultAsync(x => x.VerificationToken == token);
+        }
         public async Task<Vendor> VendorGetByGoogleIdAsync(string googleId)
         {
             return await _dbContext.Vendors.FirstOrDefaultAsync(u => u.GoogleId == googleId);
