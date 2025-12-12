@@ -276,6 +276,16 @@ namespace Presentation.Controllers
             if (result.Success) return Ok(result);
             return BadRequest(result);
         }
+        [HttpGet("verify")]
+        public async Task<IActionResult> Verify(string token)
+        {
+            var success = await _authService.VerifyEmailAsync(token);
+
+            if (!success)
+                return BadRequest("Invalid or expired token");
+
+            return Ok("Email verified successfully");
+        }
 
 
     }

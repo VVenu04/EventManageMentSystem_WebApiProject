@@ -35,6 +35,9 @@ namespace infrastucure.Repositary
             stats.TotalVendors = await _context.Vendors.CountAsync();
             stats.TotalCustomers = await _context.Customers.CountAsync();
             stats.TotalBookings = await _context.Bookings.CountAsync();
+            stats.AdminCashBack = await _context.Bookings
+                .Where(b => b.BookingStatus == "Completed")
+                .SumAsync(b => b.TotalPrice);
 
             // Total Payments (Assuming you have a Payments table)
             // If table doesn't exist yet, use Bookings TotalPrice where Status='Paid'

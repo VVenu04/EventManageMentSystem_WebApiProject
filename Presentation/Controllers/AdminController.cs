@@ -27,7 +27,14 @@ namespace Presentation.Controllers
             var stats = await _adminService.GetDashboardStatsAsync();
             return Ok(ApiResponse<AdminDashboardDto>.Success(stats));
         }
-
+        [HttpGet("ADmin/Wallet")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<ApiResponse<decimal>>> GetAdminWalletBalance()
+        {
+            var stats = await _adminService.GetDashboardStatsAsync();
+            // Assuming TotalRevenue represents the wallet balance
+            return Ok(ApiResponse<decimal>.Success(stats.AdminCashBack, "Wallet balance retrieved successfully."));
+        }
 
         [ProducesErrorResponseType(typeof(ApiResponse<AdminDto>))]
         [ProducesResponseType(typeof(ApiResponse<AdminDto>), StatusCodes.Status201Created)] 

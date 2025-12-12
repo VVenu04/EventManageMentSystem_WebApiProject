@@ -14,5 +14,6 @@ namespace Application.Interface.IRepo
         Task<Customer> GetByEmailAsync(string email);
         Task<Customer> GetByIdAsync(Guid id);
         Task<Customer> CustomerGetByGoogleIdAsync(string googleId);
+        Task<Customer> GetByVerificationTokenAsync(string token);
     }
 }

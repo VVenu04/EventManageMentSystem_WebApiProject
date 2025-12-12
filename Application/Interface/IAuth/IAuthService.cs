@@ -29,5 +29,6 @@ namespace Application.Interface.IAuth
         Task<AuthResponseDto> VendorSignInWithGoogleAsync(string idToken);
         Task<CustomerDto> GetCustomerProfileAsync(Guid customerId);
         Task<VendorDto> GetVendorProfileAsync(Guid vendorId);
+        Task<bool> VerifyEmailAsync(string token);
     }
 }

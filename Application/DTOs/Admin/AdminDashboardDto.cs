@@ -13,6 +13,8 @@ namespace Application.DTOs.Admin
         public int TotalBookings { get; set; }
         public decimal TotalRevenue { get; set; } // Total Payments
         public List<DashboardActivityDto> RecentActivities { get; set; }
+        public decimal AdminCashBack { get; set; }
+
     }
 
     public class DashboardActivityDto
