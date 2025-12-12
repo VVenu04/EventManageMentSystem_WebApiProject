@@ -27,6 +27,7 @@ namespace infrastucure.Repositary
             _dbContext.Admins.Update(admin);
             await _dbContext.SaveChangesAsync();
         }
+        
         public async Task<AdminDashboardDto> GetDashboardStatsAsync()
         {
             var stats = new AdminDashboardDto();

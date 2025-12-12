@@ -1,8 +1,10 @@
 ﻿using Application.Common;
+using Application.DTOs;
 using Application.DTOs.Auth;
 using Application.DTOs.Forgot;
 using Application.DTOs.Google;
 using Application.Interface.IAuth;
+using Application.Interface.IService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -12,9 +14,10 @@ namespace Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController(IAuthService authService) : BaseApiController
+    public class AuthController(IAuthService authService, IEmailService emailService) : BaseApiController
     {
         private readonly IAuthService _authService = authService;
+        private readonly IEmailService _emailService = emailService;
 
         // --- Customer Routes ---
         [HttpPost("customer/register")]
@@ -296,7 +299,25 @@ namespace Presentation.Controllers
 
             return Ok("Email verified successfully");
         }
+        [AllowAnonymous]
+        [HttpPost("send")]
+        public async Task<IActionResult> SendToAdmin([FromBody] MessageDto dto)
+        {
+            string adminEmail = "vvenujan04@gmail.com";
 
+            string subject = "New  Message";
+            string body = $@"
+            <h3>Customer Message</h3>
+            <p><b>Name:</b>{dto.Name}</p>
+            <p><b>PhoneNumber:</b>{dto.PhoneNumber}</p>
+            <p><b>Email:</b> {dto.Email}</p>
+            <p><b>Message:</b><br>{dto.Message.Replace("\n", "<br>")}</p>
+        ";
+
+            await _emailService.SendEmailAsync(adminEmail, subject, body);
+
+            return Ok("Message sent to admin successfully!");
+        }
 
     }
 }
