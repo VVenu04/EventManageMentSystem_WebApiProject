@@ -58,6 +58,11 @@ namespace Application.Services
         public async Task<BookingConfirmationDto> CreateBookingAsync(CreateBookingDto createBookingDto, Guid customerId)
         {
             var customer = await _authRepo.GetCustomerByIdAsync(customerId);
+            var verify = customer.IsVerified;
+            if (verify == false)
+            {
+                throw new Exception("Please verify your email before making a booking.");
+            }
             if (customer == null)
             {
                 // Token-ல் இருந்து வரும் ID தவறாக இருந்தால், அது ஒரு தீவிர பிழை.
