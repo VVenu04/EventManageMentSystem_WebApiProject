@@ -19,6 +19,7 @@ namespace Application.Mapper
                 CustomerID = booking.CustomerID,
                 CustomerName = booking.Customer?.Name,
                 EventDate = booking.EventDate,
+                EventTime = booking.EventTime,
                 TotalPrice = booking.TotalPrice,
                 BookingStatus = booking.BookingStatus,
 
@@ -44,6 +45,7 @@ namespace Application.Mapper
                 CustomerID = booking.CustomerID,
                 CustomerName = customer?.Name ?? "Customer",
                 EventDate = booking.EventDate,
+                EventTime = booking.EventTime,
                 TotalPrice = booking.TotalPrice,
                 BookingStatus = booking.BookingStatus,
                 BookedItems = booking.BookingItems.Select(item =>

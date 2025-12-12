@@ -21,7 +21,7 @@ namespace Application.Services
         private readonly IAuthRepository _authRepo;
         private readonly IPackageRepository _packageRepo;
         private readonly IConfiguration _configuration;
-
+        private readonly IAdminRepo _adminRepo;
         private readonly IPaymentService _paymentService;
         private readonly INotificationService _notificationService;
         private readonly IPaymentRepository _paymentRepository;
@@ -41,7 +41,8 @@ namespace Application.Services
                               IPaymentService paymentService,
                               INotificationService notificationService,
                               IConfiguration configuration,
-                              IPaymentRepository paymentRepository) 
+                              IPaymentRepository paymentRepository,
+                              IAdminRepo adminRepo) 
         {
             _bookingRepo = bookingRepo;
             _serviceRepo = serviceRepo;
@@ -51,6 +52,7 @@ namespace Application.Services
             _notificationService = notificationService;
             _configuration = configuration;
             _paymentRepository = paymentRepository;
+            _adminRepo = adminRepo;
         }
 
         public async Task<BookingConfirmationDto> CreateBookingAsync(CreateBookingDto createBookingDto, Guid customerId)
@@ -461,6 +463,21 @@ namespace Application.Services
             // TODO: Trigger Payment Release (e.g., _paymentService.ReleaseFunds...)
 
             await _bookingRepo.UpdateBookingItemAsync(item);
+            var booking = await _paymentRepository.GetByBookingIdAsync(dto.BookingItemID);
+            var vendorcashback = booking.VendorEarnings;
+            var admincashback = booking.AdminCommission;
+            var vendor = await _authRepo.GetVendorByIdAsync(item.VendorID);
+            if (item.TrackingStatus == "Completed" )
+            {
+                vendor.VendorCashBack = vendorcashback;
+                await _authRepo.UpdateVendorAsync(vendor);
+                var admin = await _adminRepo.GetAllAsync();
+                foreach(var a in admin)
+                {
+                    a.AdminCashBack = admincashback;
+                }
+
+            } 
 
             // 1. Send the Real Email
             try

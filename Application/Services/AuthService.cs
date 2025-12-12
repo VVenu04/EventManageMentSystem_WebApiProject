@@ -126,14 +126,33 @@ namespace Application.Services
                 Name = dto.Name,
                 Email = dto.Email,
                 PhoneNumber = dto.PhoneNumber,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password)
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
+                IsVerified = false,
+                TokenExpires = DateTime.UtcNow.AddHours(24)
             };
-
+            var token = Guid.NewGuid().ToString();
             await _authRepo.AddCustomerAsync(customer);
+            var verifyUrl = $"http://localhost:5018//api/auth/verify?token={token}";
+
+            await _emailService.SendEmailAsync(customer.Email, "Verify Your Email",
+                $"Click to verify: {verifyUrl}");
 
             return CreateAuthResponse(customer.CustomerID, customer.Name, customer.Email, "Customer", "Registration Successful");
         }
+        public async Task<bool> VerifyEmailAsync(string token)
+        {
+            var user = await _customerRepo.GetByVerificationTokenAsync(token);
 
+            if (user == null || user.TokenExpires < DateTime.UtcNow)
+                return false;
+
+            user.IsVerified = true;
+            user.VerificationToken = null;
+            user.TokenExpires = null;
+
+            await _customerRepo.UpdateAsync(user);
+            return true;
+        }
         public async Task<AuthResponseDto> LoginCustomerAsync(LoginDto dto)
         {
             var customer = await _authRepo.GetCustomerByEmailAsync(dto.Email);
@@ -356,7 +375,8 @@ namespace Application.Services
                 Location = vendor.Location,
                 Description = vendor.Description,
                 Logo = vendor.Logo,
-                EventPerDayLimit = vendor.EventPerDayLimit
+                EventPerDayLimit = vendor.EventPerDayLimit,
+                VendorEarnings = vendor.VendorCashBack
                 // RegisterNumber etc.
             };
         }

@@ -24,7 +24,7 @@ namespace Application.DTOs.Admin
         [DataType(DataType.Password)]
         [CustomPassword]
         public string AdminPassword { get; set; }
+        public decimal AdminCashBack { get; set; }
 
-        
     }
 }

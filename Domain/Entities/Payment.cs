@@ -17,7 +17,7 @@ namespace Domain.Entities
         public decimal AmountPaid { get; set; } 
         public DateTime PaymentDate { get; set; } = DateTime.UtcNow;
         public string Status { get; set; } // "Pending", "Succeeded", "Failed"
-
+        public string PaymentMethod { get; set; } // "cash back elad Cash
         public decimal AdminCommission { get; set; } 
         public decimal VendorEarnings { get; set; }  
         public decimal CustomerCashback { get; set; } 

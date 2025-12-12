@@ -1,6 +1,7 @@
 ﻿using Application.DTOs.Payment;
 using Application.Interface.IRepo;
 using Application.Interface.IService;
+using Domain.Constants;
 using Domain.Entities;
 using Microsoft.Extensions.Configuration;
 using Stripe;
@@ -82,8 +83,10 @@ namespace Application.Services
             var h =     booking.CustomerID;
            var cust = await _authRepo.GetCustomerByIdAsync(h);
             if (cust == null) return false;
+       
             if(booking.TotalPrice >= cust.WalletBalance)
             {
+                decimal startprice = booking.TotalPrice;
                 decimal balance = booking.TotalPrice - cust.WalletBalance;
 
                 decimal totalAmount = balance;
@@ -98,16 +101,16 @@ namespace Application.Services
                 {
                     // --- PACKAGE LOGIC ---
                     // Admin: 5%, Customer: 5% (Cashback), Vendor: 90%
-                    adminShare = totalAmount * 0.05m;
-                    customerCashback = totalAmount * 0.05m;
-                    vendorShare = totalAmount * 0.90m;
+                    adminShare = startprice * 0.05m;
+                    customerCashback = startprice * 0.05m;
+                    vendorShare = startprice * 0.90m;
                 }
                 else
                 {
                     // --- SINGLE SERVICE LOGIC ---
                     // Admin: 10%, Vendor: 90%
-                    adminShare = totalAmount * 0.10m;
-                    vendorShare = totalAmount * 0.90m;
+                    adminShare = startprice * 0.10m;
+                    vendorShare = startprice * 0.90m;
                     customerCashback = 0;
                 }
 
@@ -125,7 +128,8 @@ namespace Application.Services
                     // Shares
                     AdminCommission = adminShare,
                     VendorEarnings = vendorShare,
-                    CustomerCashback = customerCashback
+                    CustomerCashback = customerCashback,
+  
                 };
 
                 await _paymentRepo.AddAsync(payment);
@@ -139,16 +143,20 @@ namespace Application.Services
                         await _authRepo.UpdateCustomerAsync(customer); // (Repo-வில் இந்த method தேவை)
                     }
                 }
+        
+               
+               
 
             }
             else 
             {
+                decimal startprice = booking.TotalPrice;
                 decimal balance = cust.WalletBalance - booking.TotalPrice;
                 decimal totalAmount = balance;
                 decimal adminShare = 0;
                 decimal vendorShare = 0;
                 decimal customerCashback = 0;
-               // decimal vendorEarnings = await _
+            
 
                 // Package Booking-ஆ எனச் சோதி (PackageID உள்ளதா?)
                 bool isPackageBooking = booking.BookingItems.Any(bi => bi.PackageID != null);
@@ -157,16 +165,16 @@ namespace Application.Services
                 {
                     // --- PACKAGE LOGIC ---
                     // Admin: 5%, Customer: 5% (Cashback), Vendor: 90%
-                    adminShare = totalAmount * 0.05m;
-                    customerCashback = totalAmount * 0.05m;
-                    vendorShare = totalAmount * 0.90m;
+                    adminShare = startprice * 0.05m;
+                    customerCashback = startprice * 0.05m;
+                    vendorShare = startprice * 0.90m;
                 }
                 else
                 {
                     // --- SINGLE SERVICE LOGIC ---
                     // Admin: 10%, Vendor: 90%
-                    adminShare = totalAmount * 0.10m;
-                    vendorShare = totalAmount * 0.90m;
+                    adminShare = startprice * 0.10m;
+                    vendorShare = startprice * 0.90m;
                     customerCashback = 0;
                 }
 
@@ -199,10 +207,6 @@ namespace Application.Services
                         await _authRepo.UpdateCustomerAsync(customer); // (Repo-வில் இந்த method தேவை)
                     }
                 }
-                //if (vendorShare > 0)
-                //{
-                //    var vendor = await _authRepo.GetVendorByIdAsync(booking.);
-                //}
 
 
             }
