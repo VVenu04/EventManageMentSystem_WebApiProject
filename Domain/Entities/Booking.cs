@@ -15,6 +15,7 @@ namespace Domain.Entities
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime EventDate { get; set; }
         public DateTime EventTime { get; set; }
+        public string Discription { get; set; } 
 
         // Navigation Properties
         public Customer? Customer { get; set; }

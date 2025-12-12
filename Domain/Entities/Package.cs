@@ -13,6 +13,7 @@ namespace Domain.Entities
         public Guid PackageID { get; set; }
         public Guid VendorID { get; set; }
         public required string Name { get; set; }
+        public string Description { get; set; }
         public decimal TotalPrice { get; set; }
         public bool IsActive { get; set; } = false; 
         public string Status { get; set; } = "Draft";

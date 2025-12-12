@@ -21,5 +21,7 @@ namespace Application.Interface.IRepo
 
         // Added this NEW method specifically for checking a Package's status
         Task<IEnumerable<PackageRequest>> GetPendingRequestsByPackageAsync(Guid packageId);
+
+        Task<IEnumerable<PackageRequest>> GetAllRequestsByPackageAsync(Guid packageId);
     }
 }

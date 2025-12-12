@@ -120,18 +120,23 @@ namespace Presentation.Controllers
         }
 
         //  PUT: Update Service (Vendor Only) 
+        // PUT: Update Service (Vendor Only)
+        // PUT: Update Service (Vendor Only)
         [HttpPut("{id}")]
         [Authorize(Roles = "Vendor")]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> UpdateService(Guid id, [FromBody] UpdateServiceDto updateServiceDto)
+        public async Task<IActionResult> UpdateService(Guid id, [FromForm] UpdateServiceDto updateServiceDto, [FromForm] List<IFormFile> images)
         {
             if (CurrentUserId == Guid.Empty) return Unauthorized(ApiResponse<object>.Failure("Invalid Token"));
 
             if (id == Guid.Empty) return BadRequest(ApiResponse<object>.Failure("Invalid Service ID."));
 
+            // 🚨 FIX: Remove the faulty if-block. 
+            // 'images' parameter already contains the files from the form.
+
             try
             {
-                await _serviceService.UpdateServiceAsync(id, updateServiceDto, CurrentUserId);
+                // Service-க்கு DTO + Images அனுப்புகிறோம்
+                await _serviceService.UpdateServiceAsync(id, updateServiceDto, images, CurrentUserId);
                 return Ok(ApiResponse<object>.Success(null, "Service updated successfully."));
             }
             catch (Exception ex)
