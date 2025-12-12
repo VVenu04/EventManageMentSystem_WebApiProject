@@ -41,7 +41,7 @@ namespace Application.Services
                               IPaymentService paymentService,
                               INotificationService notificationService,
                               IConfiguration configuration,
-                              IPaymentRepository paymentRepository) 
+                              IPaymentRepository paymentRepository)
         {
             _bookingRepo = bookingRepo;
             _serviceRepo = serviceRepo;
@@ -76,7 +76,7 @@ namespace Application.Services
                 BookingItemID = Guid.NewGuid(),
                 ServiceItemID = service.ServiceItemID,
                 VendorID = service.VendorID,
-                ItemPrice = service.Price, 
+                ItemPrice = service.Price,
                 TrackingStatus = "Confirmed",
                 // It should be null initially
                 CompletionOtp = null
@@ -89,8 +89,8 @@ namespace Application.Services
                 EventDate = createBookingDto.EventDate,
                 EventTime = createBookingDto.EventTime,
                 Discription = createBookingDto.Description,
-                Location = createBookingDto.Location, 
-                TotalPrice = totalPrice, 
+                Location = createBookingDto.Location,
+                TotalPrice = totalPrice,
                 BookingStatus = "Confirmed",
                 BookingItems = bookingItemsList
             };
@@ -119,7 +119,7 @@ namespace Application.Services
                 booking.BookingID
             );
 
-            
+
 
 
             // 7. Return Confirmation DTO (Mapper-ஐப் பயன்படுத்தி)
@@ -143,7 +143,8 @@ namespace Application.Services
         public async Task<BookingConfirmationDto> GetBookingByIdAsync(Guid bookingId)
         {
             var booking = await _bookingRepo.GetByIdAsync(bookingId);
-            if (booking == null) {
+            if (booking == null)
+            {
                 throw new Exception($"Booking with ID {bookingId} not found.");
 
 
@@ -162,7 +163,7 @@ namespace Application.Services
             //{
             //}
 
-            if(dto.PackageID != null && dto.ServiceIDs.Count > 0)
+            if (dto.PackageID != null && dto.ServiceIDs.Count > 0)
             {
                 throw new Exception("Cannot book both");
             }
@@ -219,12 +220,12 @@ namespace Application.Services
         }
 
         // --- Helper Method 2: Business Logic-ஐச் சோதித்தல் ---
-        private async Task ValidateBookingLogicAsync(List<ServiceItem> services, Dictionary<Guid, Vendor> vendors, DateTime eventDate )
+        private async Task ValidateBookingLogicAsync(List<ServiceItem> services, Dictionary<Guid, Vendor> vendors, DateTime eventDate)
         {
             // Loop 1: Services-ஐ Validate செய்
 
 
-            
+
             foreach (var service in services)
             {
                 if (!service.Active)
@@ -249,11 +250,11 @@ namespace Application.Services
                         throw new Exception($"Sorry, the service '{service.Name}' has reached its booking limit ({(int)service.EventPerDayLimit}) for this date.");
                     }
                 }
-                 
+
 
             }
 
-          
+
         }
 
         public async Task CancelBookingAsync(Guid bookingId, Guid customerId)
@@ -310,7 +311,7 @@ namespace Application.Services
 
 
         // UPDATED TRACKING METHOD
-        
+
         public async Task UpdateTrackingStatusAsync(UpdateTrackingDto dto, Guid vendorId)
         {
             // 1. Validate Status Input (Selectable Logic)
@@ -333,7 +334,7 @@ namespace Application.Services
 
             var item = await _bookingRepo.GetBookingItemByIdAsync(dto.BookingItemID);
             if (item == null) throw new Exception("Item not found.");
-     
+
             // NEW LOGIC STARTS HERE
             if (dto.Status == "JobDone")
             {

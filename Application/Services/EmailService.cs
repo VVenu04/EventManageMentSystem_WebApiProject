@@ -19,6 +19,20 @@ namespace Application.Services
             _configuration = configuration;
             _smtpClient = smtpClient;
         }
+        public async Task SendEmailAsync(string toEmail, string subject, string body)
+        {
+            var senderEmail = _configuration["EmailSettings:SenderEmail"];
+            var senderName = _configuration["EmailSettings:SenderName"];
+            var mailMessage = new MailMessage
+            {
+                From = new MailAddress(senderEmail, senderName),
+                Subject = subject,
+                Body = body,
+                IsBodyHtml = true
+            };
+            mailMessage.To.Add(toEmail);
+            await _smtpClient.SendMailAsync(mailMessage);
+        }
         public async Task SendOtpEmailAsync(string toEmail, string otp, string userName)
         {
             var senderEmail = _configuration["EmailSettings:SenderEmail"];
@@ -36,7 +50,8 @@ namespace Application.Services
 
             await _smtpClient.SendMailAsync(mailMessage);
         }
-
+        //public async Task SendEmailToAdmin(string toEmail)
+       // private string GetOtpEmailTemplate(string Email , string PhoneNumber , )
         private string GetOtpEmailTemplate(string otp, string userName)
         {
             return $@"

@@ -12,8 +12,8 @@ using infrastucure.Data;
 namespace infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251209053552_UpdateOtpSchema")]
-    partial class UpdateOtpSchema
+    [Migration("20251212151640_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -46,6 +46,9 @@ namespace infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<decimal>("AdminCashBack")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("AdminEmail")
                         .HasColumnType("nvarchar(max)");
 
@@ -75,8 +78,14 @@ namespace infrastructure.Migrations
                     b.Property<Guid>("CustomerID")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Discription")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("EventDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("EventTime")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Location")
                         .HasColumnType("nvarchar(max)");
@@ -166,6 +175,9 @@ namespace infrastructure.Migrations
                     b.Property<string>("GoogleId")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsVerified")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Location")
                         .HasColumnType("nvarchar(max)");
 
@@ -187,8 +199,14 @@ namespace infrastructure.Migrations
                     b.Property<string>("ProfilePhoto")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("TokenExpires")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("VerificationToken")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("WalletBalance")
                         .HasColumnType("decimal(18,2)");
@@ -270,6 +288,9 @@ namespace infrastructure.Migrations
                     b.Property<Guid>("PackageID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("EventID")
                         .HasColumnType("uniqueidentifier");
@@ -377,6 +398,9 @@ namespace infrastructure.Migrations
 
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("PaymentMethod")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
@@ -506,6 +530,9 @@ namespace infrastructure.Migrations
                     b.Property<string>("GoogleId")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsVerified")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Location")
                         .HasColumnType("nvarchar(max)");
 
@@ -536,8 +563,17 @@ namespace infrastructure.Migrations
                     b.Property<int>("TimeLimit")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("TokenExpires")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<decimal>("VendorCashBack")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("VerificationToken")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("VendorID");
 

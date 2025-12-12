@@ -13,5 +13,6 @@ namespace Application.Interface.IRepo
         Task UpdateAsync(Vendor vendor);
         Task<Vendor> GetByEmailAsync(string email);
         Task<Vendor> VendorGetByGoogleIdAsync(string googleId);
+        Task<Vendor> GetByVerificationTokenAsync(string token);
     }
 }
