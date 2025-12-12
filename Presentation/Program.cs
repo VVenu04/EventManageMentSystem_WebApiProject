@@ -1,4 +1,4 @@
-using Application;
+﻿using Application;
 using Application.Common;
 using Application.Interface.IService;
 using infrastructure.ExternalServices;
@@ -12,6 +12,7 @@ using Presentation.Providers;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Presentation
 {
@@ -164,6 +165,8 @@ namespace Presentation
             app.MapControllers();
 
             app.MapHub<NotificationHub>("/notificationHub");
+            app.MapHub<ChatHub>("/chathub"); // 🚨 Endpoint URL
+
             app.Run();
         }
     }

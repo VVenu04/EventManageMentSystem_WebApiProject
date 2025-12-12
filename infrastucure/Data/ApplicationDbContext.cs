@@ -31,6 +31,7 @@ namespace infrastucure.Data
         public DbSet<Tracking> Tracking { get; set; }
         public DbSet<PackageRequest> PackageRequests { get; set; }
         public DbSet<ServiceImage> ServiceImages { get; set; }
+        public DbSet<ChatMessage>ChatMessages { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
