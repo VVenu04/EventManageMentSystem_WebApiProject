@@ -21,7 +21,7 @@ namespace Application.Services
         private readonly IAuthRepository _authRepo;
         private readonly IPackageRepository _packageRepo;
         private readonly IConfiguration _configuration;
-        private readonly IAdminRepo _adminRepo;
+
         private readonly IPaymentService _paymentService;
         private readonly INotificationService _notificationService;
         private readonly IPaymentRepository _paymentRepository;
@@ -41,8 +41,7 @@ namespace Application.Services
                               IPaymentService paymentService,
                               INotificationService notificationService,
                               IConfiguration configuration,
-                              IPaymentRepository paymentRepository,
-                              IAdminRepo adminRepo) 
+                              IPaymentRepository paymentRepository)
         {
             _bookingRepo = bookingRepo;
             _serviceRepo = serviceRepo;
@@ -52,17 +51,11 @@ namespace Application.Services
             _notificationService = notificationService;
             _configuration = configuration;
             _paymentRepository = paymentRepository;
-            _adminRepo = adminRepo;
         }
 
         public async Task<BookingConfirmationDto> CreateBookingAsync(CreateBookingDto createBookingDto, Guid customerId)
         {
             var customer = await _authRepo.GetCustomerByIdAsync(customerId);
-            var verify = customer.IsVerified;
-            if (verify == false)
-            {
-                throw new Exception("Please verify your email before making a booking.");
-            }
             if (customer == null)
             {
                 // Token-ல் இருந்து வரும் ID தவறாக இருந்தால், அது ஒரு தீவிர பிழை.
@@ -83,7 +76,7 @@ namespace Application.Services
                 BookingItemID = Guid.NewGuid(),
                 ServiceItemID = service.ServiceItemID,
                 VendorID = service.VendorID,
-                ItemPrice = service.Price, 
+                ItemPrice = service.Price,
                 TrackingStatus = "Confirmed",
                 // It should be null initially
                 CompletionOtp = null
@@ -96,8 +89,8 @@ namespace Application.Services
                 EventDate = createBookingDto.EventDate,
                 EventTime = createBookingDto.EventTime,
                 Discription = createBookingDto.Description,
-                Location = createBookingDto.Location, 
-                TotalPrice = totalPrice, 
+                Location = createBookingDto.Location,
+                TotalPrice = totalPrice,
                 BookingStatus = "Confirmed",
                 BookingItems = bookingItemsList
             };
@@ -126,7 +119,7 @@ namespace Application.Services
                 booking.BookingID
             );
 
-            
+
 
 
             // 7. Return Confirmation DTO (Mapper-ஐப் பயன்படுத்தி)
@@ -150,7 +143,8 @@ namespace Application.Services
         public async Task<BookingConfirmationDto> GetBookingByIdAsync(Guid bookingId)
         {
             var booking = await _bookingRepo.GetByIdAsync(bookingId);
-            if (booking == null) {
+            if (booking == null)
+            {
                 throw new Exception($"Booking with ID {bookingId} not found.");
 
 
@@ -169,7 +163,7 @@ namespace Application.Services
             //{
             //}
 
-            if(dto.PackageID != null && dto.ServiceIDs.Count > 0)
+            if (dto.PackageID != null && dto.ServiceIDs.Count > 0)
             {
                 throw new Exception("Cannot book both");
             }
@@ -226,12 +220,12 @@ namespace Application.Services
         }
 
         // --- Helper Method 2: Business Logic-ஐச் சோதித்தல் ---
-        private async Task ValidateBookingLogicAsync(List<ServiceItem> services, Dictionary<Guid, Vendor> vendors, DateTime eventDate )
+        private async Task ValidateBookingLogicAsync(List<ServiceItem> services, Dictionary<Guid, Vendor> vendors, DateTime eventDate)
         {
             // Loop 1: Services-ஐ Validate செய்
 
 
-            
+
             foreach (var service in services)
             {
                 if (!service.Active)
@@ -256,11 +250,11 @@ namespace Application.Services
                         throw new Exception($"Sorry, the service '{service.Name}' has reached its booking limit ({(int)service.EventPerDayLimit}) for this date.");
                     }
                 }
-                 
+
 
             }
 
-          
+
         }
 
         public async Task CancelBookingAsync(Guid bookingId, Guid customerId)
@@ -317,7 +311,7 @@ namespace Application.Services
 
 
         // UPDATED TRACKING METHOD
-        
+
         public async Task UpdateTrackingStatusAsync(UpdateTrackingDto dto, Guid vendorId)
         {
             // 1. Validate Status Input (Selectable Logic)
@@ -340,7 +334,7 @@ namespace Application.Services
 
             var item = await _bookingRepo.GetBookingItemByIdAsync(dto.BookingItemID);
             if (item == null) throw new Exception("Item not found.");
-     
+
             // NEW LOGIC STARTS HERE
             if (dto.Status == "JobDone")
             {
@@ -468,21 +462,6 @@ namespace Application.Services
             // TODO: Trigger Payment Release (e.g., _paymentService.ReleaseFunds...)
 
             await _bookingRepo.UpdateBookingItemAsync(item);
-            var booking = await _paymentRepository.GetByBookingIdAsync(dto.BookingItemID);
-            var vendorcashback = booking.VendorEarnings;
-            var admincashback = booking.AdminCommission;
-            var vendor = await _authRepo.GetVendorByIdAsync(item.VendorID);
-            if (item.TrackingStatus == "Completed" )
-            {
-                vendor.VendorCashBack = vendorcashback;
-                await _authRepo.UpdateVendorAsync(vendor);
-                var admin = await _adminRepo.GetAllAsync();
-                foreach(var a in admin)
-                {
-                    a.AdminCashBack = admincashback;
-                }
-
-            } 
 
             // 1. Send the Real Email
             try
