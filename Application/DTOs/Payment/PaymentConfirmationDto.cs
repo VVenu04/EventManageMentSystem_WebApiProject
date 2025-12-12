@@ -9,5 +9,6 @@ namespace Application.DTOs.Payment
     public class PaymentConfirmationDto
     {
         public string PaymentIntentId { get; set; }
+       
     }
 }

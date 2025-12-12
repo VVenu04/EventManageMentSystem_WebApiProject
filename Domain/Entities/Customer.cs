@@ -19,7 +19,7 @@ namespace Domain.Entities
         public string Location { get; set; }
         public string GoogleId { get; set; }
         public string ProfilePhoto { get; set; }
-
+       // public bool verify {  get; set; } = false;
         public ICollection<Booking> Bookings { get; set; }= new List<Booking>();
         public ICollection<Message> Messages { get; set; } = new List<Message>();
         public decimal WalletBalance { get; set; } = 0;

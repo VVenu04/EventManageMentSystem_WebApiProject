@@ -23,6 +23,7 @@ namespace Domain.Entities
         public ICollection<Message> Message { get; set; }
         public int EventPerDayLimit { get; set; }
         public int TimeLimit { get; set; }
+        public decimal VendorCashBack {  get; set; }
         public string GoogleId { get; set; }
         public string ProfilePhoto { get; set; }
         public string Logo { get; set; }

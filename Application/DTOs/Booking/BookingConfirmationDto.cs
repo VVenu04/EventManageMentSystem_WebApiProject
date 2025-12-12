@@ -12,6 +12,7 @@ namespace Application.DTOs.Booking
         public Guid CustomerID { get; set; }
         public string CustomerName { get; set; }
         public DateTime EventDate { get; set; }
+        public DateTime EventTime { get; set; }
         public decimal TotalPrice { get; set; }
         public string BookingStatus { get; set; }
 
