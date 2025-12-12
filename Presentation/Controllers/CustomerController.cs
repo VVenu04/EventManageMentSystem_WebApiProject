@@ -15,6 +15,7 @@ namespace Presentation.Controllers
     {
         private readonly ICustomerService _customerService;
         private readonly IPhotoService _photoService;
+     
         public CustomerController(ICustomerService customerService, IPhotoService photoService)
         {
             _customerService = customerService;
@@ -157,7 +158,8 @@ namespace Presentation.Controllers
             return Ok(ApiResponse<object>.Success(new { Url = result.SecureUrl.AbsoluteUri }, "Profile photo uploaded successfully."));
         }
 
+        
 
-
+ 
     }
 }

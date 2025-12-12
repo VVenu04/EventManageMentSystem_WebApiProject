@@ -50,7 +50,8 @@ namespace Application.Services
 
             await _smtpClient.SendMailAsync(mailMessage);
         }
-
+        //public async Task SendEmailToAdmin(string toEmail)
+       // private string GetOtpEmailTemplate(string Email , string PhoneNumber , )
         private string GetOtpEmailTemplate(string otp, string userName)
         {
             return $@"
