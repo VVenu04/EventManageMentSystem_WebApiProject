@@ -36,8 +36,6 @@ namespace infrastucure.Repositary
             stats.TotalVendors = await _context.Vendors.CountAsync();
             stats.TotalCustomers = await _context.Customers.CountAsync();
             stats.TotalBookings = await _context.Bookings.CountAsync();
-             
-                 
 
             // Total Payments (Assuming you have a Payments table)
             // If table doesn't exist yet, use Bookings TotalPrice where Status='Paid'
@@ -45,6 +43,10 @@ namespace infrastucure.Repositary
             stats.TotalRevenue = await _context.Bookings
                 .Where(b => b.BookingStatus == "Paid" || b.BookingStatus == "Completed")
                 .SumAsync(b => b.TotalPrice);
+
+            stats.AdminCashBack = await _context.Payments
+                .Where(p => p.Status == "Succeeded")
+                .SumAsync(p => p.AdminCommission);
 
             // 2. Recent Activities (Logic: Get latest 3 bookings & 2 new vendors)
             var activities = new List<DashboardActivityDto>();
