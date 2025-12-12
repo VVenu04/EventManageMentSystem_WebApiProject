@@ -29,7 +29,7 @@ namespace Application.Mapper
             adminDTO.AdminPassword = null;
             adminDTO.AdminEmail = admin.AdminEmail;
             adminDTO.AdminName = admin.AdminName;
-            adminDTO.AdminEarnings = admin.AdminCashBack;
+            adminDTO.AdminCashBack = admin.AdminCashBack;
             return adminDTO;
         }
         public static IEnumerable<AdminDto> MapToAdminDTOList(IEnumerable<Admin> admins)
