@@ -21,10 +21,10 @@ namespace Presentation.Controllers
         }
 
         // POST: api/payments/create-intent
-        [HttpPost("create-intent")]
+        [HttpPost("process-mock")]
         [Authorize(Roles = "Customer")]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> CreatePaymentIntent([FromBody] PaymentRequestDto dto)
+        public async Task<IActionResult> ProcessPayment([FromBody] PaymentRequestDto dto)
         {
             if (dto == null || dto.BookingID == Guid.Empty)
             {
@@ -33,9 +33,17 @@ namespace Presentation.Controllers
 
             try
             {
-                var clientSecret = await _paymentService.ProcessMockPaymentAsync(dto.BookingID);
-                // Return the secret inside the Data object
-                return Ok(ApiResponse<object>.Success(new { clientSecret }));
+                // Service returns bool (True = Success)
+                var isSuccess = await _paymentService.ProcessMockPaymentAsync(dto.BookingID);
+
+                if (isSuccess)
+                {
+                    return Ok(ApiResponse<object>.Success(null, "Payment processed successfully!"));
+                }
+                else
+                {
+                    return BadRequest(ApiResponse<object>.Failure("Payment failed. Please check your wallet balance."));
+                }
             }
             catch (Exception ex)
             {
@@ -43,8 +51,7 @@ namespace Presentation.Controllers
             }
         }
 
-        
- 
+
         [HttpGet("wallet-history")]
         [Authorize(Roles = "Customer")]
         public async Task<ActionResult<IEnumerable<WalletTransactionDto>>> GetWalletHistory()

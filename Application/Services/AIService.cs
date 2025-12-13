@@ -1,4 +1,5 @@
-﻿using Application.Interface.IService;
+﻿using Application.Interface.IRepo;
+using Application.Interface.IService;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Net.Http;
@@ -24,18 +25,37 @@ namespace Application.Services
             _baseUrl = "https://openrouter.ai/api/v1/chat/completions";
         }
 
-        // Chatbot Logic
+
         public async Task<string> GetChatResponseAsync(string userMessage, string role)
         {
             if (string.IsNullOrEmpty(_apiKey))
                 return "API Key is missing.";
 
+            // 🚨 STRICT SYSTEM PROMPT (AI-க்குக் கடுமையான கட்டுப்பாடுகள்)
             string systemPrompt = @"
-                You are 'SmartBot', assistant for Smart Function Event Management System.
-                Answer about bookings, vendors, packages.
-                Be short & clear.";
+        You are 'SmartBot', the exclusive AI assistant for the **'Smart Function' Event Management System** in Sri Lanka.
+
+        ✅ **YOUR ALLOWED TOPICS:**
+        1. **Event Planning:** Weddings, Birthdays, Puberty ceremonies, Corporate events.
+        2. **Vendor Services:** Catering, Decoration, Photography, Cakes, Halls, Sounds/Lights.
+        3. **Platform Features:** Booking process, Payments, Packages, Vendor collaboration.
+        4. **Budgeting:** Helping users estimate event costs in **LKR (Sri Lankan Rupees)**.
+
+        ⛔ **STRICT RESTRICTIONS (DO NOT ANSWER):**
+        - **DO NOT** answer questions about Politics, Sports, Movies, Math, Coding, or General Knowledge.
+        - **DO NOT** write essays or stories unrelated to events.
+        - If the user asks anything outside of Event Management, reply with this exact phrase:
+          'I apologize, but I am designed only to assist with the Smart Function Event Management System.'
+
+        **CONTEXT & TONE:**
+        - Location Context: Jaffna, Sri Lanka.
+        - Currency: LKR.
+        - Tone: Professional, Polite, and Short.
+    ";
+
             return await SendRequestToOpenRouter(systemPrompt, userMessage);
         }
+
 
         // Budget Planner
         public async Task<string> GenerateBudgetPlanAsync(string eventType, int guests, decimal budget)
@@ -43,17 +63,30 @@ namespace Application.Services
             if (string.IsNullOrEmpty(_apiKey))
                 return "API Key is missing.";
 
-            string systemPrompt = "You output ONLY JSON array. No markdown.";
+            // 🚨 SYSTEM PROMPT: AI-க்குக் கடுமையான கட்டளை
+            string systemPrompt = @"
+        You are an expert Event Budget Planner using LKR currency.
+        
+        CRITICAL RULES:
+        1. Output ONLY a raw JSON array. Do not use Markdown (```json).
+        2. You MUST allocate the budget ONLY for these 3 specific categories: 'Catering', 'Decoration', 'Cake'.
+        3. Do NOT add any other categories like Transport, Venue, or Photography.
+        4. Ensure the total amount equals the provided budget.
+    ";
 
+            // 🚨 USER PROMPT: விவரங்கள்
             string userPrompt = $@"
-                Create budget plan for '{eventType}' with {guests} guests. 
-                Total budget: {budget} LKR.
+        Create a budget plan for a '{eventType}' with {guests} guests. 
+        Total Budget: {budget} LKR.
 
-                Output sample:
-                [
-                    {{""category"":""Catering"",""amount"":0,""percentage"":0}},
-                    {{""category"":""Decoration"",""amount"":0,""percentage"":0}}
-                ]";
+        Allocate the funds logically among 'Catering', 'Decoration', and 'Cake' based on the event type.
+
+        Required Output Format:
+        [
+            {{ ""category"": ""Catering"", ""amount"": 0, ""percentage"": 0 }},
+            {{ ""category"": ""Decoration"", ""amount"": 0, ""percentage"": 0 }},
+            {{ ""category"": ""Cake"", ""amount"": 0, ""percentage"": 0 }}
+        ]";
 
             return await SendRequestToOpenRouter(systemPrompt, userPrompt);
         }
@@ -107,6 +140,6 @@ namespace Application.Services
             }
         }
 
-       
+
     }
 }
