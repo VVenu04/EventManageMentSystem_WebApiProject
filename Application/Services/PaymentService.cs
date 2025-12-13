@@ -4,7 +4,6 @@ using Application.Interface.IService;
 using Domain.Constants;
 using Domain.Entities;
 using Microsoft.Extensions.Configuration;
-using Stripe;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,18 +16,21 @@ namespace Application.Services
         private readonly IBookingRepository _bookingRepo;
         private readonly IAuthRepository _authRepo;
         private readonly IPaymentRepository _paymentRepo;
-     
+        private readonly INotificationService _notificationService;
+
 
 
         public PaymentService(IBookingRepository bookingRepo,
                               IAuthRepository authRepo,
-                              IPaymentRepository paymentRepo
-                              )
+                              IPaymentRepository paymentRepo,
+                              INotificationService notificationService)
+                              
         {
             _bookingRepo = bookingRepo;
             _authRepo = authRepo;
             _paymentRepo = paymentRepo;
-         
+            _notificationService = notificationService;
+
         }
 
         // 1. Stripe-ல் Payment Intent-ஐ உருவாக்குதல்
@@ -126,6 +128,23 @@ namespace Application.Services
             // 9. Update Booking Status
             booking.BookingStatus = "Paid";
             await _bookingRepo.UpdateAsync(booking);
+
+            // 👉 NEW LOGIC: SEND NOTIFICATIONS TO VENDORS
+            // =========================================================
+            if (booking.BookingItems != null)
+            {
+                foreach (var item in booking.BookingItems)
+                {
+                    string vendorMsg = $"Payment Received! The customer has paid for Booking #{booking.BookingID.ToString().Substring(0, 6)}. You can now start the job.";
+
+                    await _notificationService.SendNotificationAsync(
+                        item.VendorID,
+                        vendorMsg,
+                        "PaymentConfirmed",
+                        booking.BookingID
+                    );
+                }
+            }
 
             return true;
         }
