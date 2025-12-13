@@ -18,6 +18,7 @@ namespace Application.Mapper
            //admin.PasswordHash = dto.AdminPassword;
             admin.AdminEmail = dto.AdminEmail;
             admin.AdminName = dto.AdminName;
+      
             return admin;
         }
         public static AdminDto MapToAdminDTO(Admin admin)
@@ -28,6 +29,7 @@ namespace Application.Mapper
             adminDTO.AdminPassword = null;
             adminDTO.AdminEmail = admin.AdminEmail;
             adminDTO.AdminName = admin.AdminName;
+            adminDTO.AdminCashBack = admin.AdminCashBack;
             return adminDTO;
         }
         public static IEnumerable<AdminDto> MapToAdminDTOList(IEnumerable<Admin> admins)

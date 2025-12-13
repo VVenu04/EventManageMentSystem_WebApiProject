@@ -23,6 +23,7 @@ namespace Domain.Entities
         public ICollection<Message> Message { get; set; }
         public int EventPerDayLimit { get; set; }
         public int TimeLimit { get; set; }
+        public decimal VendorCashBack {  get; set; }
         public string GoogleId { get; set; }
         public string ProfilePhoto { get; set; }
         public string Logo { get; set; }
@@ -31,6 +32,9 @@ namespace Domain.Entities
         public DateTime? PasswordResetOtpExpiry { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
-      
+        public bool IsVerified { get; set; }
+        public string VerificationToken { get; set; }
+        public DateTime? TokenExpires { get; set; }
+
     }
 }

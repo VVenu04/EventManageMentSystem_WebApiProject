@@ -10,10 +10,11 @@ namespace Application.DTOs.Booking
     {
 
         public DateTime EventDate { get; set; }
+        public string EventTime { get; set; }
         public string Location { get; set; }
         public List<Guid> ServiceIDs { get; set; }
         public Guid? PackageID { get; set; }
-        public string EventTime { get; set; }
+       // public DateTime EventTime { get; set; }
         public string Description { get; set; }
     }
 }

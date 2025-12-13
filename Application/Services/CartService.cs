@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Application.Services
 {
-    public class CartService: ICartService
+    public class CartService : ICartService
     {
         private readonly IBookingRepository _bookingRepo;
         private readonly IServiceItemRepository _serviceRepo;
@@ -44,8 +44,8 @@ namespace Application.Services
                     BookingStatus = BookingStatus.Cart, // "Cart" நிலை
                     EventDate = dto.EventDate,
                     Location = dto.Location,
-                    EventTime=dto.EventTime,
-                    Discription=dto.Description,
+                    EventTime = dto.EventTime,
+                    Discription = dto.Description,
                     CreatedAt = DateTime.UtcNow,
                     BookingItems = new List<BookingItem>()
                 };

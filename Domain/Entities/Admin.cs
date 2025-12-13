@@ -15,5 +15,6 @@ namespace Domain.Entities
         public string AdminName { get; set; }=string.Empty;
         public string AdminEmail { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty;
+        public decimal AdminCashBack { get; set; }
     }
 }
