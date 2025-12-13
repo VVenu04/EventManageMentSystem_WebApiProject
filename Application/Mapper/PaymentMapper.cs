@@ -18,7 +18,7 @@ namespace Application.Mapper
             {
                 PaymentID = payment.PaymentID,
                 BookingID = payment.BookingID,
-                StripePaymentIntentId = payment.StripePaymentIntentId,
+                TransactionId = payment.TransactionId,
                 AmountPaid = payment.AmountPaid,
                 Status = payment.Status,
                 PaymentDate = payment.PaymentDate,

@@ -11,7 +11,7 @@ namespace Application.Interface.IRepo
     public interface IPaymentRepository
     {
         Task<Payment> AddAsync(Payment payment);
-        Task<Payment?> GetByPaymentIntentIdAsync(string paymentIntentId);
+        Task<Payment?> GetByTransactionIdAsync(string transactionId);
         Task<Payment?> GetByBookingIdAsync(Guid bookingId);
 
         // Payment Status-ஐ (Refunded என) மாற்ற

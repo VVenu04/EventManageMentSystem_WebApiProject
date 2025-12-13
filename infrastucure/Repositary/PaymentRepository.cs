@@ -26,10 +26,10 @@ namespace infrastructure.Repositary
             return payment;
         }
 
-        public async Task<Payment?> GetByPaymentIntentIdAsync(string paymentIntentId)
+        public async Task<Payment?> GetByTransactionIdAsync(string transactionId)
         {
             return await _context.Payments
-                .FirstOrDefaultAsync(p => p.StripePaymentIntentId == paymentIntentId);
+                    .FirstOrDefaultAsync(p => p.TransactionId == transactionId);
         }
 
         // --- 🚨 FIX: '?' சேர்க்கவும் ---

@@ -12,8 +12,8 @@ using infrastucure.Data;
 namespace infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251212151640_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20251213074726_NewUpdates")]
+    partial class NewUpdates
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -405,7 +405,7 @@ namespace infrastructure.Migrations
                     b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("StripePaymentIntentId")
+                    b.Property<string>("TransactionId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("VendorEarnings")

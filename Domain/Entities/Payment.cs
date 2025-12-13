@@ -13,14 +13,17 @@ namespace Domain.Entities
         public Guid PaymentID { get; set; }
         public Guid BookingID { get; set; }
 
-        public string StripePaymentIntentId { get; set; } // Stripe Transaction ID
-        public decimal AmountPaid { get; set; } 
+        // Stripe ID-க்கு பதில் பொதுவான ID
+        public string TransactionId { get; set; }
+
+        public decimal AmountPaid { get; set; }
         public DateTime PaymentDate { get; set; } = DateTime.UtcNow;
-        public string Status { get; set; } // "Pending", "Succeeded", "Failed"
-        public string PaymentMethod { get; set; } // "cash back elad Cash
-        public decimal AdminCommission { get; set; } 
-        public decimal VendorEarnings { get; set; }  
-        public decimal CustomerCashback { get; set; } 
+        public string Status { get; set; } // "Succeeded", "Refunded"
+        public string PaymentMethod { get; set; } // "MockWallet", "MockCard"
+
+        public decimal AdminCommission { get; set; }
+        public decimal VendorEarnings { get; set; }
+        public decimal CustomerCashback { get; set; }
 
         // Navigation
         public Booking Booking { get; set; }
