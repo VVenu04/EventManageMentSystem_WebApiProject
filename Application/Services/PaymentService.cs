@@ -46,26 +46,31 @@ namespace Application.Services
             // 3. Customer Wallet சரிபார்ப்பு
             var customer = await _authRepo.GetCustomerByIdAsync(booking.CustomerID);
             if (customer == null) throw new Exception("Customer not found");
-
+            var c = customer.WalletBalance;
             // 4. பணத்தை கணக்கிடுதல் (Wallet vs Total Logic)
             decimal totalAmountToPay = 0; // External Payment (Mock Card)
             decimal walletDeduction = 0;  // Wallet-ல் எடுப்பது
-
-            if (booking.TotalPrice >= customer.WalletBalance)
+           
+            if (booking.TotalPrice >= customer.WalletBalance && c > 0)
             {
                 // Wallet-ல் பணம் குறைவு. முழு Wallet பணத்தையும் எடுத்துக்கொள்வோம்.
                 walletDeduction = customer.WalletBalance;
                 totalAmountToPay = booking.TotalPrice - customer.WalletBalance;
             }
-            else
+            else if(booking.TotalPrice <= customer.WalletBalance && c > 0)
             {
                 // Wallet-ல் நிறைய பணம் உள்ளது.
-                walletDeduction = booking.TotalPrice;
-                totalAmountToPay = 0; // வெளியிலிருந்து எதுவும் கட்ட வேண்டாம்
+                walletDeduction = customer.WalletBalance;
+                totalAmountToPay = customer.WalletBalance - booking.TotalPrice;
+            }
+            else
+            {
+                walletDeduction = 0;
+                totalAmountToPay = booking.TotalPrice;
             }
 
-            // 5. Commission Calculation
-            decimal startprice = booking.TotalPrice;
+                // 5. Commission Calculation
+                decimal startprice = booking.TotalPrice;
             decimal adminShare = 0;
             decimal vendorShare = 0;
             decimal customerCashback = 0;
@@ -111,10 +116,10 @@ namespace Application.Services
             // 8. Update Wallet Balances
 
             // A. கஸ்டமர் Wallet-ல் பணத்தை கழித்தல் (Used Balance)
-            if (walletDeduction > 0)
-            {
-                customer.WalletBalance -= walletDeduction;
-            }
+            //if (walletDeduction > 0)
+            //{
+            //    customer.WalletBalance -= walletDeduction;
+            //}
 
             // B. கஸ்டமருக்கு Cashback கொடுத்தல்
             if (customerCashback > 0)

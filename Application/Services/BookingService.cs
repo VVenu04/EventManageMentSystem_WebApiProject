@@ -20,7 +20,7 @@ namespace Application.Services
         private readonly IAuthRepository _authRepo;
         private readonly IPackageRepository _packageRepo;
         private readonly IConfiguration _configuration;
-
+        private readonly IAdminRepo _adminRepo;
         private readonly IPaymentService _paymentService;
         private readonly INotificationService _notificationService;
         private readonly IPaymentRepository _paymentRepository;
@@ -37,6 +37,7 @@ namespace Application.Services
                               IPaymentService paymentService,
                               INotificationService notificationService,
                               IConfiguration configuration,
+                              IAdminRepo adminRepo,
                               IPaymentRepository paymentRepository)
         {
             _bookingRepo = bookingRepo;
@@ -47,6 +48,7 @@ namespace Application.Services
             _notificationService = notificationService;
             _configuration = configuration;
             _paymentRepository = paymentRepository;
+            _adminRepo = adminRepo;
         }
 
         public async Task<BookingConfirmationDto> CreateBookingAsync(CreateBookingDto createBookingDto, Guid customerId)
@@ -362,6 +364,18 @@ namespace Application.Services
             item.ServiceDate = DateTime.UtcNow;
 
             await _bookingRepo.UpdateBookingItemAsync(item);
+           
+            var booking = await _paymentRepository.GetByBookingIdAsync(dto.BookingItemID);
+            var vendorcash = booking.VendorEarnings;
+            var vendor = await _authRepo.GetVendorByIdAsync(item.VendorID);
+            var admin = await _adminRepo.GetAllAsync();
+            vendor.VendorCashBack = vendorcash;
+            await _authRepo.UpdateVendorAsync(vendor);
+
+           
+
+
+            // await _authRepo.UpdateVendorAsync();
 
             try
             {
