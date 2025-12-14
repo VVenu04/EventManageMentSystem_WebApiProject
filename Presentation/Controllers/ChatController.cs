@@ -46,6 +46,23 @@ namespace Presentation.Controllers
             return Ok(new { response });
         }
 
+
+        //public class DescriptionRequest
+        //{
+        //    public string ServiceName { get; set; }
+        //    public string Category { get; set; }
+        //    public string Price { get; set; }
+        //}
+
+        // 🚨 API ENDPOINT
+        [HttpPost("generate-description")]
+        [Authorize(Roles = "Vendor")] // Vendor only
+        public async Task<IActionResult> GenerateDescription([FromBody] DescriptionRequestDto dto)
+        {
+            var result = await _aiService.GenerateServiceDescriptionAsync(dto.ServiceName, dto.Category);
+            return Ok(new { description = result });
+        }
+
     }
 
 }

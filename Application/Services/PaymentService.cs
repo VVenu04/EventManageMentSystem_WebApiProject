@@ -4,7 +4,6 @@ using Application.Interface.IService;
 using Domain.Constants;
 using Domain.Entities;
 using Microsoft.Extensions.Configuration;
-using Stripe;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,210 +16,139 @@ namespace Application.Services
         private readonly IBookingRepository _bookingRepo;
         private readonly IAuthRepository _authRepo;
         private readonly IPaymentRepository _paymentRepo;
-        private readonly string _stripeSecretKey;
+        private readonly INotificationService _notificationService;
+
 
 
         public PaymentService(IBookingRepository bookingRepo,
                               IAuthRepository authRepo,
                               IPaymentRepository paymentRepo,
-                              IConfiguration config)
+                              INotificationService notificationService)
+                              
         {
             _bookingRepo = bookingRepo;
             _authRepo = authRepo;
             _paymentRepo = paymentRepo;
-            _stripeSecretKey = config["StripeSettings:SecretKey"];
-            StripeConfiguration.ApiKey = _stripeSecretKey;
+            _notificationService = notificationService;
+
         }
 
         // 1. Stripe-ல் Payment Intent-ஐ உருவாக்குதல்
-        public async Task<string> CreatePaymentIntentAsync(PaymentRequestDto dto)
+        public async Task<bool> ProcessMockPaymentAsync(Guid bookingId)
         {
-            var booking = await _bookingRepo.GetByIdAsync(dto.BookingID);
+            var booking = await _bookingRepo.GetByIdAsync(bookingId);
             if (booking == null) throw new Exception("Booking not found");
 
-            var options = new PaymentIntentCreateOptions
+            var existingPayment = await _paymentRepo.GetByBookingIdAsync(bookingId);
+            if (existingPayment != null && existingPayment.Status == "Succeeded")
+                return true; // ஏற்கனவே Payment முடிந்துவிட்டது
+
+            // 3. Customer Wallet சரிபார்ப்பு
+            var customer = await _authRepo.GetCustomerByIdAsync(booking.CustomerID);
+            if (customer == null) throw new Exception("Customer not found");
+
+            // 4. பணத்தை கணக்கிடுதல் (Wallet vs Total Logic)
+            decimal totalAmountToPay = 0; // External Payment (Mock Card)
+            decimal walletDeduction = 0;  // Wallet-ல் எடுப்பது
+
+            if (booking.TotalPrice >= customer.WalletBalance)
             {
-                // Stripe சතங்களில் (cents) கேட்கும் (LKR 100 = 10000 cents)
-                Amount = (long)(booking.TotalPrice * 100),
-                Currency = "lkr",
-                PaymentMethodTypes = new List<string> { "card" },
-                Metadata = new Dictionary<string, string>
-                {
-                    { "BookingID", booking.BookingID.ToString() }
-                }
+                // Wallet-ல் பணம் குறைவு. முழு Wallet பணத்தையும் எடுத்துக்கொள்வோம்.
+                walletDeduction = customer.WalletBalance;
+                totalAmountToPay = booking.TotalPrice - customer.WalletBalance;
+            }
+            else
+            {
+                // Wallet-ல் நிறைய பணம் உள்ளது.
+                walletDeduction = booking.TotalPrice;
+                totalAmountToPay = 0; // வெளியிலிருந்து எதுவும் கட்ட வேண்டாம்
+            }
+
+            // 5. Commission Calculation
+            decimal startprice = booking.TotalPrice;
+            decimal adminShare = 0;
+            decimal vendorShare = 0;
+            decimal customerCashback = 0;
+
+            bool isPackageBooking = booking.BookingItems.Any(bi => bi.PackageID != null);
+
+            if (isPackageBooking)
+            {
+                // Package: Admin 5%, Cashback 5%, Vendor 90%
+                adminShare = startprice * 0.05m;
+                customerCashback = startprice * 0.05m;
+                vendorShare = startprice * 0.90m;
+            }
+            else
+            {
+                // Single Service: Admin 10%, Vendor 90%
+                adminShare = startprice * 0.10m;
+                vendorShare = startprice * 0.90m;
+                customerCashback = 0;
+            }
+
+            // 6. Generate Dummy Transaction ID
+            string mockTransactionId = "MOCK_PAY_" + Guid.NewGuid().ToString().Substring(0, 8).ToUpper();
+
+            // 7. Save Payment Record
+            var payment = new Payment
+            {
+                PaymentID = Guid.NewGuid(),
+                BookingID = bookingId,
+                TransactionId = mockTransactionId, // Mock ID
+                AmountPaid = totalAmountToPay + walletDeduction, // Total Paid
+                Status = "Succeeded",
+                PaymentDate = DateTime.UtcNow,
+                PaymentMethod = totalAmountToPay > 0 ? "MockCard + Wallet" : "Wallet",
+
+                AdminCommission = adminShare,
+                VendorEarnings = vendorShare,
+                CustomerCashback = customerCashback,
             };
 
-            var service = new PaymentIntentService();
-            var intent = await service.CreateAsync(options);
+            await _paymentRepo.AddAsync(payment);
 
-            return intent.ClientSecret;
-        }
+            // 8. Update Wallet Balances
 
-        // 2. Payment-ஐ உறுதி செய்து, பணத்தைப் பிரித்தல் (Core Logic)
-        public async Task<bool> ConfirmPaymentAndDistributeFundsAsync(string paymentIntentId)
-        {
-            // A. Stripe-ல் Payment நிலையைச் சரிபார்
-            var service = new PaymentIntentService();
-            var intent = await service.GetAsync(paymentIntentId);
-
-            if (intent.Status != "succeeded") return false;
-
-            // B. ஏற்கனவே பதிவு செய்யப்பட்டதா எனச் சோதி (Duplicate Check)
-            var existingPayment = await _paymentRepo.GetByPaymentIntentIdAsync(paymentIntentId);
-            if (existingPayment != null) return true; //ஏற்கனவே முடிந்துவிட்டது
-
-            // C. Booking-ஐ எடு
-            if (!intent.Metadata.ContainsKey("BookingID")) return false;
-            var bookingId = Guid.Parse(intent.Metadata["BookingID"]);
-
-            var booking = await _bookingRepo.GetByIdAsync(bookingId);
-            if (booking == null) return false;
-           // var huhu = new    PaymentRequestDto();
-          
-             
-
-            // --- BUSINESS LOGIC: 10% vs 5% Calculation ---
-            var h =     booking.CustomerID;
-           var cust = await _authRepo.GetCustomerByIdAsync(h);
-            if (cust == null) return false;
-       
-            if(booking.TotalPrice >= cust.WalletBalance)
+            // A. கஸ்டமர் Wallet-ல் பணத்தை கழித்தல் (Used Balance)
+            if (walletDeduction > 0)
             {
-                decimal startprice = booking.TotalPrice;
-                decimal balance = booking.TotalPrice - cust.WalletBalance;
-
-                decimal totalAmount = balance;
-                decimal adminShare = 0;
-                decimal vendorShare = 0;
-                decimal customerCashback = 0;
-
-                // Package Booking-ஆ எனச் சோதி (PackageID உள்ளதா?)
-                bool isPackageBooking = booking.BookingItems.Any(bi => bi.PackageID != null);
-
-                if (isPackageBooking)
-                {
-                    // --- PACKAGE LOGIC ---
-                    // Admin: 5%, Customer: 5% (Cashback), Vendor: 90%
-                    adminShare = startprice * 0.05m;
-                    customerCashback = startprice * 0.05m;
-                    vendorShare = startprice * 0.90m;
-                }
-                else
-                {
-                    // --- SINGLE SERVICE LOGIC ---
-                    // Admin: 10%, Vendor: 90%
-                    adminShare = startprice * 0.10m;
-                    vendorShare = startprice * 0.90m;
-                    customerCashback = 0;
-                }
-
-                // --- D. Save Payment Record (Using Repository) ---
-
-                var payment = new Payment
-                {
-                    PaymentID = Guid.NewGuid(),
-                    BookingID = bookingId,
-                    StripePaymentIntentId = paymentIntentId,
-                    AmountPaid = totalAmount,
-                    Status = "Succeeded",
-                    PaymentDate = DateTime.UtcNow,
-
-                    // Shares
-                    AdminCommission = adminShare,
-                    VendorEarnings = vendorShare,
-                    CustomerCashback = customerCashback,
-  
-                };
-
-                await _paymentRepo.AddAsync(payment);
-
-                if (customerCashback > 0)
-                {
-                    var customer = await _authRepo.GetCustomerByIdAsync(booking.CustomerID);
-                    if (customer != null)
-                    {
-                        customer.WalletBalance += customerCashback;
-                        await _authRepo.UpdateCustomerAsync(customer); // (Repo-வில் இந்த method தேவை)
-                    }
-                }
-        
-               
-               
-
-            }
-            else 
-            {
-                decimal startprice = booking.TotalPrice;
-                decimal balance = cust.WalletBalance - booking.TotalPrice;
-                decimal totalAmount = balance;
-                decimal adminShare = 0;
-                decimal vendorShare = 0;
-                decimal customerCashback = 0;
-            
-
-                // Package Booking-ஆ எனச் சோதி (PackageID உள்ளதா?)
-                bool isPackageBooking = booking.BookingItems.Any(bi => bi.PackageID != null);
-
-                if (isPackageBooking)
-                {
-                    // --- PACKAGE LOGIC ---
-                    // Admin: 5%, Customer: 5% (Cashback), Vendor: 90%
-                    adminShare = startprice * 0.05m;
-                    customerCashback = startprice * 0.05m;
-                    vendorShare = startprice * 0.90m;
-                }
-                else
-                {
-                    // --- SINGLE SERVICE LOGIC ---
-                    // Admin: 10%, Vendor: 90%
-                    adminShare = startprice * 0.10m;
-                    vendorShare = startprice * 0.90m;
-                    customerCashback = 0;
-                }
-
-                // --- D. Save Payment Record (Using Repository) ---
-
-                var payment = new Payment
-                {
-                    PaymentID = Guid.NewGuid(),
-                    BookingID = bookingId,
-                    StripePaymentIntentId = paymentIntentId,
-                    AmountPaid = totalAmount,
-                    Status = "Succeeded",
-                    PaymentDate = DateTime.UtcNow,
-
-                    // Shares
-                    AdminCommission = adminShare,
-                    VendorEarnings = vendorShare,
-                    CustomerCashback = customerCashback,
-                   // VendorEarnings = vendorEarnings
-                };
-
-                await _paymentRepo.AddAsync(payment);
-
-                if (customerCashback > 0)
-                {
-                    var customer = await _authRepo.GetCustomerByIdAsync(booking.CustomerID);
-                    if (customer != null)
-                    {
-                        customer.WalletBalance += customerCashback;
-                        await _authRepo.UpdateCustomerAsync(customer); // (Repo-வில் இந்த method தேவை)
-                    }
-                }
-
-
+                customer.WalletBalance -= walletDeduction;
             }
 
+            // B. கஸ்டமருக்கு Cashback கொடுத்தல்
+            if (customerCashback > 0)
+            {
+                customer.WalletBalance += customerCashback;
+            }
 
-                // --- E. Update Customer Wallet (Cashback இருந்தால்) ---
+            // Update Customer once
+            await _authRepo.UpdateCustomerAsync(customer);
 
+            // 9. Update Booking Status
+            booking.BookingStatus = "Paid";
+            await _bookingRepo.UpdateAsync(booking);
 
-                // --- F. Update Booking Status ---
-                booking.BookingStatus = "Paid";
-            await _bookingRepo.UpdateAsync(booking); // (Repo-வில் இந்த method தேவை)
+            // 👉 NEW LOGIC: SEND NOTIFICATIONS TO VENDORS
+            // =========================================================
+            if (booking.BookingItems != null)
+            {
+                foreach (var item in booking.BookingItems)
+                {
+                    string vendorMsg = $"Payment Received! The customer has paid for Booking #{booking.BookingID.ToString().Substring(0, 6)}. You can now start the job.";
+
+                    await _notificationService.SendNotificationAsync(
+                        item.VendorID,
+                        vendorMsg,
+                        "PaymentConfirmed",
+                        booking.BookingID
+                    );
+                }
+            }
 
             return true;
         }
+
 
         public async Task<bool> RefundPaymentAsync(Guid bookingId)
         {
@@ -232,45 +160,35 @@ namespace Application.Services
                 throw new Exception("No successful payment found for this booking.");
             }
 
-            try
-            {
+            
                 // 2. Stripe-ல் Refund-ஐ உருவாக்கு
-                var refundOptions = new RefundCreateOptions
-                {
-                    PaymentIntent = payment.StripePaymentIntentId,
-                    Reason = RefundReasons.RequestedByCustomer
-                };
-
-                var refundService = new RefundService();
-                await refundService.CreateAsync(refundOptions);
-
-                // 3. Payment Status-ஐ Update செய்
                 payment.Status = "Refunded";
 
-                // 4. Wallet Logic
-                if (payment.CustomerCashback > 0)
+                // 2. Wallet Logic (Reverse logic)
+                var customer = payment.Booking?.Customer;
+                if (customer == null)
                 {
-                    // Repo-வில் Include செய்திருப்பதால் payment.Booking.Customer null ஆக இருக்காது
-                    var customer = payment.Booking?.Customer;
-                    if (customer != null)
-                    {
-                        customer.WalletBalance -= payment.CustomerCashback;
-                        await _authRepo.UpdateCustomerAsync(customer);
-                    }
-                    // ஒருவேளை Include வேலை செய்யவில்லை என்றால், _authRepo.GetCustomerByIdAsync-ஐப் பயன்படுத்தலாம்
+                    // Repo include fail ஆனால் தனியாக எடுக்கவும்
+                    customer = await _authRepo.GetCustomerByIdAsync(payment.Booking.CustomerID);
                 }
 
-                // (OLD: await _context.SaveChangesAsync();)
-                // 5. Repo-வை வைத்து Save செய்
-                await _paymentRepo.UpdateAsync(payment);
+                if (customer != null)
+                {
+                    // A. வாங்கிய Cashback-ஐ திரும்ப எடு
+                    if (payment.CustomerCashback > 0)
+                    {
+                        customer.WalletBalance -= payment.CustomerCashback;
+                    }
 
+                    // B. Refund தொகையை Wallet-ல் சேர் (முழு தொகையும் திரும்ப)
+                    customer.WalletBalance += payment.AmountPaid;
+
+                    await _authRepo.UpdateCustomerAsync(customer);
+                }
+
+                await _paymentRepo.UpdateAsync(payment);
                 return true;
             }
-            catch (StripeException ex)
-            {
-                throw new Exception($"Stripe Refund Failed: {ex.Message}");
-            }
-        }
         public async Task<IEnumerable<WalletTransactionDto>> GetCustomerWalletHistoryAsync(Guid customerId)
         {
             var payments = await _paymentRepo.GetByCustomerIdAsync(customerId);

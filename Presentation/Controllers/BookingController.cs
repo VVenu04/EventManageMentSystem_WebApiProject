@@ -186,6 +186,30 @@ namespace Presentation.Controllers
                 return BadRequest(ApiResponse<object>.Failure(ex.Message));
             }
         }
+
+
+        // BookingController.cs குள்ளே இந்த புதிய Method-ஐ சேர்க்கவும்
+
+        [HttpGet("customer/{customerId}")]
+        [Authorize(Roles = "Admin")] // 🚨 Admin-க்கு மட்டுமே அனுமதி
+        [ProducesResponseType(typeof(ApiResponse<IEnumerable<BookingConfirmationDto>>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetBookingsByCustomer(Guid customerId)
+        {
+            if (customerId == Guid.Empty)
+                return BadRequest(ApiResponse<object>.Failure("Invalid Customer ID."));
+
+            try
+            {
+                // ஏற்கனவே Service-ல் இருக்கும் Method-ஐ பயன்படுத்தலாம்
+                var bookings = await _bookingService.GetBookingsByCustomerAsync(customerId);
+
+                return Ok(ApiResponse<IEnumerable<BookingConfirmationDto>>.Success(bookings ?? new List<BookingConfirmationDto>()));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ApiResponse<object>.Failure(ex.Message));
+            }
+        }
     }
 
 
