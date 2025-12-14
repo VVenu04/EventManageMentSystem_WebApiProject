@@ -19,7 +19,7 @@ namespace Domain.Entities
         public string Location { get; set; }
         public string GoogleId { get; set; }
         public string ProfilePhoto { get; set; }
-
+         
         public ICollection<Booking> Bookings { get; set; }= new List<Booking>();
         public ICollection<Message> Messages { get; set; } = new List<Message>();
         public decimal WalletBalance { get; set; } = 0;
@@ -30,5 +30,8 @@ namespace Domain.Entities
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public DateTime? UpdatedAt { get; set; }
+        public bool IsVerified { get; set; }
+        public string VerificationToken { get; set; }
+        public DateTime? TokenExpires { get; set; }
     }
 }

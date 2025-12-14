@@ -154,5 +154,66 @@ namespace Presentation.Controllers
         }
 
 
+
+        // PUT: api/Booking/track-status
+        [HttpPut("track-status")]
+        [Authorize(Roles = "Vendor")]
+        public async Task<IActionResult> UpdateTracking([FromBody] UpdateTrackingDto dto)
+        {
+            try
+            {
+                await _bookingService.UpdateTrackingStatusAsync(dto, CurrentUserId);
+                return Ok(ApiResponse<object>.Success(null, "Status updated successfully."));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ApiResponse<object>.Failure(ex.Message));
+            }
+        }
+
+        // POST: api/Booking/complete-job
+        [HttpPost("complete-job")]
+        [Authorize(Roles = "Vendor")]
+        public async Task<IActionResult> CompleteJob([FromBody] CompleteJobDto dto)
+        {
+            try
+            {
+                var success = await _bookingService.CompleteServiceAsync(dto, CurrentUserId);
+                return Ok(ApiResponse<object>.Success(null, "Job completed and verified successfully!"));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ApiResponse<object>.Failure(ex.Message));
+            }
+        }
+
+
+        // BookingController.cs குள்ளே இந்த புதிய Method-ஐ சேர்க்கவும்
+
+        [HttpGet("customer/{customerId}")]
+        [Authorize(Roles = "Admin")] // 🚨 Admin-க்கு மட்டுமே அனுமதி
+        [ProducesResponseType(typeof(ApiResponse<IEnumerable<BookingConfirmationDto>>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetBookingsByCustomer(Guid customerId)
+        {
+            if (customerId == Guid.Empty)
+                return BadRequest(ApiResponse<object>.Failure("Invalid Customer ID."));
+
+            try
+            {
+                // ஏற்கனவே Service-ல் இருக்கும் Method-ஐ பயன்படுத்தலாம்
+                var bookings = await _bookingService.GetBookingsByCustomerAsync(customerId);
+
+                return Ok(ApiResponse<IEnumerable<BookingConfirmationDto>>.Success(bookings ?? new List<BookingConfirmationDto>()));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ApiResponse<object>.Failure(ex.Message));
+            }
+        }
     }
+
+
 }
+
+
+

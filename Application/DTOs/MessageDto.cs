@@ -6,23 +6,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.DTOs.Auth
+namespace Application.DTOs
 {
-    public class RegisterVendorDto
+    public class MessageDto
     {
-        [Required(ErrorMessage = "Username is required.")]
+        [Required]
         public string Name { get; set; }
-        public string CompanyName { get; set; }
-
-        [Required(ErrorMessage = "Email is required.")]
+        [Required(ErrorMessage = "Email is required")]
+        [EmailAddress(ErrorMessage = "Invalid email address")]
         [CustomEmail]
         public string Email { get; set; }
-
-        [DataType(DataType.Password)]
-        [CustomPassword]
-        public string Password { get; set; }
- 
+        [Required]
         [Phone(ErrorMessage = "Invalid Phone Number.")]
         public string PhoneNumber { get; set; }
+
+        [Required]
+        public string Message { get; set; }
     }
 }

@@ -34,6 +34,7 @@ namespace Application.Services
         private readonly IAuthRepository _authRepo;
         private readonly ITokenService _tokenService;
         private readonly IConfiguration _config;
+       
 
         public AuthService(IConfiguration config, IVendorRepo vendorRepo, IAuthRepository authRepo, ITokenService tokenService, ICustomerRepo customerRepo , IEmailService emailService)
         {
@@ -48,6 +49,7 @@ namespace Application.Services
         // --- CUSTOMER ---
         public async Task<AuthResponseDto> CustomerSignInWithGoogleAsync(string idToken)
         {
+
             // 1) Validate Google ID token
             var settings = new GoogleJsonWebSignature.ValidationSettings()
             {
@@ -70,29 +72,41 @@ namespace Application.Services
             var name = payload.Name ?? payload.Email!;
             var picture = payload.Picture;
 
-            var user = await _customerRepo.CustomerGetByGoogleIdAsync(googleId)
+          
+            var user = await _customerRepo.CustomerGetByGoogleIdAsync(googleId) 
                        ?? await _customerRepo.GetByEmailAsync(email);
+
+
+          
 
             if (user  == null)
             {
+                if (await _authRepo.CustomerEmailExistsAsync(email) || await _authRepo.VendorEmailExistsAsync(email) )
+                {
+                    return new AuthResponseDto { IsSuccess = false, Message = "Email already exists" };
+                }
                 user = new Domain.Entities.Customer
                 {
                     GoogleId = googleId,
                     Email = email,
                     Name = name,
-                    ProfilePhoto = picture
+                    ProfilePhoto = picture,
+                    IsVerified = true
                 };
                 await _customerRepo.AddAsync(user);
                 
             }
             else
             {
-                // If existing user had no GoogleId, set it
-                if (string.IsNullOrEmpty(user.GoogleId))
-                {
-                    user.GoogleId = googleId;
-                    await _customerRepo.UpdateAsync(user);
-                }
+                            
+                    if (string.IsNullOrEmpty(user.GoogleId))
+                    {
+                        user.GoogleId = googleId;
+                        await _customerRepo.UpdateAsync(user);
+                    }
+                
+                
+              
             }
 
             return CreateAuthResponse(user.CustomerID, user.Name, user.Email, "Customer", "Login Successful");
@@ -102,25 +116,46 @@ namespace Application.Services
         public async Task<AuthResponseDto> RegisterCustomerAsync(RegisterCustomerDto dto)
         {
 
-            if (await _authRepo.CustomerEmailExistsAsync(dto.Email))
+            if (await _authRepo.CustomerEmailExistsAsync(dto.Email) || await _authRepo.VendorEmailExistsAsync(dto.Email))
             {
                 return new AuthResponseDto { IsSuccess = false, Message = "Email already exists" };
             }
-
+            var token = Guid.NewGuid().ToString();
             var customer = new Domain.Entities.Customer
             {
                 CustomerID = Guid.NewGuid(),
                 Name = dto.Name,
                 Email = dto.Email,
                 PhoneNumber = dto.PhoneNumber,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password)
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
+                IsVerified = false,
+                VerificationToken = token,
+                TokenExpires = DateTime.UtcNow.AddHours(24)
             };
-
+          
             await _authRepo.AddCustomerAsync(customer);
+            var verifyUrl = $"http://localhost:5018/api/auth/verify/customer?token={token}";
+
+
+            await _emailService.SendEmailAsync(customer.Email, "Verify Your Email",
+                $"Click to verify: {verifyUrl}");
 
             return CreateAuthResponse(customer.CustomerID, customer.Name, customer.Email, "Customer", "Registration Successful");
         }
+        public async Task<bool> VerifyEmailCustomerAsync(string token)
+        {
+            var user = await _customerRepo.GetByVerificationTokenAsync(token);
 
+            if (user == null || user.TokenExpires < DateTime.UtcNow)
+                return false;
+
+            user.IsVerified = true;
+            user.VerificationToken = null;
+            user.TokenExpires = null;
+
+            await _customerRepo.UpdateAsync(user);
+            return true;
+        }
         public async Task<AuthResponseDto> LoginCustomerAsync(LoginDto dto)
         {
             var customer = await _authRepo.GetCustomerByEmailAsync(dto.Email);
@@ -309,11 +344,11 @@ namespace Application.Services
         // --- VENDOR ---
         public async Task<AuthResponseDto> RegisterVendorAsync(RegisterVendorDto dto)
         {
-            if (await _authRepo.VendorEmailExistsAsync(dto.Email))
+            if (await _authRepo.CustomerEmailExistsAsync(dto.Email) || await _authRepo.VendorEmailExistsAsync(dto.Email))
             {
                 return new AuthResponseDto { IsSuccess = false, Message = "Email already exists" };
             }
-
+            var token = Guid.NewGuid().ToString();
             var vendor = new Vendor
             {
                 VendorID = Guid.NewGuid(),
@@ -321,10 +356,18 @@ namespace Application.Services
                 CompanyName = dto.CompanyName,
                 Email = dto.Email,
                 PhoneNumber = dto.PhoneNumber,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password)
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
+                IsVerified = false,
+                VerificationToken = token,
+                TokenExpires = DateTime.UtcNow.AddHours(24)
             };
 
             await _authRepo.AddVendorAsync(vendor);
+            var verifyUrl = $"http://localhost:5018/api/auth/verify/vendor?token={token}";
+
+
+            await _emailService.SendEmailAsync(vendor.Email, "Verify Your Email",
+                $"Click to verify: {verifyUrl}");
 
             return CreateAuthResponse(vendor.VendorID, vendor.Name, vendor.Email, "Vendor", "Registration Successful");
         }
@@ -343,7 +386,8 @@ namespace Application.Services
                 Location = vendor.Location,
                 Description = vendor.Description,
                 Logo = vendor.Logo,
-                EventPerDayLimit = vendor.EventPerDayLimit
+                EventPerDayLimit = vendor.EventPerDayLimit,
+                VendorEarnings = vendor.VendorCashBack
                 // RegisterNumber etc.
             };
         }
@@ -434,30 +478,37 @@ namespace Application.Services
             var email = payload.Email!;
             var name = payload.Name ?? payload.Email!;
             var picture = payload.Picture;
-
-            var user =  
-                        await _vendorRepo.GetByEmailAsync(email);
+           
+            var user = await _vendorRepo.VendorGetByGoogleIdAsync(googleId)  
+                       ??  await _vendorRepo.GetByEmailAsync(email);
+          
 
             if (user == null)
             {
+                if (await _authRepo.CustomerEmailExistsAsync(email) || await _authRepo.VendorEmailExistsAsync(email))
+                {
+                    return new AuthResponseDto { IsSuccess = false, Message = "Email already exists" };
+                }
                 user = new Domain.Entities.Vendor
                 {
                     GoogleId = googleId,
                     Email = email,
                     Name = name,
-                    ProfilePhoto = picture
+                    ProfilePhoto = picture,
+                    IsVerified = true
                 };
                 await _vendorRepo.AddAsync(user);
                 await _vendorRepo.SaveChangesAsync();
             }
             else
             {
-                // If existing user had no GoogleId, set it
                 if (string.IsNullOrEmpty(user.GoogleId))
                 {
                     user.GoogleId = googleId;
                     await _vendorRepo.UpdateAsync(user);
                 }
+                // If existing user had no GoogleId, set it
+
             }
 
             return CreateAuthResponse(user.VendorID, user.Name, user.Email, "Vendor", "Login Successful");
@@ -579,7 +630,20 @@ namespace Application.Services
             }
         }
 
+        public async Task<bool> VerifyEmailVendorAsync(string token)
+        {
+            var user = await _vendorRepo.GetByVerificationTokenAsync(token);
 
+            if (user == null || user.TokenExpires < DateTime.UtcNow)
+                return false;
+
+            user.IsVerified = true;
+            user.VerificationToken = null;
+            user.TokenExpires = null;
+
+            await _vendorRepo.UpdateAsync(user);
+            return true;
+        }
 
 
         // --- ADMIN ---

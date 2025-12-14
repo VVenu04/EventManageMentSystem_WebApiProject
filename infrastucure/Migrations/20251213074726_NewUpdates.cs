@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class NewImageUploads : Migration
+    public partial class NewUpdates : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,7 +18,8 @@ namespace infrastructure.Migrations
                     AdminID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     AdminName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AdminEmail = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AdminCashBack = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -53,7 +54,10 @@ namespace infrastructure.Migrations
                     PasswordResetOtp = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PasswordResetOtpExpiry = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsVerified = table.Column<bool>(type: "bit", nullable: false),
+                    VerificationToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TokenExpires = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -99,7 +103,9 @@ namespace infrastructure.Migrations
                     TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Location = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EventDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    EventDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EventTime = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Discription = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -150,6 +156,7 @@ namespace infrastructure.Migrations
                     Location = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EventPerDayLimit = table.Column<int>(type: "int", nullable: false),
                     TimeLimit = table.Column<int>(type: "int", nullable: false),
+                    VendorCashBack = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     GoogleId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ProfilePhoto = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Logo = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -158,6 +165,9 @@ namespace infrastructure.Migrations
                     PasswordResetOtpExpiry = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsVerified = table.Column<bool>(type: "bit", nullable: false),
+                    VerificationToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TokenExpires = table.Column<DateTime>(type: "datetime2", nullable: true),
                     EventID = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
@@ -176,10 +186,11 @@ namespace infrastructure.Migrations
                 {
                     PaymentID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     BookingID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    StripePaymentIntentId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TransactionId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AmountPaid = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     PaymentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PaymentMethod = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AdminCommission = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     VendorEarnings = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     CustomerCashback = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
@@ -247,6 +258,7 @@ namespace infrastructure.Migrations
                     PackageID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     VendorID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -343,7 +355,10 @@ namespace infrastructure.Migrations
                     PackageID = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     VendorID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ItemPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    TrackingStatus = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    TrackingStatus = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CompletionOtp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OtpExpiry = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ServiceDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -423,7 +438,7 @@ namespace infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ServiceImage",
+                name: "ServiceImages",
                 columns: table => new
                 {
                     ServiceImageID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -433,9 +448,9 @@ namespace infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ServiceImage", x => x.ServiceImageID);
+                    table.PrimaryKey("PK_ServiceImages", x => x.ServiceImageID);
                     table.ForeignKey(
-                        name: "FK_ServiceImage_ServiceItems_ServiceItemID",
+                        name: "FK_ServiceImages_ServiceItems_ServiceItemID",
                         column: x => x.ServiceItemID,
                         principalTable: "ServiceItems",
                         principalColumn: "ServiceItemID",
@@ -529,8 +544,8 @@ namespace infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_ServiceImage_ServiceItemID",
-                table: "ServiceImage",
+                name: "IX_ServiceImages_ServiceItemID",
+                table: "ServiceImages",
                 column: "ServiceItemID");
 
             migrationBuilder.CreateIndex(
@@ -585,7 +600,7 @@ namespace infrastructure.Migrations
                 name: "Payments");
 
             migrationBuilder.DropTable(
-                name: "ServiceImage");
+                name: "ServiceImages");
 
             migrationBuilder.DropTable(
                 name: "Tracking");

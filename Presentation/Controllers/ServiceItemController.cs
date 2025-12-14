@@ -85,7 +85,7 @@ namespace Presentation.Controllers
             {
                 var services = await _serviceService.GetServicesByVendorAsync(vendorId);
 
-                // 🚨 Success Response with Data (or Empty List)
+                //  Success Response with Data (or Empty List)
                 return Ok(ApiResponse<IEnumerable<ServiceItemDto>>.Success(services ?? new List<ServiceItemDto>()));
             }
             catch (Exception ex)
@@ -102,7 +102,7 @@ namespace Presentation.Controllers
         {
             try
             {
-                // 🚨 FIX: DTO Null ஆக இருந்தால் Empty Object உருவாக்கு
+                //  FIX: DTO Null ஆக இருந்தால் Empty Object உருவாக்கு
                 searchDto ??= new ServiceSearchDto();
 
                 var services = await _serviceService.SearchServicesAsync(searchDto);
@@ -119,9 +119,6 @@ namespace Presentation.Controllers
             }
         }
 
-        //  PUT: Update Service (Vendor Only) 
-        // PUT: Update Service (Vendor Only)
-        // PUT: Update Service (Vendor Only)
         [HttpPut("{id}")]
         [Authorize(Roles = "Vendor")]
         public async Task<IActionResult> UpdateService(Guid id, [FromForm] UpdateServiceDto updateServiceDto, [FromForm] List<IFormFile> images)

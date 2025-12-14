@@ -10,11 +10,12 @@ namespace Application.DTOs.Payment
     {
         public Guid PaymentID { get; set; }
         public Guid BookingID { get; set; }
-        public string StripePaymentIntentId { get; set; }
+        public string TransactionId { get; set; }
         public decimal AmountPaid { get; set; }
         public string Status { get; set; }
         public DateTime PaymentDate { get; set; }
-
         public decimal CustomerCashback { get; set; }
+        public decimal VendorCashback { get; set; }
+       
     }
 }

@@ -1,8 +1,7 @@
-﻿using Application.Common; // ApiResponse-க்காக
+﻿using Application.Common;
 using Application.DTOs.Cart;
 using Application.Interface.IService;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -11,8 +10,8 @@ namespace Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize] 
-    public class CartController : BaseApiController 
+    [Authorize]
+    public class CartController : BaseApiController
     {
         private readonly ICartService _cartService;
 
@@ -22,12 +21,18 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("add")]
-        public async Task<IActionResult> AddToCart(AddToCartDto dto)
+        public async Task<IActionResult> AddToCart([FromBody] AddToCartDto dto) // 🚨 Explicit [FromBody]
         {
-            
             if (CurrentUserId == Guid.Empty) return Unauthorized(ApiResponse<object>.Failure("User not identified."));
 
+            // 🚨 Token-ல் இருந்து வரும் ID-ஐ இங்கே செட் செய்கிறோம்
             dto.CustomerID = CurrentUserId;
+
+            // Basic Validation
+            if (dto.ServiceID == null && dto.PackageID == null)
+            {
+                return BadRequest(ApiResponse<object>.Failure("Must provide either a Service or Package ID."));
+            }
 
             try
             {
@@ -36,24 +41,23 @@ namespace Presentation.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ApiResponse<object>.Failure(ex.Message));
+                // 🚨 Log the inner exception for debugging if available
+                var errorMessage = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+                return BadRequest(ApiResponse<object>.Failure(errorMessage));
             }
         }
 
+        // ... (GetMyCart, RemoveItem, Checkout methods keep as is) ...
         [HttpGet]
         public async Task<IActionResult> GetMyCart()
         {
             if (CurrentUserId == Guid.Empty) return Unauthorized(ApiResponse<object>.Failure("User not identified."));
-
             try
             {
                 var cart = await _cartService.GetMyCartAsync(CurrentUserId);
                 return Ok(ApiResponse<object>.Success(cart));
             }
-            catch (Exception ex)
-            {
-                return BadRequest(ApiResponse<object>.Failure(ex.Message));
-            }
+            catch (Exception ex) { return BadRequest(ApiResponse<object>.Failure(ex.Message)); }
         }
 
         [HttpDelete("remove/{itemId}")]
@@ -62,35 +66,21 @@ namespace Presentation.Controllers
             try
             {
                 await _cartService.RemoveFromCartAsync(itemId);
-                return Ok(ApiResponse<object?>.Success(null, "Item removed from cart."));
+                return Ok(ApiResponse<object?>.Success(null, "Item removed."));
             }
-            catch (Exception ex)
-            {
-                return BadRequest(ApiResponse<object>.Failure(ex.Message));
-            }
+            catch (Exception ex) { return BadRequest(ApiResponse<object>.Failure(ex.Message)); }
         }
 
-       
         [HttpPost("checkout")]
         public async Task<IActionResult> Checkout()
         {
             if (CurrentUserId == Guid.Empty) return Unauthorized(ApiResponse<object>.Failure("User not identified."));
-
             try
             {
-                // Service-ல் CheckoutAsync மெதட் BookingID-ஐ ரிட்டர்ன் செய்யும்படி மாற்ற வேண்டும்
-                // அல்லது Cart-ஐ Pending-ஆக மாற்றிய பின், அந்த Booking Object-ஐ ரிட்டர்ன் செய்யவும்.
-
-                var bookingId = await _cartService.CheckoutAsync(CurrentUserId); // Service-ஐயும் மாற்ற வேண்டும்
-
-                // 🚨 FIX: Return BookingID so Frontend can go to Payment Page
+                var bookingId = await _cartService.CheckoutAsync(CurrentUserId);
                 return Ok(ApiResponse<object>.Success(new { bookingId }, "Checkout successful."));
             }
-            catch (Exception ex)
-            {
-                return BadRequest(ApiResponse<object>.Failure(ex.Message));
-            }
+            catch (Exception ex) { return BadRequest(ApiResponse<object>.Failure(ex.Message)); }
         }
-
     }
 }

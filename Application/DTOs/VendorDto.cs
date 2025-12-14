@@ -20,15 +20,18 @@ namespace Application.DTOs
         [CustomEmail]
         [Required]
         public string ContactEmail { get; set; }
-        [Required]
-        public string PhoneNumber { get; set; }
 
+        [Phone(ErrorMessage = "Invalid Phone Number.")]
+        public string PhoneNumber { get; set; }
+        [CustomPassword]
         public string Password { get; set; }
         public string CompanyName { get; set; }
         public string Location { get; set; }
         public string Description { get; set; }
         public string Logo { get; set; } // (Photo upload செய்த பின் வரும் URL)
         public decimal EventPerDayLimit { get; set; }
+
+        public decimal VendorEarnings { get;set; }
         //public string Email { get; set; } // (Photo upload செய்த பின் வரும் URL)
 
 

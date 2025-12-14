@@ -33,7 +33,7 @@ namespace Presentation.Controllers
 
             try
             {
-                var clientSecret = await _paymentService.CreatePaymentIntentAsync(dto);
+                var clientSecret = await _paymentService.ProcessMockPaymentAsync(dto.BookingID);
                 // Return the secret inside the Data object
                 return Ok(ApiResponse<object>.Success(new { clientSecret }));
             }
@@ -43,32 +43,17 @@ namespace Presentation.Controllers
             }
         }
 
-        // POST: api/payments/confirm
-        [HttpPost("confirm")]
+        
+ 
+        [HttpGet("wallet-history")]
         [Authorize(Roles = "Customer")]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> ConfirmPayment([FromBody] PaymentConfirmationDto dto)
+        public async Task<ActionResult<IEnumerable<WalletTransactionDto>>> GetWalletHistory()
         {
-            if (dto == null || string.IsNullOrEmpty(dto.PaymentIntentId))
-            {
-                return BadRequest(ApiResponse<object>.Failure("Invalid payment confirmation details."));
-            }
+            if (CurrentUserId == Guid.Empty) return Unauthorized();
 
-            try
-            {
-                var success = await _paymentService.ConfirmPaymentAndDistributeFundsAsync(dto.PaymentIntentId);
-
-                if (!success)
-                {
-                    return BadRequest(ApiResponse<object>.Failure("Payment confirmation failed or Payment not successful yet."));
-                }
-
-                return Ok(ApiResponse<object>.Success(null, "Payment successful! Booking confirmed and funds distributed."));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ApiResponse<object>.Failure(ex.Message));
-            }
+            var history = await _paymentService.GetCustomerWalletHistoryAsync(CurrentUserId);
+            return Ok(ApiResponse<IEnumerable<WalletTransactionDto>>.Success(history));
         }
+
     }
 }

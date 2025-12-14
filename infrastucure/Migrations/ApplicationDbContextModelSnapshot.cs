@@ -43,6 +43,9 @@ namespace infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<decimal>("AdminCashBack")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("AdminEmail")
                         .HasColumnType("nvarchar(max)");
 
@@ -72,8 +75,14 @@ namespace infrastructure.Migrations
                     b.Property<Guid>("CustomerID")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Discription")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("EventDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("EventTime")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Location")
                         .HasColumnType("nvarchar(max)");
@@ -97,11 +106,20 @@ namespace infrastructure.Migrations
                     b.Property<Guid>("BookingID")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("CompletionOtp")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("ItemPrice")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<DateTime?>("OtpExpiry")
+                        .HasColumnType("datetime2");
+
                     b.Property<Guid?>("PackageID")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("ServiceDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid?>("ServiceItemID")
                         .HasColumnType("uniqueidentifier");
@@ -154,6 +172,9 @@ namespace infrastructure.Migrations
                     b.Property<string>("GoogleId")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsVerified")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Location")
                         .HasColumnType("nvarchar(max)");
 
@@ -175,8 +196,14 @@ namespace infrastructure.Migrations
                     b.Property<string>("ProfilePhoto")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("TokenExpires")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("VerificationToken")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("WalletBalance")
                         .HasColumnType("decimal(18,2)");
@@ -258,6 +285,9 @@ namespace infrastructure.Migrations
                     b.Property<Guid>("PackageID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("EventID")
                         .HasColumnType("uniqueidentifier");
@@ -366,10 +396,13 @@ namespace infrastructure.Migrations
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("PaymentMethod")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("StripePaymentIntentId")
+                    b.Property<string>("TransactionId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("VendorEarnings")
@@ -494,6 +527,9 @@ namespace infrastructure.Migrations
                     b.Property<string>("GoogleId")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsVerified")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Location")
                         .HasColumnType("nvarchar(max)");
 
@@ -524,8 +560,17 @@ namespace infrastructure.Migrations
                     b.Property<int>("TimeLimit")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("TokenExpires")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<decimal>("VendorCashBack")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("VerificationToken")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("VendorID");
 
