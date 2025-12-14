@@ -9,8 +9,7 @@ namespace Application.Interface.IService
 {
     public interface IPaymentService
     {
-        Task<string> CreatePaymentIntentAsync(PaymentRequestDto dto);
-        Task<bool> ConfirmPaymentAndDistributeFundsAsync(string paymentIntentId);
+        Task<bool> ProcessMockPaymentAsync(Guid bookingId);
         Task<bool> RefundPaymentAsync(Guid bookingId);
         Task<IEnumerable<WalletTransactionDto>> GetCustomerWalletHistoryAsync(Guid customerId);
     }

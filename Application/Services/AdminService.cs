@@ -78,7 +78,7 @@ namespace Application.Services
             return payments.Select(p => new TransactionDto
             {
                 PaymentID = p.PaymentID,
-                TransactionID = p.StripePaymentIntentId,
+                TransactionID = p.TransactionId,
                 BookingID = p.BookingID,
                 CustomerName = p.Booking?.Customer?.Name ?? "Unknown",
                 CustomerEmail = p.Booking?.Customer?.Email ?? "N/A",

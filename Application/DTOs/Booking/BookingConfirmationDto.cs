@@ -9,8 +9,13 @@ namespace Application.DTOs.Booking
     public class BookingConfirmationDto
     {
         public Guid BookingID { get; set; }
+
+        public Guid BookingItemID { get; set; }
         public Guid CustomerID { get; set; }
         public string CustomerName { get; set; }
+
+        public string ServiceName { get; set; }
+
         public DateTime EventDate { get; set; }
         public string EventTime { get; set; }
         public decimal TotalPrice { get; set; }
