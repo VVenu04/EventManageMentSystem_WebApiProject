@@ -45,6 +45,13 @@ namespace Presentation.Controllers
             // JSON String-ஐ அப்படியே அனுப்புகிறோம்
             return Ok(new { response });
         }
+        [HttpPost("generate-description")]
+        [Authorize(Roles = "Vendor")] // Vendor only
+        public async Task<IActionResult> GenerateDescription([FromBody] DescriptionRequestDto dto)
+        {
+            var result = await _aiService.GenerateServiceDescriptionAsync(dto.ServiceName, dto.Category);
+            return Ok(new { description = result });
+        }
 
     }
 

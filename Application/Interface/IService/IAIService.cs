@@ -12,5 +12,6 @@ namespace Application.Interface.IService
 
         // 2. Budget Plan உருவாக்குதல்
         Task<string> GenerateBudgetPlanAsync(string eventType, int guests, decimal budget);
+        Task<string> GenerateServiceDescriptionAsync(string serviceName, string category);
     }
 }
