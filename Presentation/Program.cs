@@ -155,10 +155,12 @@ namespace Presentation
             app.MapHealthChecks("/health/ready");
             app.MapHealthChecks("/health/live");
 
-            app.UseCors(x =>      // CORS (Before Auth)
+            // CORS Configuration - Allow all origins for production (Vercel deployment)
+            // Note: AllowAnyOrigin() works with JWT tokens (no credentials needed)
+            app.UseCors(x =>      
             x.AllowAnyHeader()
             .AllowAnyMethod()
-            .WithOrigins("http://localhost:4200", "http://localhost:5278"));
+            .AllowAnyOrigin()); // Allow all origins for Vercel and other deployments
 
             app.UseAuthentication();
             app.UseAuthorization();
