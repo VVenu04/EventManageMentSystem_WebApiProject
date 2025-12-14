@@ -360,8 +360,15 @@ namespace Application.Services
 
             item.TrackingStatus = "Completed";
             item.ServiceDate = DateTime.UtcNow;
+            var book = item.BookingID;
+            var booking = await _paymentRepository.GetByBookingIdAsync(book);
+            var vendorcash = booking.VendorEarnings;
+            var vendor = await _authRepo.GetVendorByIdAsync(item.VendorID);
+            vendor.VendorCashBack += vendorcash;
+            await _authRepo.UpdateVendorAsync(vendor);
 
             await _bookingRepo.UpdateBookingItemAsync(item);
+          
 
             try
             {

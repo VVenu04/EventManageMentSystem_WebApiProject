@@ -5,6 +5,7 @@ using Application.DTOs.Forgot;
 using Application.DTOs.Google;
 using Application.Interface.IAuth;
 using Application.Interface.IService;
+using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -316,7 +317,7 @@ namespace Presentation.Controllers
 
             await _emailService.SendEmailAsync(adminEmail, subject, body);
 
-            return Ok("Message sent to admin successfully!");
+            return Ok(ApiResponse<object>.Success(null, "Message sent to admin successfully!"));
         }
 
     }
