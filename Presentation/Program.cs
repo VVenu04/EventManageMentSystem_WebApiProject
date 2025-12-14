@@ -129,28 +129,31 @@ namespace Presentation
 
             builder.Services.AddCors();
 
+            // Add Health Checks
+            builder.Services.AddHealthChecks();
+
             var app = builder.Build();
 
 
 
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
+            // Enable Swagger in all environments
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
             {
-                //app.MapOpenApi();
-                app.UseSwagger();
-                app.UseSwaggerUI(options =>
-                {
-                    options.SwaggerEndpoint("/swagger/v1/swagger.json", "My API v1");
-                    options.RoutePrefix = string.Empty;
-                });
-
-
-            }
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "Event Management API v1");
+                options.RoutePrefix = string.Empty; // Swagger UI at root
+            });
 
             app.UseMiddleware<ExceptionMiddleware>();  // (MIDDLEWARE) Error Handling (First)
 
-            app.UseHttpsRedirection();
+            // HTTPS redirection removed for Docker deployment on HTTP port 8080
+            // app.UseHttpsRedirection();
 
+            // Map health check endpoints first (before CORS to ensure they're always accessible)
+            app.MapHealthChecks("/health");
+            app.MapHealthChecks("/health/ready");
+            app.MapHealthChecks("/health/live");
 
             app.UseCors(x =>      // CORS (Before Auth)
             x.AllowAnyHeader()
@@ -159,11 +162,14 @@ namespace Presentation
 
             app.UseAuthentication();
             app.UseAuthorization();
-         
 
             app.MapControllers();
 
             app.MapHub<NotificationHub>("/notificationHub");
+
+            // Configure to listen on port 8080
+            app.Urls.Add("http://0.0.0.0:8080");
+            
             app.Run();
         }
     }
