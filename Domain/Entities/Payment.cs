@@ -13,7 +13,6 @@ namespace Domain.Entities
         public Guid PaymentID { get; set; }
         public Guid BookingID { get; set; }
 
-        // Stripe ID-க்கு பதில் பொதுவான ID
         public string TransactionId { get; set; }
 
         public decimal AmountPaid { get; set; }

@@ -29,7 +29,7 @@ namespace infrastructure.Repositary
         {
             return await _context.Set<Notification>()
                 .Where(n => n.UserID == userId)
-                .OrderByDescending(n => n.CreatedAt) // புதியது மேலே வர வேண்டும்
+                .OrderByDescending(n => n.CreatedAt) 
                 .ToListAsync();
         }
 

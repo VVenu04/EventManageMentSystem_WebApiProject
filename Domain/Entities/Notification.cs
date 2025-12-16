@@ -13,11 +13,10 @@ namespace Domain.Entities
         
         public Guid NotificationID { get; set; }
 
-        public Guid UserID { get; set; } // யாருக்கு இந்த செய்தி? (VendorID / CustomerID)
+        public Guid UserID { get; set; } 
         public string Message { get; set; } = string.Empty;
         public string Type { get; set; } = "Info"; // "Booking", "Payment", "Alert"
 
-        // Navigation (Optional - கிளிக் செய்தால் அந்தப் பக்கத்திற்குப் போக)
         public Guid? RelatedEntityID { get; set; } // (BookingID or PackageID)
 
         public bool IsRead { get; set; } = false;

@@ -214,10 +214,8 @@ namespace Presentation.Controllers
 
             try
             {
-                // 🚨 FIX: பழைய Placeholder-ஐ நீக்கிவிட்டு, உண்மையான Service Call-ஐப் பயன்படுத்தவும்.
                 var requests = await _packageService.GetPendingRequestsAsync(vendorId);
 
-                // List காலியாக இருந்தால் Empty List அனுப்புவோம் (Null அனுப்பக்கூடாது)
                 return Ok(ApiResponse<IEnumerable<PackageRequestDto>>.Success(requests ?? new List<PackageRequestDto>()));
             }
             catch (Exception ex)
@@ -256,7 +254,6 @@ namespace Presentation.Controllers
             }
             catch (Exception ex)
             {
-                // This will catch the "Cannot delete: This package has existing bookings" error
                 return BadRequest(ApiResponse<object>.Failure(ex.Message));
             }
         }

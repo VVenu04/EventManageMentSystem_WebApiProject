@@ -9,7 +9,7 @@ namespace Domain.Entities
         public Guid BookingItemID { get; set; }
 
         public Guid BookingID { get; set; }
-        public Guid? ServiceItemID { get; set; } // ServiceID அல்ல
+        public Guid? ServiceItemID { get; set; } 
         public Guid? PackageID { get; set; }
         public Guid VendorID { get; set; }
         public decimal ItemPrice { get; set; }
@@ -26,8 +26,6 @@ namespace Domain.Entities
         // Navigation Properties
         public Booking? Booking { get; set; }
 
-        // 🚨 இங்கே கவனிக்கவும்: நாம் Class பெயரை 'ServiceItem' என மாற்றினோம்.
-        // ஆனால் Property பெயர் 'Service' ஆக இருந்தால் Mapper-ல் 'item.Service' எனப் பயன்படுத்தலாம்.
         public ServiceItem? Service { get; set; }
 
         public Package? Package { get; set; }

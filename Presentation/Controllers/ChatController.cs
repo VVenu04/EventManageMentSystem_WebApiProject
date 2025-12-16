@@ -34,15 +34,13 @@ namespace Presentation.Controllers
             return Ok(new { response });
         }
         [HttpPost("budget-planner")]
-        [AllowAnonymous] // யார் வேண்டுமானாலும் பயன்படுத்தலாம் (அல்லது [Authorize] போடலாம்)
+        [AllowAnonymous] 
         public async Task<IActionResult> BudgetPlanner([FromBody] BudgetRequestDto dto)
         {
             if (dto == null) return BadRequest("Invalid data.");
 
-            // AI Service-ஐ அழைக்கிறது
             var response = await _aiService.GenerateBudgetPlanAsync(dto.EventType, dto.GuestCount, dto.TotalBudget);
 
-            // JSON String-ஐ அப்படியே அனுப்புகிறோம்
             return Ok(new { response });
         }
         [HttpPost("generate-description")]

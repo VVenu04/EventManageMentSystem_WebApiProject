@@ -41,7 +41,6 @@ namespace Presentation.Controllers
 
             try
             {
-                // Service-க்கு DTO + Images இரண்டையும் அனுப்புகிறோம்
                 var newService = await _serviceService.CreateServiceAsync(createServiceDto, images, CurrentUserId);
 
                 return CreatedAtAction(
@@ -102,16 +101,12 @@ namespace Presentation.Controllers
         {
             try
             {
-                //  FIX: DTO Null ஆக இருந்தால் Empty Object உருவாக்கு
                 searchDto ??= new ServiceSearchDto();
 
                 var services = await _serviceService.SearchServicesAsync(searchDto);
 
-                // Service Layer-ல் ஏற்கனவே Mapping நடந்திருந்தால்:
                 return Ok(ApiResponse<IEnumerable<ServiceItemDto>>.Success(services));
 
-                // அல்லது இங்கே Map செய்வதாக இருந்தால்:
-                // return Ok(ApiResponse<IEnumerable<ServiceItemDto>>.Success(services.Select(ServiceMapper.MapToServiceDto)));
             }
             catch (Exception ex)
             {
@@ -127,12 +122,9 @@ namespace Presentation.Controllers
 
             if (id == Guid.Empty) return BadRequest(ApiResponse<object>.Failure("Invalid Service ID."));
 
-            // 🚨 FIX: Remove the faulty if-block. 
-            // 'images' parameter already contains the files from the form.
 
             try
             {
-                // Service-க்கு DTO + Images அனுப்புகிறோம்
                 await _serviceService.UpdateServiceAsync(id, updateServiceDto, images, CurrentUserId);
                 return Ok(ApiResponse<object>.Success(null, "Service updated successfully."));
             }
@@ -162,7 +154,7 @@ namespace Presentation.Controllers
             }
         }
         [HttpPatch("{id}/status")]
-        [Authorize(Roles = "Admin, Vendor")] // அட்மின் மற்றும் வெண்டர் இருவருக்கும் அனுமதி
+        [Authorize(Roles = "Admin, Vendor")] 
         public async Task<IActionResult> ToggleServiceStatus(Guid id)
         {
             try

@@ -46,14 +46,13 @@ namespace infrastructure.Repositary
         public async Task<IEnumerable<PackageRequest>> GetPendingRequestsForVendorAsync(Guid vendorId)
         {
             return await _context.PackageRequests
-                .Include(r => r.Package) // Package details தெரிய வேண்டும்
+                .Include(r => r.Package) 
                 .Where(r => r.ReceiverVendorID == vendorId && r.Status == "Pending")
                 .ToListAsync();
         }
 
         public async Task<bool> IsVendorApprovedForPackageAsync(Guid packageId, Guid vendorId)
         {
-            // Vendor அந்த Package-இன் Owner-ஆ? அல்லது Request Accept செய்தவரா?
             var isOwner = await _context.Packages.AnyAsync(p => p.PackageID == packageId && p.VendorID == vendorId);
             if (isOwner) return true;
 
@@ -67,7 +66,7 @@ namespace infrastructure.Repositary
         {
             return await _context.PackageRequests
                 .Include(r => r.Package)
-                .Include(r => r.SenderVendor) // ✅ இப்போது இது பிழையின்றி வேலை செய்யும்
+                .Include(r => r.SenderVendor) 
                 .Where(r => r.ReceiverVendorID == vendorId && r.Status == "Pending")
                 .OrderByDescending(r => r.CreatedAt)
                 .ToListAsync();

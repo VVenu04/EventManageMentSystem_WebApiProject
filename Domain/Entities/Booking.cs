@@ -21,7 +21,6 @@ namespace Domain.Entities
         public Customer? Customer { get; set; }
         public Payment? Payment { get; set; }
 
-        // 🚨 முக்கிய மாற்றம்: இது List ஆக இருக்க வேண்டும், string ஆக இருக்கக்கூடாது
         public ICollection<BookingItem> BookingItems { get; set; } = new List<BookingItem>();
     }
 }

@@ -21,11 +21,10 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("add")]
-        public async Task<IActionResult> AddToCart([FromBody] AddToCartDto dto) // 🚨 Explicit [FromBody]
+        public async Task<IActionResult> AddToCart([FromBody] AddToCartDto dto) 
         {
             if (CurrentUserId == Guid.Empty) return Unauthorized(ApiResponse<object>.Failure("User not identified."));
 
-            // 🚨 Token-ல் இருந்து வரும் ID-ஐ இங்கே செட் செய்கிறோம்
             dto.CustomerID = CurrentUserId;
 
             // Basic Validation
@@ -41,7 +40,6 @@ namespace Presentation.Controllers
             }
             catch (Exception ex)
             {
-                // 🚨 Log the inner exception for debugging if available
                 var errorMessage = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
                 return BadRequest(ApiResponse<object>.Failure(errorMessage));
             }

@@ -139,23 +139,18 @@ namespace Presentation.Controllers
         [HttpPost("UploadLogo/{vendorId}")]
         public async Task<IActionResult> UploadLogo(Guid vendorId, IFormFile file)
         {
-            // 1. File இருக்கான்னு செக் பண்றோம்
             if (file == null || file.Length == 0)
                 return BadRequest(ApiResponse<object>.Failure("No file uploaded."));
 
-            // 2. Vendor இருக்காரான்னு செக் பண்றோம் (Optional but recommended)
             var existingVendor = await _vendorService.GetVendorAsync(vendorId);
             if (existingVendor == null)
                 return NotFound(ApiResponse<object>.Failure("Vendor not found."));
 
-            // 3. Cloudinary-ல் Upload பண்றோம் (PhotoService வழியாக)
             var result = await _photoService.AddPhotoAsync(file);
 
             if (result.Error != null)
                 return BadRequest(ApiResponse<object>.Failure(result.Error.Message));
 
-            // 4. வந்த URL-ஐ Database-ல் Save பண்றோம்
-            // குறிப்பு: இதற்காக Service Layer-ல் ஒரு method எழுத வேண்டும் (கீழே பாருங்கள்)
             var updateResult = await _vendorService.UpdateVendorLogoAsync(vendorId, result.SecureUrl.AbsoluteUri);
 
             if (!updateResult)
@@ -182,7 +177,6 @@ namespace Presentation.Controllers
             if (result.Error != null)
                 return BadRequest(ApiResponse<object>.Failure(result.Error.Message));
 
-            // URL-ஐ Database-ல் update செய்கிறோம்
             var updateResult = await _vendorService.UpdateVendorProfilePhotoAsync(vendorId, result.SecureUrl.AbsoluteUri);
 
             if (!updateResult)

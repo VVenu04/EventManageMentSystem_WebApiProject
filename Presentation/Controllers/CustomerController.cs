@@ -134,22 +134,18 @@ namespace Presentation.Controllers
         [HttpPost("UploadProfilePhoto/{customerId}")]
         public async Task<IActionResult> UploadProfilePhoto(Guid customerId, IFormFile file)
         {
-            // File இருக்கான்னு செக் பண்றோம்
             if (file == null || file.Length == 0)
                 return BadRequest(ApiResponse<object>.Failure("No file uploaded."));
 
-            // Customer இருக்காரான்னு செக் பண்றோம்
-            var existingCustomer = await _customerService.GetCustomerAsync(customerId); // அல்லது உங்கள் Get Method
+            var existingCustomer = await _customerService.GetCustomerAsync(customerId); 
             if (existingCustomer == null)
                 return NotFound(ApiResponse<object>.Failure("Customer not found."));
 
-            // Cloudinary-ல் Upload பண்றோம்
             var result = await _photoService.AddPhotoAsync(file);
 
             if (result.Error != null)
                 return BadRequest(ApiResponse<object>.Failure(result.Error.Message));
 
-            // Database-ல் URL-ஐ update பண்றோம்
             var updateResult = await _customerService.UpdateCustomerProfilePhotoAsync(customerId, result.SecureUrl.AbsoluteUri);
 
             if (!updateResult)

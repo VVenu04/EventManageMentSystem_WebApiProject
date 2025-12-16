@@ -20,7 +20,6 @@ namespace infrastructure
 
         public async Task SendToUserAsync(string userId, string message)
         {
-            // SignalR Hub-ஐப் பயன்படுத்தி மெசேஜ் அனுப்புகிறோம்
             await _hubContext.Clients.User(userId).SendAsync("ReceiveNotification", message);
         }
     }

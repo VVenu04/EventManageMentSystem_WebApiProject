@@ -35,7 +35,6 @@ namespace infrastructure.ExternalServices
                 var uploadParams = new ImageUploadParams
                 {
                     File = new FileDescription(file.FileName, stream),
-                    // தேவைப்பட்டால் Transformation மாற்றவும்
                     Transformation = new Transformation().Height(500).Width(500).Crop("fill").Gravity("face"),
                     Folder = "smart-function"
                 };
@@ -61,7 +60,6 @@ namespace infrastructure.ExternalServices
                 var uploadParams = new ImageUploadParams
                 {
                     File = new FileDescription(file.FileName, stream),
-                    // தேவைப்பட்டால் Transformation சேர்க்கலாம்
                     Transformation = new Transformation().Height(500).Width(500).Crop("fill").Gravity("face")
                 };
 

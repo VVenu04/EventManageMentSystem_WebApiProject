@@ -32,7 +32,6 @@ namespace infrastructure.Repositary
                     .FirstOrDefaultAsync(p => p.TransactionId == transactionId);
         }
 
-        // --- 🚨 FIX: '?' சேர்க்கவும் ---
         public async Task<Payment?> GetByBookingIdAsync(Guid bookingId)
         {
             return await _context.Payments
@@ -50,16 +49,16 @@ namespace infrastructure.Repositary
         {
             return await _context.Payments
                 .Include(p => p.Booking)
-                .ThenInclude(b => b.Customer) // Customer விவரம் தேவை
-                .OrderByDescending(p => p.PaymentDate) // புதியது முதலில்
+                .ThenInclude(b => b.Customer) 
+                .OrderByDescending(p => p.PaymentDate) 
                 .ToListAsync();
         }
         public async Task<IEnumerable<Payment>> GetByCustomerIdAsync(Guid customerId)
         {
             return await _context.Payments
-                .Include(p => p.Booking) // Booking மூலம் Customer-ஐப் பிடிக்கிறோம்
+                .Include(p => p.Booking) 
                 .Where(p => p.Booking.CustomerID == customerId)
-                .OrderByDescending(p => p.PaymentDate) // புதியது முதலில்
+                .OrderByDescending(p => p.PaymentDate) 
                 .ToListAsync();
         }
     }

@@ -12,8 +12,8 @@ namespace Domain.Entities
         [Key]
         public Guid ServiceImageID { get; set; }
 
-        public string ImageUrl { get; set; } // Photo-இன் URL
-        public bool IsCover { get; set; } = false; // இது main photo-வா?
+        public string ImageUrl { get; set; } 
+        public bool IsCover { get; set; } = false; 
 
         // Foreign Key
         public Guid ServiceItemID { get; set; }

@@ -94,7 +94,6 @@ namespace infrastructure.Repositary
             var item = await _context.BookingItems.FindAsync(itemId);
             if (item != null)
             {
-                // Booking TotalPrice-ஐக் குறைக்கவும்
                 var booking = await _context.Bookings.FindAsync(item.BookingID);
                 if (booking != null)
                 {
@@ -108,14 +107,14 @@ namespace infrastructure.Repositary
         public async Task<IEnumerable<Booking>> GetBookingsByVendorAsync(Guid vendorId)
         {
             return await _context.Bookings
-                .Include(b => b.Customer) // Customer பெயர் காட்ட
+                .Include(b => b.Customer) 
                 .Include(b => b.BookingItems)
-                    .ThenInclude(bi => bi.Service) // Service பெயர் காட்ட
+                    .ThenInclude(bi => bi.Service) 
                 .Include(b => b.BookingItems)
-                    .ThenInclude(bi => bi.Package) // Package பெயர் காட்ட
-                                                   // அந்த Vendor-க்குச் சொந்தமான Item ஏதேனும் உள்ளதா எனத் தேடுகிறது
+                    .ThenInclude(bi => bi.Package) 
+                                                   
                 .Where(b => b.BookingItems.Any(bi => bi.VendorID == vendorId))
-                .OrderByDescending(b => b.CreatedAt) // புதியது முதலில்
+                .OrderByDescending(b => b.CreatedAt) 
                 .ToListAsync();
         }
 
