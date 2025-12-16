@@ -10,6 +10,6 @@ namespace Application.DTOs.Booking
     public class CompleteJobDto
     {
         public Guid BookingItemID { get; set; }
-        public string Otp { get; set; } // Customer-ஐக் கேட்டு Vendor பதிவு செய்வது
+        public string Otp { get; set; } 
     }
 }

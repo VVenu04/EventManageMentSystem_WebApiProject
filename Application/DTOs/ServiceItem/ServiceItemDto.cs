@@ -22,7 +22,7 @@ namespace Application.DTOs.Service
         public Guid VendorID { get; set; }
         public string VendorName { get; set; }
         public Guid CategoryID { get; set; }
-        public string CategoryName { get; set; } // (Mapper-இல் Include செய்ய வேண்டும்)
+        public string CategoryName { get; set; } 
 
         // --- Photos List ---
         public List<string> ImageUrls { get; set; }

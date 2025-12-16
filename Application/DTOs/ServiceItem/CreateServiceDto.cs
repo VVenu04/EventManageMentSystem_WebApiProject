@@ -17,7 +17,7 @@ namespace Application.DTOs.ServiceItem
 
         // Limits
         public decimal EventPerDayLimit { get; set; }
-        public double TimeLimit { get; set; } // (e.g., 3.5 நாட்கள்)
+        public double TimeLimit { get; set; } 
 
         // Relations
         public Guid CategoryID { get; set; }
@@ -25,8 +25,6 @@ namespace Application.DTOs.ServiceItem
 
         public List<Guid> EventIDs { get; set; } = new List<Guid>();
 
-        // --- நீங்கள் கேட்ட 5 Photos ---
-        // (Frontend 5 URL-களை List-ஆக அனுப்பும்)
         public List<IFormFile> Images { get; set; } = new List<IFormFile>();
     }
 }

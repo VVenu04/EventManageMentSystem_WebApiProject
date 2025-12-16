@@ -16,8 +16,6 @@ namespace Application.Services
         private readonly IBookingRepository _bookingRepo;
         private readonly IServiceItemRepository _serviceRepo;
         private readonly IPackageRepository _packageRepo;
-        // (DbSet-ஐப் பயன்படுத்த Context தேவைப்படலாம், அல்லது Repo-ல் AddItem method வேண்டும்)
-        // எளிமைக்காக Repo-வில் தேவையான methods இருப்பதாக வைத்துக்கொள்வோம்.
 
         public CartService(IBookingRepository bookingRepo,
                            IServiceItemRepository serviceRepo,
@@ -30,13 +28,10 @@ namespace Application.Services
 
         public async Task<CartDto> AddToCartAsync(AddToCartDto dto)
         {
-            // 1. பயனருக்கு ஏற்கனவே "Cart" உள்ளதா எனப் பார்
-            // (GetCartByCustomerIdAsync என்ற method-ஐ Repo-ல் சேர்க்க வேண்டும்)
             var cart = await _bookingRepo.GetCartByCustomerIdAsync(dto.CustomerID);
 
             if (cart == null)
             {
-                // புதிய Cart (Booking) உருவாக்கு
                 cart = new Booking
                 {
                     BookingID = Guid.NewGuid(),
@@ -52,7 +47,6 @@ namespace Application.Services
                 await _bookingRepo.AddAsync(cart);
             }
 
-            // 2. Item-ஐ உருவாக்கு (Service or Package)
             var newItem = new BookingItem
             {
                 BookingItemID = Guid.NewGuid(),
@@ -90,9 +84,6 @@ namespace Application.Services
                 throw new Exception("Must provide either ServiceID or PackageID");
             }
 
-            // 3. Item-ஐச் சேர் மற்றும் Update செய்
-            // (Repo-வில் AddItemAsync இருந்தால் நல்லது, அல்லது Collection-ல் சேர்த்து Update)
-            // இங்கு நேரடியாகச் சேர்ப்பதாக வைத்துக்கொள்வோம் (Repo update தேவை)
             await _bookingRepo.AddItemToCartAsync(newItem);
 
             // Total Price Update
@@ -123,10 +114,8 @@ namespace Application.Services
 
         public async Task RemoveFromCartAsync(Guid bookingItemId)
         {
-            // Repo method தேவை: DeleteItemAsync
             await _bookingRepo.RemoveItemFromCartAsync(bookingItemId);
 
-            // TotalPrice-ஐ update செய்ய மறக்காதீர்கள் (Logic Repo-வில் அல்லது இங்கேயே எழுதலாம்)
         }
 
         public async Task<Guid> CheckoutAsync(Guid customerId)
@@ -135,12 +124,10 @@ namespace Application.Services
 
             if (cart == null) throw new Exception("Cart is empty or not found.");
 
-            // Status-ஐ "Pending" என மாற்று
             cart.BookingStatus = BookingStatus.Pending;
 
             await _bookingRepo.UpdateAsync(cart);
 
-            // 🚨 FIX: Return the BookingID
             return cart.BookingID;
         }
 

@@ -13,20 +13,15 @@ namespace Application.Interface.IService
     public interface IServiceItemService
     {
         Task<ServiceItemDto> CreateServiceAsync(CreateServiceDto dto, List<IFormFile> images, Guid vendorId);
-        // 🚨 'CreateServiceDto'-வை 'UpdateServiceDto'-ஆக மாற்றவும்
-        Task UpdateServiceAsync(Guid serviceId, UpdateServiceDto dto, List<IFormFile> images, Guid vendorId);        // Vendor-ஆல் ஒரு Service-ஐ delete செய்ய
+        Task UpdateServiceAsync(Guid serviceId, UpdateServiceDto dto, List<IFormFile> images, Guid vendorId);        
         Task DeleteServiceAsync(Guid serviceId, Guid vendorId);
 
-        // Customer/User-ஆல் ஒரு Service-ஐப் பார்க்க
         Task<ServiceItemDto> GetServiceByIdAsync(Guid serviceId);
 
-        // Customer/User-ஆல் எல்லா Services-ஐயும் பார்க்க
         Task<IEnumerable<ServiceItemDto>> GetAllServicesAsync();
 
-        // Customer/User-ஆல் ஒரு Vendor-இன் Services-ஐப் பார்க்க
         Task<IEnumerable<ServiceItemDto>> GetServicesByVendorAsync(Guid vendorId);
 
-        // FIXED: Changed the return type from ServiceItem to ServiceItemDto (28th Nov)
         Task<IEnumerable<ServiceItemDto>> SearchServicesAsync(ServiceSearchDto searchDto);
         Task<bool> ToggleStatusAsync(Guid serviceId);
     }

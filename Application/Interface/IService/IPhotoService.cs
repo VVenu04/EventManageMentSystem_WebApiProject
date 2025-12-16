@@ -12,7 +12,6 @@ namespace Application.Interface.IService
     {
         Task<ImageUploadResult> AddPhotoAsync(IFormFile file);
 
-        // Delete செய்வதற்கு (Optional)
         Task<DeletionResult> DeletePhotoAsync(string publicId);
     }
 }

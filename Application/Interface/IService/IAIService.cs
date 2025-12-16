@@ -10,7 +10,6 @@ namespace Application.Interface.IService
     {
         Task<string> GetChatResponseAsync(string userMessage, string role);
 
-        // 2. Budget Plan உருவாக்குதல்
         Task<string> GenerateBudgetPlanAsync(string eventType, int guests, decimal budget);
         Task<string> GenerateServiceDescriptionAsync(string serviceName, string category);
     }

@@ -11,13 +11,10 @@ namespace Application.Interface.IService
     {
         Task<CartDto> AddToCartAsync(AddToCartDto dto);
 
-        // பயனரின் Cart-ஐப் பார்க்க
         Task<CartDto> GetMyCartAsync(Guid customerId);
 
-        // Cart-ல் இருந்து ஒன்றை நீக்க
         Task RemoveFromCartAsync(Guid bookingItemId);
 
-        // Cart-ஐ Checkout செய்ய (Booking-ஆக மாற்ற)
         Task<Guid> CheckoutAsync(Guid customerId);
     }
 }

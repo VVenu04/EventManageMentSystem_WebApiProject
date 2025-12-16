@@ -18,9 +18,8 @@ namespace Application.Services
         public AIService(IConfiguration config)
         {
             _httpClient = new HttpClient();
-            _apiKey = config["OpenRouterSettings:ApiKey"]; // ⭐ NEW KEY NAME
+            _apiKey = config["OpenRouterSettings:ApiKey"];
 
-            // ⭐ OpenRouter API Endpoint (FREE)
             _baseUrl = "https://openrouter.ai/api/v1/chat/completions";
         }
 
@@ -30,7 +29,7 @@ namespace Application.Services
             if (string.IsNullOrEmpty(_apiKey))
                 return "API Key is missing.";
 
-            // 🚨 STRICT SYSTEM PROMPT (AI-க்குக் கடுமையான கட்டுப்பாடுகள்)
+         
             string systemPrompt = @"
         You are 'SmartBot', the exclusive AI assistant for the **'Smart Function' Event Management System** in Sri Lanka.
 
@@ -65,7 +64,6 @@ namespace Application.Services
             if (string.IsNullOrEmpty(_apiKey))
                 return "API Key is missing.";
 
-            // 🚨 SYSTEM PROMPT: AI-க்குக் கடுமையான கட்டளை
             string systemPrompt = @"
         You are an expert Event Budget Planner using LKR currency.
         
@@ -76,7 +74,6 @@ namespace Application.Services
         4. Ensure the total amount equals the provided budget.
     ";
 
-            // 🚨 USER PROMPT: விவரங்கள்
             string userPrompt = $@"
         Create a budget plan for a '{eventType}' with {guests} guests. 
         Total Budget: {budget} LKR.
@@ -149,7 +146,6 @@ namespace Application.Services
         {
             if (string.IsNullOrEmpty(_apiKey)) return "API Key is missing.";
 
-            // Prompt Engineering (AI-க்கு கட்டளை)
             string prompt = $@"
                 Act as a professional marketing copywriter for an Event Management Platform.
                 Write a short, attractive, and professional service description (approx 30-40 words).
@@ -164,7 +160,7 @@ namespace Application.Services
 
             var requestBody = new
             {
-                model = "google/gemini-2.0-flash-exp:free", // அல்லது உங்களுக்கு பிடித்த மாடல்
+                model = "google/gemini-2.0-flash-exp:free", 
                 messages = new[]
                 {
                     new { role = "system", content = "You are a helpful marketing assistant." },

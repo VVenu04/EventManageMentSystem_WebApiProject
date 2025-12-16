@@ -11,7 +11,7 @@ namespace Application.DTOs.ServiceItem
         public string? SearchTerm { get; set; }= string.Empty;
         public Guid? EventID { get; set; }
 
-        public Guid? CategoryID { get; set; }   // (குறிப்பிட்ட Category மட்டும்)
+        public Guid? CategoryID { get; set; }   
         public decimal? MinPrice { get; set; }
         public decimal? MaxPrice { get; set; }
         public string Location { get; set; }= string.Empty;

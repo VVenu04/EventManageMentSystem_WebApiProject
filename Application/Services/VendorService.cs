@@ -66,10 +66,10 @@ namespace Application.Service
 
         public async Task<bool> UpdateVendorLogoAsync(Guid vendorId, string logoUrl)
         {
-            var vendor = await _vendorRepo.GetByIdAsync(v => v.VendorID == vendorId); // அல்லது _context.Vendors.Find(vendorId)
+            var vendor = await _vendorRepo.GetByIdAsync(v => v.VendorID == vendorId); 
             if (vendor == null) return false;
 
-            vendor.Logo = logoUrl; // URL-ஐ set பண்றோம்
+            vendor.Logo = logoUrl; 
             vendor.UpdatedAt = DateTime.UtcNow;
 
             await _vendorRepo.UpdateAsync(vendor); // Save Changes

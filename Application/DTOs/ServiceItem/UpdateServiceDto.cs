@@ -19,8 +19,6 @@ namespace Application.DTOs.ServiceItem
         public Guid CategoryID { get; set; }
         //public Guid? EventID { get; set; }
         public List<Guid> EventIDs { get; set; }
-        // புதிய Photo URLs பட்டியல்
-        // (Frontend எப்போதுமே மொத்தமாக 5 URL-களையும் அனுப்ப வேண்டும்)
         public List<string> ImageUrls { get; set; }
     }
 }

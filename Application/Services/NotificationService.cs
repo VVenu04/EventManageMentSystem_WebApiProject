@@ -13,10 +13,10 @@ namespace Application.Services
     public class NotificationService:INotificationService
     {
         private readonly INotificationRepository _notificationRepo;
-        private readonly IRealTimeNotifier _realTimeNotifier; // <-- 1. புதிய Interface-ஐ Inject செய்யவும்
+        private readonly IRealTimeNotifier _realTimeNotifier; 
 
         public NotificationService(INotificationRepository notificationRepo,
-                                   IRealTimeNotifier realTimeNotifier) // <-- 2. Constructor-ல் மாற்றவும்
+                                   IRealTimeNotifier realTimeNotifier) 
         {
             _notificationRepo = notificationRepo;
             _realTimeNotifier = realTimeNotifier;
@@ -24,7 +24,7 @@ namespace Application.Services
 
         public async Task SendNotificationAsync(Guid userId, string message, string type, Guid? relatedId)
         {
-            // A. Database-ல் சேமி
+            
             var notification = new Notification
             {
                 NotificationID = Guid.NewGuid(),
@@ -38,8 +38,6 @@ namespace Application.Services
 
             await _notificationRepo.AddAsync(notification);
 
-            // B. Real-time ஆக அனுப்பு (Abstraction மூலம்)
-            // --- 3. இங்கே புதிய Method-ஐ call செய்யவும் ---
             await _realTimeNotifier.SendToUserAsync(userId.ToString(), message);
         }
 

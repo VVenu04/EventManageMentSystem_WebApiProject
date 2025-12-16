@@ -28,7 +28,7 @@ namespace Application.Services
             {
                 new(JwtRegisteredClaimNames.Email, email),
                 new(JwtRegisteredClaimNames.NameId, userId.ToString()),
-                new(ClaimTypes.Role, role) // *** இது மிக முக்கியம் ***
+                new(ClaimTypes.Role, role) 
             };
 
             var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);

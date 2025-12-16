@@ -46,7 +46,7 @@ namespace Application.Services
             if (images.Count > 5)
                 throw new Exception("You cannot add more than 5 photos per service.");
 
-            // 2. Category & Event Validation (பழைய Code அப்படியே...)
+            // 2. Category & Event Validation
             var category = await _categoryRepo.GetByIdAsync(dto.CategoryID);
             if (category == null) throw new Exception($"Category not found.");
 
@@ -60,26 +60,23 @@ namespace Application.Services
                 }
             }
 
-            // --- 3. CLOUDINARY UPLOAD LOGIC (இதுதான் முக்கியம்!) ---
+            // --- 3. CLOUDINARY UPLOAD LOGIC  ---
             var serviceImages = new List<ServiceImage>();
 
-            // போட்டோ ஒவ்வொன்றாக Cloudinary-ல் ஏற்றுகிறோம்
             for (int i = 0; i < images.Count; i++)
             {
                 var file = images[i];
 
-                // IPhotoService-ஐ வைத்து Upload செய்கிறோம் (இதை Constructor-ல் Inject செய்ய வேண்டும்)
                 var uploadResult = await _photoService.AddPhotoAsync(file);
 
                 if (uploadResult.Error != null)
                     throw new Exception($"Image upload failed: {uploadResult.Error.Message}");
 
-                // Cloudinary தந்த URL-ஐ List-ல் சேர்க்கிறோம்
                 serviceImages.Add(new ServiceImage
                 {
                     ServiceImageID = Guid.NewGuid(),
                     ImageUrl = uploadResult.SecureUrl.AbsoluteUri, // Cloudinary URL
-                    IsCover = (i == 0) // முதல் போட்டோ Cover Photo
+                    IsCover = (i == 0) 
                 });
             }
 
@@ -97,7 +94,7 @@ namespace Application.Services
                 TimeLimit = dto.TimeLimit,
                 VendorID = vendorId,
                 Active = true,
-                ServiceImages = serviceImages // Cloudinary URLs உள்ள List
+                ServiceImages = serviceImages 
             };
 
             // 5. Save to Database
@@ -154,8 +151,6 @@ namespace Application.Services
 
             // 3. Update Images (SMART LOGIC)
 
-            // A. பழைய படங்கள் எதை Frontend-ல் நீக்கினார்களோ அதை இங்கேயும் நீக்கவும்
-            // (DTO-வில் ImageUrls என்பது "தக்கவைத்துக்கொள்ள வேண்டிய" பழைய படங்களின் URL பட்டியல்)
             var keptUrls = dto.ImageUrls ?? new List<string>();
 
             var imagesToDelete = service.ServiceImages
@@ -167,7 +162,6 @@ namespace Application.Services
                 _serviceRepo.DeleteImages(imagesToDelete);
             }
 
-            // B. புதிய படங்களை Upload செய்து சேர்க்கவும்
             if (images != null && images.Any())
             {
                 foreach (var file in images)
@@ -211,11 +205,9 @@ namespace Application.Services
 
         public async Task<IEnumerable<ServiceItemDto>> SearchServicesAsync(ServiceSearchDto searchDto)
         {
-            // 🚨 இங்கே 'throw new NotImplementedException()' இருக்கக்கூடாது.
 
             var services = await _serviceRepo.SearchServicesAsync(searchDto);
 
-            // Map Entity to DTO
             return services.Select(ServiceMapper.MapToServiceDto);
         }
         public async Task<bool> ToggleStatusAsync(Guid serviceId)

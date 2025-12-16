@@ -33,7 +33,6 @@ namespace Application.Services
 
         }
 
-        // 1. Stripe-ல் Payment Intent-ஐ உருவாக்குதல்
         public async Task<bool> ProcessMockPaymentAsync(Guid bookingId)
         {
             var booking = await _bookingRepo.GetByIdAsync(bookingId);
@@ -41,27 +40,24 @@ namespace Application.Services
 
             var existingPayment = await _paymentRepo.GetByBookingIdAsync(bookingId);
             if (existingPayment != null && existingPayment.Status == "Succeeded")
-                return true; // ஏற்கனவே Payment முடிந்துவிட்டது
+                return true; 
 
-            // 3. Customer Wallet சரிபார்ப்பு
             var customer = await _authRepo.GetCustomerByIdAsync(booking.CustomerID);
             if (customer == null) throw new Exception("Customer not found");
 
-            // 4. பணத்தை கணக்கிடுதல் (Wallet vs Total Logic)
+            //  (Wallet vs Total Logic)
             decimal totalAmountToPay = 0; // External Payment (Mock Card)
-            decimal walletDeduction = 0;  // Wallet-ல் எடுப்பது
+            decimal walletDeduction = 0;  // get from wallet
 
             if (booking.TotalPrice >= customer.WalletBalance)
             {
-                // Wallet-ல் பணம் குறைவு. முழு Wallet பணத்தையும் எடுத்துக்கொள்வோம்.
                 walletDeduction = customer.WalletBalance;
                 totalAmountToPay = booking.TotalPrice - customer.WalletBalance;
             }
             else
             {
-                // Wallet-ல் நிறைய பணம் உள்ளது.
                 walletDeduction = booking.TotalPrice;
-                totalAmountToPay = 0; // வெளியிலிருந்து எதுவும் கட்ட வேண்டாம்
+                totalAmountToPay = 0; 
             }
 
             // 5. Commission Calculation
@@ -110,13 +106,11 @@ namespace Application.Services
 
             // 8. Update Wallet Balances
 
-            // A. கஸ்டமர் Wallet-ல் பணத்தை கழித்தல் (Used Balance)
             if (walletDeduction > 0)
             {
                 customer.WalletBalance -= walletDeduction;
             }
 
-            // B. கஸ்டமருக்கு Cashback கொடுத்தல்
             if (customerCashback > 0)
             {
                 customer.WalletBalance += customerCashback;
@@ -152,7 +146,6 @@ namespace Application.Services
 
         public async Task<bool> RefundPaymentAsync(Guid bookingId)
         {
-            // 1. Repo-வை வைத்து Payment-ஐ எடு (OLD: _context.Payments...)
             var payment = await _paymentRepo.GetByBookingIdAsync(bookingId);
 
             if (payment == null || payment.Status != "Succeeded")
@@ -161,26 +154,21 @@ namespace Application.Services
             }
 
             
-                // 2. Stripe-ல் Refund-ஐ உருவாக்கு
                 payment.Status = "Refunded";
 
-                // 2. Wallet Logic (Reverse logic)
                 var customer = payment.Booking?.Customer;
                 if (customer == null)
                 {
-                    // Repo include fail ஆனால் தனியாக எடுக்கவும்
                     customer = await _authRepo.GetCustomerByIdAsync(payment.Booking.CustomerID);
                 }
 
                 if (customer != null)
                 {
-                    // A. வாங்கிய Cashback-ஐ திரும்ப எடு
                     if (payment.CustomerCashback > 0)
                     {
                         customer.WalletBalance -= payment.CustomerCashback;
                     }
 
-                    // B. Refund தொகையை Wallet-ல் சேர் (முழு தொகையும் திரும்ப)
                     customer.WalletBalance += payment.AmountPaid;
 
                     await _authRepo.UpdateCustomerAsync(customer);
